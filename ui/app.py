@@ -691,49 +691,73 @@ def main() -> None:
 
     action_col, hint_col = st.columns([1, 3])
     with action_col:
-        process_images = st.button(
+        process_button_slot = st.empty()
+        process_images = process_button_slot.button(
             "Ler imagens",
             type="primary",
             disabled=research_upload is None and prestige_upload is None,
             use_container_width=True,
+            key="process_images_button",
         )
     with hint_col:
         st.caption("O app infere pela ordem dos tiers: ausente antes de uma sequencia visivel = maxed; ausente depois do limite visivel = locked.")
 
+    ocr_notice = st.session_state.pop("ocr_notice", None)
+    if ocr_notice:
+        st.success(str(ocr_notice))
+    ocr_error = st.session_state.pop("ocr_error", None)
+    if ocr_error:
+        st.error(str(ocr_error))
+
     if process_images:
+        process_button_slot.button(
+            "Processando imagens...",
+            type="primary",
+            disabled=True,
+            use_container_width=True,
+            key="process_images_busy_button",
+        )
         ocr_results: list[dict[str, Any]] = []
-        try:
-            if research_upload is not None:
-                image_path = save_upload(research_upload, run_dir / "uploads" / research_upload.name)
-                ocr_results.append(
-                    run_ocr(
-                        python_bin=python_bin,
-                        image_path=image_path,
-                        output_path=run_dir / "research_ocr.json",
-                        screen="research-core",
-                        engine=engine,
+        with st.status("Processando imagens...", expanded=True) as status:
+            try:
+                if research_upload is not None:
+                    st.write("Salvando e lendo Energia / Research...")
+                    image_path = save_upload(research_upload, run_dir / "uploads" / research_upload.name)
+                    ocr_results.append(
+                        run_ocr(
+                            python_bin=python_bin,
+                            image_path=image_path,
+                            output_path=run_dir / "research_ocr.json",
+                            screen="research-core",
+                            engine=engine,
+                        )
                     )
-                )
-            if prestige_upload is not None:
-                image_path = save_upload(prestige_upload, run_dir / "uploads" / prestige_upload.name)
-                ocr_results.append(
-                    run_ocr(
-                        python_bin=python_bin,
-                        image_path=image_path,
-                        output_path=run_dir / "prestige_ocr.json",
-                        screen="prestige-core",
-                        engine=engine,
+                if prestige_upload is not None:
+                    st.write("Salvando e lendo Prestige / PowerUps...")
+                    image_path = save_upload(prestige_upload, run_dir / "uploads" / prestige_upload.name)
+                    ocr_results.append(
+                        run_ocr(
+                            python_bin=python_bin,
+                            image_path=image_path,
+                            output_path=run_dir / "prestige_ocr.json",
+                            screen="prestige-core",
+                            engine=engine,
+                        )
                     )
-                )
-            if not ocr_results:
-                st.error("Anexe pelo menos uma imagem.")
-            else:
-                st.session_state["ocr_results"] = ocr_results
-                st.session_state["state_rows"] = build_state_rows(ocr_results)
-                st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
-                st.success("OCR concluido. Resolva as pendencias, se houver, e gere a macro.")
-        except Exception as exc:
-            st.error(str(exc))
+                if not ocr_results:
+                    status.update(label="Nenhuma imagem anexada.", state="error", expanded=True)
+                    st.session_state["ocr_error"] = "Anexe pelo menos uma imagem."
+                else:
+                    st.write("Montando estado dos upgrades...")
+                    st.session_state["ocr_results"] = ocr_results
+                    st.session_state["state_rows"] = build_state_rows(ocr_results)
+                    st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
+                    status.update(label="OCR concluido.", state="complete", expanded=False)
+                    st.session_state["ocr_notice"] = "OCR concluido. Resolva as pendencias, se houver, e gere a macro."
+            except Exception as exc:
+                status.update(label="Falha ao processar imagens.", state="error", expanded=True)
+                st.session_state["ocr_error"] = str(exc)
+        st.rerun()
 
     ocr_results = st.session_state.get("ocr_results", [])
     show_warnings(ocr_results)
