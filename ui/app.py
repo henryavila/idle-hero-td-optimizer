@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
+import hashlib
 import json
 import os
 import re
@@ -40,7 +41,7 @@ PRESTIGE_KEYS = [
 ]
 CORE_KEYS = [*RESEARCH_KEYS, *PRESTIGE_KEYS]
 STATUS_OPTIONS = ["available", "locked", "maxed", "ignore", "review"]
-PREVIEW_WIDTH = 420
+THUMBNAIL_WIDTH = 220
 SCREEN_ORDER = ["Research/Energy", "Prestige/PowerUps"]
 SCREEN_TITLES = {
     "Research/Energy": "Research / Energy",
@@ -72,8 +73,40 @@ def page_setup() -> None:
         page_icon=None,
         layout="wide",
     )
+    st.markdown(
+        """
+        <style>
+        .block-container {
+            padding-top: 1.2rem;
+            padding-bottom: 2rem;
+            max-width: 1760px;
+        }
+        .block-container h1 {
+            font-size: 2.35rem;
+            line-height: 1.08;
+            margin-bottom: 0.35rem;
+        }
+        [data-testid="stFileUploaderDropzone"] {
+            min-height: 4.5rem;
+            padding: 0.55rem 0.75rem;
+        }
+        [data-testid="stFileUploaderDropzone"] > div {
+            padding: 0;
+        }
+        [data-testid="stTextArea"] textarea {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 0.88rem;
+            line-height: 1.35;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            border-radius: 8px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
     st.title("Idle Hero TD Optimizer")
-    st.caption("Arraste os prints, confirme o estado e copie a saida para sua macro.")
+    st.caption("Arraste os prints, informe os recursos e copie a macro gerada no topo.")
 
 
 def ensure_run_dir() -> Path:
@@ -740,7 +773,6 @@ def render_debug_rows(merged: pd.DataFrame) -> None:
 def show_editor() -> pd.DataFrame | None:
     rows = st.session_state.get("state_rows")
     if rows is None:
-        st.info("Arraste as imagens e clique em 'Ler imagens' para montar o estado.")
         return None
 
     merged = rows.copy()
@@ -758,7 +790,8 @@ def show_editor() -> pd.DataFrame | None:
             screen_section_header(screen, subset)
             render_pending_cards(merged, pending, screen, state_version)
 
-    render_state_summary(merged)
+    with st.expander("Resumo dos levels lidos", expanded=not pending.empty):
+        render_state_summary(merged)
     render_inference_summary(merged)
     render_advanced_editor(merged)
     render_debug_rows(merged)
@@ -776,15 +809,21 @@ def show_validation_errors(errors: list[str]) -> None:
         st.write("\n".join(f"- {error}" for error in errors))
 
 
-def show_upload_preview(upload: Any, caption: str) -> None:
+@st.dialog("Print ampliado", width="large")
+def show_image_spotlight(image_bytes: bytes, caption: str) -> None:
+    st.image(image_bytes, caption=caption, width="stretch")
+
+
+def show_upload_preview(upload: Any, caption: str, button_key: str) -> None:
     if upload is None:
         st.caption("Nenhum print anexado.")
         return
-    st.image(upload, caption=caption, width=PREVIEW_WIDTH)
+    st.image(upload, caption=caption, width=THUMBNAIL_WIDTH)
+    if st.button("Ampliar print", key=f"spotlight_{button_key}", use_container_width=True):
+        show_image_spotlight(bytes(upload.getbuffer()), caption)
 
 
 def show_upload_block(
-    column_name: str,
     title: str,
     subtitle: str,
     accent: str,
@@ -794,10 +833,9 @@ def show_upload_block(
     with st.container(border=True):
         st.markdown(
             f"""
-            <div style="border-left: 8px solid {accent}; padding: 0.1rem 0 0.2rem 0.85rem; margin-bottom: 0.85rem;">
-                <div style="font-size: 0.78rem; font-weight: 800; opacity: 0.72; text-transform: uppercase;">{column_name}</div>
-                <div style="font-size: 1.55rem; font-weight: 850; line-height: 1.1;">{title}</div>
-                <div style="font-size: 0.95rem; opacity: 0.75; margin-top: 0.25rem;">{subtitle}</div>
+            <div style="border-left: 7px solid {accent}; padding: 0.05rem 0 0.1rem 0.7rem; margin-bottom: 0.55rem;">
+                <div style="font-size: 1.1rem; font-weight: 850; line-height: 1.15;">{title}</div>
+                <div style="font-size: 0.82rem; opacity: 0.72; margin-top: 0.18rem;">{subtitle}</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -808,10 +846,89 @@ def show_upload_block(
             key=uploader_key,
             label_visibility="collapsed",
         )
-        st.divider()
-        st.markdown(f"**Preview: {title}**")
-        show_upload_preview(upload, preview_caption)
+        show_upload_preview(upload, preview_caption, uploader_key)
         return upload
+
+
+def render_macro_output_panel(
+    result: dict[str, Any] | None,
+    macro_text: str | None,
+    run_dir: Path,
+    *,
+    has_pending: bool = False,
+    resource_errors: list[str] | None = None,
+    macro_stale: bool = False,
+    key_prefix: str = "top",
+    show_details: bool = False,
+) -> None:
+    resource_errors = resource_errors or []
+    st.markdown("### Macro")
+
+    if has_pending:
+        st.info("Resolva as pendencias de OCR abaixo para liberar a macro.")
+    elif resource_errors:
+        st.warning(resource_errors[0])
+    elif not macro_text:
+        st.info("A macro aparece aqui assim que as imagens forem lidas.")
+    elif macro_stale:
+        st.warning("Recursos ou objetivo mudaram. Recalcule para atualizar esta macro.")
+
+    sections = split_macro_sections(macro_text or "")
+    research_text = sections.get("Research/Energy", "")
+    prestige_text = sections.get("Prestige/PowerUps", "")
+    macro_digest = hashlib.sha1((macro_text or "").encode("utf-8")).hexdigest()[:10]
+
+    st.text_area(
+        "ENERGY / RESEARCH",
+        research_text,
+        height=90,
+        placeholder="Sem macro de Energy ainda.",
+        key=f"{key_prefix}_energy_macro_text_{macro_digest}",
+    )
+    render_copy_button(research_text, f"{key_prefix}_energy_macro", "Copiar Energy")
+
+    st.text_area(
+        "PRESTIGE / POWERUPS",
+        prestige_text,
+        height=90,
+        placeholder="Sem macro de Prestige ainda.",
+        key=f"{key_prefix}_prestige_macro_text_{macro_digest}",
+    )
+    render_copy_button(prestige_text, f"{key_prefix}_prestige_macro", "Copiar Prestige")
+
+    if macro_text:
+        with st.expander("Macro completa", expanded=False):
+            st.text_area(
+                "Macro combinada",
+                macro_text,
+                height=180,
+                label_visibility="collapsed",
+                key=f"{key_prefix}_combined_macro_text_{macro_digest}",
+            )
+            render_copy_button(macro_text, f"{key_prefix}_combined_macro", "Copiar tudo")
+            st.download_button(
+                "Baixar macro .txt",
+                data=macro_text,
+                file_name="macro_clicks.txt",
+                mime="text/plain",
+                key=f"{key_prefix}_download_macro",
+            )
+
+    if show_details and result is not None:
+        with st.expander("Detalhes da otimizacao", expanded=False):
+            detail_col_a, detail_col_b = st.columns(2)
+            with detail_col_a:
+                st.markdown("**Recursos**")
+                st.json(result.get("resources", {}), expanded=False)
+            with detail_col_b:
+                st.markdown("**Multiplicadores**")
+                st.json(result.get("factors", {}), expanded=False)
+
+            purchases = result.get("purchases", [])
+            if purchases:
+                st.markdown("**Compras recomendadas**")
+                st.dataframe(pd.DataFrame(purchases), use_container_width=True, hide_index=True)
+            st.caption(f"Artefatos salvos em: {run_dir}")
 
 
 def render_copy_button(text: str, key: str, label: str = "Copiar") -> None:
@@ -828,7 +945,7 @@ def render_copy_button(text: str, key: str, label: str = "Copiar") -> None:
             background: {'rgba(80, 80, 90, 0.35)' if disabled else '#2563eb'};
             color: white;
             font-weight: 700;
-            padding: 0.48rem 0.8rem;
+            padding: 0.36rem 0.72rem;
             cursor: {'not-allowed' if disabled else 'pointer'};
         ">{label}</button>
         <span id="{message_id}" style="margin-left: 0.6rem; font: 14px sans-serif; color: #39d98a;"></span>
@@ -849,73 +966,18 @@ def render_copy_button(text: str, key: str, label: str = "Copiar") -> None:
         }}
         </script>
         """,
-        height=48,
+        height=40,
     )
 
 
 def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> None:
-    st.subheader("Codigo para macro")
-    sections = split_macro_sections(macro_text)
-    macro_left, macro_right = st.columns(2, gap="large")
-    with macro_left:
-        st.markdown("#### ENERGIA / RESEARCH")
-        research_text = sections.get("Research/Energy", "")
-        st.text_area(
-            "Copiar macro de Energy",
-            research_text,
-            height=180,
-            placeholder="Nenhum upgrade de Energy recomendado.",
-        )
-        render_copy_button(research_text, "energy_macro", "Copiar Energy")
-        st.download_button(
-            "Baixar Energy .txt",
-            data=research_text,
-            file_name="macro_energy_research.txt",
-            mime="text/plain",
-            disabled=not bool(research_text.strip()),
-        )
-    with macro_right:
-        st.markdown("#### PRESTIGE / POWERUPS")
-        prestige_text = sections.get("Prestige/PowerUps", "")
-        st.text_area(
-            "Copiar macro de Prestige",
-            prestige_text,
-            height=180,
-            placeholder="Nenhum upgrade de Prestige recomendado.",
-        )
-        render_copy_button(prestige_text, "prestige_macro", "Copiar Prestige")
-        st.download_button(
-            "Baixar Prestige .txt",
-            data=prestige_text,
-            file_name="macro_prestige_powerups.txt",
-            mime="text/plain",
-            disabled=not bool(prestige_text.strip()),
-        )
-
-    with st.expander("Macro combinada", expanded=False):
-        st.text_area("Copiar tudo", macro_text, height=220)
-        render_copy_button(macro_text, "combined_macro", "Copiar tudo")
-        st.download_button(
-            "Baixar macro completa .txt",
-            data=macro_text,
-            file_name="macro_clicks.txt",
-            mime="text/plain",
-        )
-
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown("**Recursos**")
-        st.json(result.get("resources", {}), expanded=False)
-    with col_b:
-        st.markdown("**Multiplicadores**")
-        st.json(result.get("factors", {}), expanded=False)
-
-    purchases = result.get("purchases", [])
-    if purchases:
-        st.markdown("**Compras recomendadas**")
-        st.dataframe(pd.DataFrame(purchases), use_container_width=True, hide_index=True)
-
-    st.caption(f"Artefatos salvos em: {run_dir}")
+    render_macro_output_panel(
+        result,
+        macro_text,
+        run_dir,
+        key_prefix="result",
+        show_details=True,
+    )
 
 
 def main() -> None:
@@ -923,54 +985,71 @@ def main() -> None:
     run_dir = ensure_run_dir()
 
     with st.sidebar:
-        st.header("Configuracao")
+        st.header("Configuracao tecnica")
         python_bin = st.text_input("Python dos scripts", os.environ.get("IDLE_HERO_PYTHON", sys.executable))
         engine = st.selectbox("OCR engine", ["auto", "vision", "easyocr", "tesseract"], index=0)
-        objective = st.radio("Objetivo", ["FARM", "GOLD_PREP"], horizontal=True)
-        energy = st.text_input("Energy", "0")
-        prestige_points = st.text_input("Prestige Points", "0")
-        st.caption("Use escala do jogo: 2,59M, 1,21e20, 850K.")
+        st.caption("Ajuste aqui apenas se precisar trocar engine ou Python.")
 
-    st.markdown("### Prints de entrada")
-    col_left, col_right = st.columns(2, gap="large")
+    control_slot = st.empty()
+    macro_status_slot = st.empty()
+
+    col_left, col_middle, col_right = st.columns([1, 1, 1.35], gap="large")
     with col_left:
         research_upload = show_upload_block(
-            column_name="Coluna esquerda",
             title="ENERGIA / RESEARCH",
-            subtitle="Use o print da aba Upgrades > Research. Consome Energy.",
+            subtitle="Print da aba Research.",
             accent=SCREEN_ACCENTS["Research/Energy"],
             uploader_key="research_upload",
             preview_caption="Energia / Research",
         )
-    with col_right:
+    with col_middle:
         prestige_upload = show_upload_block(
-            column_name="Coluna direita",
             title="PRESTIGE / POWERUPS",
-            subtitle="Use o print da aba Upgrades > Prestige. Consome Prestige Points.",
+            subtitle="Print da aba Prestige.",
             accent=SCREEN_ACCENTS["Prestige/PowerUps"],
             uploader_key="prestige_upload",
             preview_caption="Prestige / PowerUps",
         )
+    with col_right:
+        macro_output_slot = st.empty()
 
-    action_col, hint_col = st.columns([1, 3])
-    with action_col:
-        process_button_slot = st.empty()
-        process_images = process_button_slot.button(
-            "Ler imagens",
-            type="primary",
-            disabled=research_upload is None and prestige_upload is None,
-            use_container_width=True,
-            key="process_images_button",
-        )
-    with hint_col:
-        st.caption("O app infere pela ordem dos tiers: ausente antes de uma sequencia visivel = maxed; ausente depois do limite visivel = locked.")
+    with control_slot.container():
+        control_col_a, control_col_b, control_col_c, control_col_d = st.columns([1.2, 1, 1, 1.35], gap="medium")
+        with control_col_a:
+            objective = st.radio("Objetivo", ["FARM", "GOLD_PREP"], horizontal=True)
+        with control_col_b:
+            energy = st.text_input("Energy", "0")
+        with control_col_c:
+            prestige_points = st.text_input("Prestige Points", "0")
+        resource_errors_for_button = validate_resource_inputs(energy, prestige_points)
+        with control_col_d:
+            st.caption("Escala do jogo: 2,59M, 1,21e20, 850K. Um recurso pode ficar 0.")
+            process_button_slot = st.empty()
+            process_button_disabled = (
+                research_upload is None and prestige_upload is None
+            ) or bool(resource_errors_for_button)
+            process_button_label = (
+                "Reler imagens e gerar macro"
+                if st.session_state.get("state_rows") is not None
+                else "Ler imagens e gerar macro"
+            )
+            process_images = process_button_slot.button(
+                process_button_label,
+                type="primary",
+                disabled=process_button_disabled,
+                use_container_width=True,
+                key="process_images_button",
+            )
+            macro_action_slot = st.empty()
 
     ocr_notice = st.session_state.pop("ocr_notice", None)
     if ocr_notice:
-        st.caption(str(ocr_notice))
+        with macro_status_slot.container():
+            st.caption(str(ocr_notice))
     ocr_error = st.session_state.pop("ocr_error", None)
     if ocr_error:
-        st.error(str(ocr_error))
+        with macro_status_slot.container():
+            st.error(str(ocr_error))
 
     if process_images:
         process_button_slot.button(
@@ -981,7 +1060,7 @@ def main() -> None:
             key="process_images_busy_button",
         )
         ocr_results: list[dict[str, Any]] = []
-        with st.status("Processando imagens...", expanded=True) as status:
+        with macro_status_slot.status("Processando imagens...", expanded=True) as status:
             try:
                 if research_upload is not None:
                     st.write("Salvando e lendo Energia / Research...")
@@ -1032,8 +1111,13 @@ def main() -> None:
     show_warnings(ocr_results)
     edited_rows = show_editor()
 
+    panel_has_pending = False
+    panel_resource_errors = resource_errors_for_button
+    panel_macro_stale = False
+
     if edited_rows is not None:
         has_pending = bool((edited_rows["status"] == "review").any())
+        panel_has_pending = has_pending
         should_auto_generate = bool(st.session_state.pop("auto_generate_macro", False))
         current_generation_inputs = {
             "objective": objective,
@@ -1041,16 +1125,15 @@ def main() -> None:
             "prestige_points": prestige_points,
         }
         resource_errors = validate_resource_inputs(energy, prestige_points)
+        panel_resource_errors = resource_errors
         macro_stale = (
             bool(st.session_state.get("last_macro_text"))
             and st.session_state.get("last_generation_inputs") != current_generation_inputs
         )
-
-        if resource_errors:
-            show_validation_errors(resource_errors)
+        panel_macro_stale = macro_stale
 
         if should_auto_generate and not has_pending and not resource_errors:
-            with st.status("Gerando macros automaticamente...", expanded=True) as status:
+            with macro_status_slot.status("Gerando macros automaticamente...", expanded=True) as status:
                 try:
                     st.write("Rodando otimizador...")
                     result, macro_text, errors = generate_macro_result(
@@ -1071,32 +1154,34 @@ def main() -> None:
                     status.update(label="Falha ao gerar macros.", state="error", expanded=True)
                     st.error(str(exc))
         elif should_auto_generate and has_pending:
-            st.info("A macro nao foi gerada automaticamente porque ainda existem pendencias de OCR.")
+            with macro_status_slot.container():
+                st.info("A macro nao foi gerada automaticamente porque ainda existem pendencias de OCR.")
         elif should_auto_generate and resource_errors:
-            st.info("A macro nao foi gerada automaticamente porque os recursos ainda nao foram informados.")
-
-        if macro_stale:
-            st.warning("Energy, Prestige Points ou objetivo mudaram. Clique em `Recalcular macro` para atualizar os codigos sem reprocessar as imagens.")
+            with macro_status_slot.container():
+                st.info("A macro nao foi gerada automaticamente porque os recursos ainda nao foram informados.")
 
         if st.session_state.get("last_macro_text"):
             macro_button_label = "Recalcular macro" if macro_stale else "Atualizar macro"
         else:
             macro_button_label = "Gerar macro"
-        macro_button_slot = st.empty()
-        run_macro = macro_button_slot.button(
-            macro_button_label,
-            disabled=has_pending or bool(resource_errors),
-            type="primary",
-            key="generate_macro_button",
-        )
-        if run_macro:
-            macro_button_slot.button(
-                "Gerando macro...",
-                disabled=True,
-                type="primary",
-                key="generate_macro_busy_button",
+        with macro_action_slot.container():
+            run_macro = st.button(
+                macro_button_label,
+                disabled=has_pending or bool(resource_errors),
+                type="secondary",
+                use_container_width=True,
+                key="generate_macro_button",
             )
-            with st.status("Gerando macro...", expanded=True) as status:
+        if run_macro:
+            with macro_action_slot.container():
+                st.button(
+                    "Gerando macro...",
+                    disabled=True,
+                    type="secondary",
+                    use_container_width=True,
+                    key="generate_macro_busy_button",
+                )
+            with macro_status_slot.status("Gerando macro...", expanded=True) as status:
                 try:
                     st.write("Validando recursos e levels...")
                     st.write("Rodando otimizador...")
@@ -1118,46 +1203,54 @@ def main() -> None:
                     status.update(label="Falha ao gerar macro.", state="error", expanded=True)
                     st.error(str(exc))
 
-        stored_result = st.session_state.get("last_result")
-        stored_macro_text = st.session_state.get("last_macro_text")
-        if stored_result is not None and stored_macro_text:
-            render_result(stored_result, stored_macro_text, run_dir)
+    stored_result = st.session_state.get("last_result")
+    stored_macro_text = st.session_state.get("last_macro_text")
+    with macro_output_slot.container():
+        render_macro_output_panel(
+            stored_result,
+            stored_macro_text,
+            run_dir,
+            has_pending=panel_has_pending,
+            resource_errors=panel_resource_errors,
+            macro_stale=panel_macro_stale,
+            key_prefix="top",
+            show_details=True,
+        )
 
-    st.divider()
-    st.subheader("Passada residual")
-    st.caption("Use depois de executar a macro principal e ver sobra real na UI do jogo.")
-    residual_col_a, residual_col_b = st.columns(2)
-    with residual_col_a:
-        residual_energy = st.text_input("Energy residual", "0")
-    with residual_col_b:
-        residual_prestige = st.text_input("Prestige residual", "0")
+    with st.expander("Passada residual", expanded=False):
+        st.caption("Use depois de executar a macro principal e ver sobra real na UI do jogo.")
+        residual_col_a, residual_col_b = st.columns(2)
+        with residual_col_a:
+            residual_energy = st.text_input("Energy residual", "0")
+        with residual_col_b:
+            residual_prestige = st.text_input("Prestige residual", "0")
 
-    if st.button("Gerar macro residual"):
-        last_result = st.session_state.get("last_result")
-        if not last_result:
-            st.error("Gere uma macro principal primeiro nesta sessao.")
-        else:
-            try:
-                residual_objective = st.session_state.get("last_objective", "FARM")
-                residual_state = {
-                    "objective": residual_objective,
-                    "resources": {
-                        "energy": residual_energy,
-                        "prestige_points": residual_prestige,
-                    },
-                    "levels": last_result["final_levels"],
-                    "locked_upgrades": last_result.get("diagnostics", {}).get("locked_upgrades", []),
-                    "warnings": ["post-macro residual pass from UI"],
-                }
-                state_path = run_dir / f"estado_residual_{residual_objective.lower()}.json"
-                result_path = run_dir / f"resultado_residual_{residual_objective.lower()}.json"
-                macro_path = run_dir / f"macro_clicks_residual_{residual_objective.lower()}.txt"
-                write_json(state_path, residual_state)
-                result = run_optimizer(python_bin, state_path, result_path, residual_objective)
-                macro_text = run_macro_formatter(python_bin, result_path, macro_path)
-                render_result(result, macro_text, run_dir)
-            except Exception as exc:
-                st.error(str(exc))
+        if st.button("Gerar macro residual"):
+            last_result = st.session_state.get("last_result")
+            if not last_result:
+                st.error("Gere uma macro principal primeiro nesta sessao.")
+            else:
+                try:
+                    residual_objective = st.session_state.get("last_objective", "FARM")
+                    residual_state = {
+                        "objective": residual_objective,
+                        "resources": {
+                            "energy": residual_energy,
+                            "prestige_points": residual_prestige,
+                        },
+                        "levels": last_result["final_levels"],
+                        "locked_upgrades": last_result.get("diagnostics", {}).get("locked_upgrades", []),
+                        "warnings": ["post-macro residual pass from UI"],
+                    }
+                    state_path = run_dir / f"estado_residual_{residual_objective.lower()}.json"
+                    result_path = run_dir / f"resultado_residual_{residual_objective.lower()}.json"
+                    macro_path = run_dir / f"macro_clicks_residual_{residual_objective.lower()}.txt"
+                    write_json(state_path, residual_state)
+                    result = run_optimizer(python_bin, state_path, result_path, residual_objective)
+                    macro_text = run_macro_formatter(python_bin, result_path, macro_path)
+                    render_result(result, macro_text, run_dir)
+                except Exception as exc:
+                    st.error(str(exc))
 
 
 if __name__ == "__main__":
