@@ -598,6 +598,37 @@ def show_upload_preview(upload: Any, caption: str) -> None:
     st.image(upload, caption=caption, width=PREVIEW_WIDTH)
 
 
+def show_upload_block(
+    column_name: str,
+    title: str,
+    subtitle: str,
+    accent: str,
+    uploader_key: str,
+    preview_caption: str,
+) -> Any:
+    with st.container(border=True):
+        st.markdown(
+            f"""
+            <div style="border-left: 8px solid {accent}; padding: 0.1rem 0 0.2rem 0.85rem; margin-bottom: 0.85rem;">
+                <div style="font-size: 0.78rem; font-weight: 800; opacity: 0.72; text-transform: uppercase;">{column_name}</div>
+                <div style="font-size: 1.55rem; font-weight: 850; line-height: 1.1;">{title}</div>
+                <div style="font-size: 0.95rem; opacity: 0.75; margin-top: 0.25rem;">{subtitle}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        upload = st.file_uploader(
+            f"Arquivo de {title}",
+            type=["png", "jpg", "jpeg"],
+            key=uploader_key,
+            label_visibility="collapsed",
+        )
+        st.divider()
+        st.markdown(f"**Preview: {title}**")
+        show_upload_preview(upload, preview_caption)
+        return upload
+
+
 def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> None:
     st.subheader("Saida para macro")
     st.text_area("Copie este bloco", macro_text, height=240)
@@ -637,18 +668,25 @@ def main() -> None:
         prestige_points = st.text_input("Prestige Points", "0")
         st.caption("Use escala do jogo: 2,59M, 1,21e20, 850K.")
 
-    col_left, col_right = st.columns(2)
+    st.markdown("### Prints de entrada")
+    col_left, col_right = st.columns(2, gap="large")
     with col_left:
-        research_upload = st.file_uploader(
-            "Arraste aqui o print de Research",
-            type=["png", "jpg", "jpeg"],
-            key="research_upload",
+        research_upload = show_upload_block(
+            column_name="Coluna esquerda",
+            title="ENERGIA / RESEARCH",
+            subtitle="Use o print da aba Upgrades > Research. Consome Energy.",
+            accent=SCREEN_ACCENTS["Research/Energy"],
+            uploader_key="research_upload",
+            preview_caption="Energia / Research",
         )
     with col_right:
-        prestige_upload = st.file_uploader(
-            "Arraste aqui o print de Prestige",
-            type=["png", "jpg", "jpeg"],
-            key="prestige_upload",
+        prestige_upload = show_upload_block(
+            column_name="Coluna direita",
+            title="PRESTIGE / POWERUPS",
+            subtitle="Use o print da aba Upgrades > Prestige. Consome Prestige Points.",
+            accent=SCREEN_ACCENTS["Prestige/PowerUps"],
+            uploader_key="prestige_upload",
+            preview_caption="Prestige / PowerUps",
         )
 
     action_col, hint_col = st.columns([1, 3])
@@ -661,14 +699,6 @@ def main() -> None:
         )
     with hint_col:
         st.caption("O app infere pela ordem dos tiers: ausente antes de uma sequencia visivel = maxed; ausente depois do limite visivel = locked.")
-
-    if research_upload is not None or prestige_upload is not None:
-        with st.expander("Previews dos prints", expanded=True):
-            preview_left, preview_right = st.columns(2)
-            with preview_left:
-                show_upload_preview(research_upload, "Research")
-            with preview_right:
-                show_upload_preview(prestige_upload, "Prestige")
 
     if process_images:
         ocr_results: list[dict[str, Any]] = []
