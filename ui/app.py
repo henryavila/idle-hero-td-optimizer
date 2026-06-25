@@ -1082,22 +1082,41 @@ def main() -> None:
             macro_button_label = "Recalcular macro" if macro_stale else "Atualizar macro"
         else:
             macro_button_label = "Gerar macro"
-        if st.button(macro_button_label, disabled=has_pending or bool(resource_errors)):
-            try:
-                result, macro_text, errors = generate_macro_result(
-                    rows=edited_rows,
-                    objective=objective,
-                    energy=energy,
-                    prestige_points=prestige_points,
-                    python_bin=python_bin,
-                    run_dir=run_dir,
-                )
-                if errors:
-                    show_validation_errors(errors)
-                elif result is not None and macro_text is not None:
-                    st.session_state["last_macro_text"] = macro_text
-            except Exception as exc:
-                st.error(str(exc))
+        macro_button_slot = st.empty()
+        run_macro = macro_button_slot.button(
+            macro_button_label,
+            disabled=has_pending or bool(resource_errors),
+            type="primary",
+            key="generate_macro_button",
+        )
+        if run_macro:
+            macro_button_slot.button(
+                "Gerando macro...",
+                disabled=True,
+                type="primary",
+                key="generate_macro_busy_button",
+            )
+            with st.status("Gerando macro...", expanded=True) as status:
+                try:
+                    st.write("Validando recursos e levels...")
+                    st.write("Rodando otimizador...")
+                    result, macro_text, errors = generate_macro_result(
+                        rows=edited_rows,
+                        objective=objective,
+                        energy=energy,
+                        prestige_points=prestige_points,
+                        python_bin=python_bin,
+                        run_dir=run_dir,
+                    )
+                    if errors:
+                        status.update(label="Nao foi possivel gerar a macro.", state="error", expanded=True)
+                        show_validation_errors(errors)
+                    elif result is not None and macro_text is not None:
+                        st.session_state["last_macro_text"] = macro_text
+                        status.update(label="Macro gerada.", state="complete", expanded=False)
+                except Exception as exc:
+                    status.update(label="Falha ao gerar macro.", state="error", expanded=True)
+                    st.error(str(exc))
 
         stored_result = st.session_state.get("last_result")
         stored_macro_text = st.session_state.get("last_macro_text")
