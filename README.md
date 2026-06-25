@@ -84,10 +84,15 @@ Se o jogo mostrou saldo arredondado antes da macro, como `2,59M`, o otimizador u
 ```text
 ui/app.py                                      Streamlit UI
 scripts/                                      motores validados de OCR, otimizacao e macro
-IdleHeroTD-apk/apk_analysis/dados-consolidados referencias extraidas e consolidadas do APK
+IdleHeroTD-apk/apk_analysis/dados-consolidados dados de runtime empacotados no app
 runs/                                         saidas locais geradas pela UI
-.ai/memory/                                  aprendizados consolidados para futuras sessoes
 ```
+
+## Portabilidade
+
+O app deve ser autocontido para execucao. Ele pode ser movido para `/Volumes/External/code/idle-hero-td-optimizer` e continuar funcionando sem depender da pasta `Games`.
+
+A pasta `Games/Idle Hero TD` continua sendo a base de conhecimento da IA e o workspace de investigacao do jogo. Quando a analise do APK gerar dados novos, sincronize para dentro deste repo apenas o subconjunto consolidado que o app realmente usa em runtime.
 
 ## Decisoes consolidadas
 
@@ -101,7 +106,7 @@ runs/                                         saidas locais geradas pela UI
 
 ## Dados incluidos
 
-Este repositorio inclui os dados consolidados, nao os dumps brutos do APK. Os principais arquivos operacionais sao:
+Este repositorio inclui os dados consolidados necessarios para execucao do app, nao os dumps brutos do APK. Os principais arquivos operacionais sao:
 
 ```text
 IdleHeroTD-apk/apk_analysis/dados-consolidados/formulas/csv/core_upgrade_formula_factors.csv
