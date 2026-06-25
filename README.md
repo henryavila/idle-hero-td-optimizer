@@ -40,7 +40,9 @@ Sem EasyOCR, o modo `auto` pode cair para macOS Vision. Isso funciona sem depend
 
 Ou abra `run.command` pelo Finder.
 
-O Streamlit abrira um endereco local parecido com:
+O launcher mantem apenas uma instancia do app. Se ja houver um servidor deste projeto rodando, ele sera reiniciado na porta fixa `8501` em vez de abrir uma segunda instancia em `8502`.
+
+O Streamlit abrira:
 
 ```text
 http://localhost:8501
