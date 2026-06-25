@@ -69,6 +69,17 @@ SUMMARY_GROUPS = [
     ("kill_gold", "Kill Gold", "#f2d33d"),
     ("prestige_power", "Prestige Power", "#bb4dff"),
 ]
+PYTHON_CANDIDATES = (
+    ".venv/bin/python",
+    ".venv/bin/python3",
+    ".venv/Scripts/python.exe",
+    "bin/python",
+    "bin/python3",
+    "Scripts/python.exe",
+    "python",
+    "python3",
+    "python.exe",
+)
 
 
 def page_setup() -> None:
@@ -120,6 +131,106 @@ def ensure_run_dir() -> Path:
     path = Path(st.session_state["run_dir"])
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def default_python_folder() -> str:
+    python_path = Path(os.environ.get("IDLE_HERO_PYTHON", sys.executable)).expanduser()
+    if python_path.exists() and python_path.is_dir():
+        return str(python_path)
+    return str(python_path.parent if python_path.name else APP_ROOT)
+
+
+def choose_folder_dialog(initial_dir: str) -> str | None:
+    if sys.platform == "darwin":
+        script = """
+        on run argv
+            set initialPath to item 1 of argv
+            try
+                set chosenFolder to choose folder with prompt "Selecione a pasta do Python" default location POSIX file initialPath
+                return POSIX path of chosenFolder
+            on error number -128
+                return ""
+            on error
+                try
+                    set chosenFolder to choose folder with prompt "Selecione a pasta do Python"
+                    return POSIX path of chosenFolder
+                on error number -128
+                    return ""
+                end try
+            end try
+        end run
+        """
+        result = subprocess.run(
+            ["osascript", "-e", script, initial_dir],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            path = result.stdout.strip()
+            return path or None
+        raise RuntimeError(result.stderr.strip() or "Nao foi possivel abrir o seletor de pasta.")
+
+    try:
+        import tkinter as tk
+        from tkinter import filedialog
+    except Exception as exc:
+        raise RuntimeError("Seletor de pasta indisponivel neste ambiente.") from exc
+
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes("-topmost", True)
+    try:
+        path = filedialog.askdirectory(initialdir=initial_dir, title="Selecione a pasta do Python")
+        return path or None
+    finally:
+        root.destroy()
+
+
+def resolve_python_from_folder(folder: str) -> tuple[str, str | None]:
+    folder_path = Path(folder).expanduser()
+    if folder_path.is_file():
+        return str(folder_path), None
+
+    if not folder_path.exists():
+        return sys.executable, f"Pasta nao encontrada: {folder}"
+
+    for candidate in PYTHON_CANDIDATES:
+        candidate_path = folder_path / candidate
+        if candidate_path.exists() and candidate_path.is_file():
+            return str(candidate_path), None
+
+    return sys.executable, "Python nao encontrado nesta pasta. Usando o Python atual do app."
+
+
+def render_python_folder_selector() -> str:
+    if "python_folder" not in st.session_state:
+        st.session_state["python_folder"] = default_python_folder()
+
+    selected_folder = str(st.session_state["python_folder"])
+    select_col, reset_col = st.columns([2, 1])
+    with select_col:
+        if st.button("Selecionar pasta do Python", use_container_width=True):
+            try:
+                chosen_folder = choose_folder_dialog(selected_folder)
+                if chosen_folder:
+                    st.session_state["python_folder"] = chosen_folder
+                    selected_folder = chosen_folder
+            except Exception as exc:
+                st.warning(str(exc))
+    with reset_col:
+        if st.button("Atual", use_container_width=True):
+            selected_folder = default_python_folder()
+            st.session_state["python_folder"] = selected_folder
+
+    python_bin, warning = resolve_python_from_folder(selected_folder)
+    st.caption("Pasta selecionada")
+    st.code(selected_folder, language=None)
+    st.caption("Python detectado")
+    st.code(python_bin, language=None)
+    if warning:
+        st.warning(warning)
+    return python_bin
 
 
 def load_max_levels() -> dict[str, int]:
@@ -1039,9 +1150,9 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Configuracao tecnica")
-        python_bin = st.text_input("Python dos scripts", os.environ.get("IDLE_HERO_PYTHON", sys.executable))
+        python_bin = render_python_folder_selector()
         engine = st.selectbox("OCR engine", ["auto", "vision", "easyocr", "tesseract"], index=0)
-        st.caption("Ajuste aqui apenas se precisar trocar engine ou Python.")
+        st.caption("Ajuste aqui apenas se precisar trocar engine ou a pasta do Python.")
 
     control_slot = st.empty()
     macro_status_slot = st.empty()

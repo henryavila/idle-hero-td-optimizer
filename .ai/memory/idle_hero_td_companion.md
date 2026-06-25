@@ -16,6 +16,7 @@ O caminho feliz precisa ser:
 - A tela principal usa tres colunas: print de Research, print de Prestige e saida da macro.
 - Os recursos e o objetivo ficam no topo, nao escondidos na sidebar.
 - A sidebar deve ficar restrita a configuracao tecnica, como Python e engine de OCR.
+- A configuracao de Python deve usar seletor de pasta e detectar o executavel automaticamente; evitar input manual de caminho quando possivel.
 - Previews dos prints devem ser pequenos para economizar espaco.
 - `Ampliar print` usa modal real e renderiza a imagem em HTML/CSS na largura do modal; `st.image` dentro do dialog pode deixar a imagem pequena demais.
 - Se nao houver pendencias de OCR e houver recurso informado, a macro deve ser gerada automaticamente apos ler as imagens.

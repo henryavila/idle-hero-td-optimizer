@@ -50,6 +50,8 @@ O Streamlit abrira:
 http://localhost:8501
 ```
 
+Na sidebar, `Selecionar pasta do Python` permite escolher a pasta onde esta o Python dos scripts. O app procura automaticamente caminhos como `.venv/bin/python`, `bin/python`, `python3` ou `Scripts/python.exe`; se nao encontrar, usa o Python atual do app.
+
 ## Fluxo
 
 1. Arraste o print de Research na coluna `Energia / Research`.
