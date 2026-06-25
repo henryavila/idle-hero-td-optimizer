@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 import json
 import os
 import re
@@ -14,6 +15,7 @@ from typing import Any
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 APP_ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +23,11 @@ SCRIPTS_DIR = APP_ROOT / "scripts"
 DATA_DIR = APP_ROOT / "IdleHeroTD-apk" / "apk_analysis" / "dados-consolidados"
 COSTS_CSV = DATA_DIR / "formulas" / "csv" / "core_upgrade_cost_formula_classes.csv"
 RUNS_DIR = APP_ROOT / "runs"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from optimize_farm_upgrades import parse_game_number  # noqa: E402
 
 RESEARCH_KEYS = [
     *(f"researchDmg{i}" for i in range(1, 7)),
@@ -294,6 +301,31 @@ def coerce_int(value: Any) -> int | None:
     return int(float(text.replace(".", "").replace(",", ".")))
 
 
+def validate_resource_inputs(energy: str, prestige_points: str) -> list[str]:
+    errors: list[str] = []
+    parsed: dict[str, Decimal] = {}
+    labels = {
+        "energy": "Energy",
+        "prestige_points": "Prestige Points",
+    }
+
+    for key, raw_value in (("energy", energy), ("prestige_points", prestige_points)):
+        try:
+            value = parse_game_number(raw_value)
+        except ValueError as exc:
+            errors.append(f"{labels[key]} invalido: {exc}")
+            continue
+        if value < 0:
+            errors.append(f"{labels[key]} nao pode ser negativo.")
+        parsed[key] = value
+
+    if errors:
+        return errors
+    if parsed.get("energy", Decimal(0)) <= 0 and parsed.get("prestige_points", Decimal(0)) <= 0:
+        errors.append("Informe Energy ou Prestige Points antes de gerar a macro. Um deles pode ficar 0, mas nao os dois.")
+    return errors
+
+
 def build_optimizer_state(
     rows: pd.DataFrame,
     objective: str,
@@ -415,6 +447,10 @@ def generate_macro_result(
     python_bin: str,
     run_dir: Path,
 ) -> tuple[dict[str, Any] | None, str | None, list[str]]:
+    resource_errors = validate_resource_inputs(energy, prestige_points)
+    if resource_errors:
+        return None, None, resource_errors
+
     state, errors = build_optimizer_state(
         rows=rows,
         objective=objective,
@@ -433,6 +469,11 @@ def generate_macro_result(
     st.session_state["last_result"] = result
     st.session_state["last_objective"] = objective
     st.session_state["last_locked"] = state.get("locked_upgrades", [])
+    st.session_state["last_generation_inputs"] = {
+        "objective": objective,
+        "energy": energy,
+        "prestige_points": prestige_points,
+    }
     return result, macro_text, []
 
 
@@ -730,8 +771,8 @@ def show_editor() -> pd.DataFrame | None:
 def show_validation_errors(errors: list[str]) -> None:
     if not errors:
         return
-    st.warning(f"{len(errors)} item(ns) precisam de ajuste antes de gerar a macro.")
-    with st.expander("Ver itens pendentes", expanded=False):
+    st.warning(f"{len(errors)} ajuste(s) precisam ser resolvidos antes de gerar a macro.")
+    with st.expander("Ver ajustes pendentes", expanded=False):
         st.write("\n".join(f"- {error}" for error in errors))
 
 
@@ -773,6 +814,45 @@ def show_upload_block(
         return upload
 
 
+def render_copy_button(text: str, key: str, label: str = "Copiar") -> None:
+    disabled = not bool(text.strip())
+    button_id = f"copy_{key}"
+    message_id = f"copy_msg_{key}"
+    payload = json.dumps(text)
+    disabled_attr = "disabled" if disabled else ""
+    components.html(
+        f"""
+        <button id="{button_id}" {disabled_attr} style="
+            border: 1px solid rgba(250, 250, 250, 0.25);
+            border-radius: 0.45rem;
+            background: {'rgba(80, 80, 90, 0.35)' if disabled else '#2563eb'};
+            color: white;
+            font-weight: 700;
+            padding: 0.48rem 0.8rem;
+            cursor: {'not-allowed' if disabled else 'pointer'};
+        ">{label}</button>
+        <span id="{message_id}" style="margin-left: 0.6rem; font: 14px sans-serif; color: #39d98a;"></span>
+        <script>
+        const button = document.getElementById({json.dumps(button_id)});
+        const message = document.getElementById({json.dumps(message_id)});
+        if (button && !button.disabled) {{
+            button.addEventListener("click", async () => {{
+                try {{
+                    await navigator.clipboard.writeText({payload});
+                    message.textContent = "Copiado";
+                    setTimeout(() => message.textContent = "", 1800);
+                }} catch (error) {{
+                    message.style.color = "#ff6b6b";
+                    message.textContent = "Falha ao copiar";
+                }}
+            }});
+        }}
+        </script>
+        """,
+        height=48,
+    )
+
+
 def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> None:
     st.subheader("Codigo para macro")
     sections = split_macro_sections(macro_text)
@@ -786,6 +866,7 @@ def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> Non
             height=180,
             placeholder="Nenhum upgrade de Energy recomendado.",
         )
+        render_copy_button(research_text, "energy_macro", "Copiar Energy")
         st.download_button(
             "Baixar Energy .txt",
             data=research_text,
@@ -802,6 +883,7 @@ def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> Non
             height=180,
             placeholder="Nenhum upgrade de Prestige recomendado.",
         )
+        render_copy_button(prestige_text, "prestige_macro", "Copiar Prestige")
         st.download_button(
             "Baixar Prestige .txt",
             data=prestige_text,
@@ -812,6 +894,7 @@ def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> Non
 
     with st.expander("Macro combinada", expanded=False):
         st.text_area("Copiar tudo", macro_text, height=220)
+        render_copy_button(macro_text, "combined_macro", "Copiar tudo")
         st.download_button(
             "Baixar macro completa .txt",
             data=macro_text,
@@ -936,6 +1019,7 @@ def main() -> None:
                     st.session_state["last_result"] = None
                     st.session_state["last_objective"] = None
                     st.session_state["last_locked"] = []
+                    st.session_state["last_generation_inputs"] = None
                     st.session_state["auto_generate_macro"] = True
                     status.update(label="OCR concluido.", state="complete", expanded=False)
                     st.session_state["ocr_notice"] = "OCR concluido."
@@ -951,8 +1035,21 @@ def main() -> None:
     if edited_rows is not None:
         has_pending = bool((edited_rows["status"] == "review").any())
         should_auto_generate = bool(st.session_state.pop("auto_generate_macro", False))
+        current_generation_inputs = {
+            "objective": objective,
+            "energy": energy,
+            "prestige_points": prestige_points,
+        }
+        resource_errors = validate_resource_inputs(energy, prestige_points)
+        macro_stale = (
+            bool(st.session_state.get("last_macro_text"))
+            and st.session_state.get("last_generation_inputs") != current_generation_inputs
+        )
 
-        if should_auto_generate and not has_pending:
+        if resource_errors:
+            show_validation_errors(resource_errors)
+
+        if should_auto_generate and not has_pending and not resource_errors:
             with st.status("Gerando macros automaticamente...", expanded=True) as status:
                 try:
                     st.write("Rodando otimizador...")
@@ -975,9 +1072,17 @@ def main() -> None:
                     st.error(str(exc))
         elif should_auto_generate and has_pending:
             st.info("A macro nao foi gerada automaticamente porque ainda existem pendencias de OCR.")
+        elif should_auto_generate and resource_errors:
+            st.info("A macro nao foi gerada automaticamente porque os recursos ainda nao foram informados.")
 
-        macro_button_label = "Atualizar macro" if st.session_state.get("last_macro_text") else "Gerar macro"
-        if st.button(macro_button_label, disabled=has_pending):
+        if macro_stale:
+            st.warning("Energy, Prestige Points ou objetivo mudaram. Clique em `Recalcular macro` para atualizar os codigos sem reprocessar as imagens.")
+
+        if st.session_state.get("last_macro_text"):
+            macro_button_label = "Recalcular macro" if macro_stale else "Atualizar macro"
+        else:
+            macro_button_label = "Gerar macro"
+        if st.button(macro_button_label, disabled=has_pending or bool(resource_errors)):
             try:
                 result, macro_text, errors = generate_macro_result(
                     rows=edited_rows,

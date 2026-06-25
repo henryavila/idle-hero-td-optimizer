@@ -54,7 +54,7 @@ http://localhost:8501
 
 1. Arraste o print de Research.
 2. Arraste o print de Prestige.
-3. Informe Energy e Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`.
+3. Informe Energy e/ou Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`. Um deles pode ficar `0`, mas nao os dois.
 4. Clique em `Ler imagens`.
 5. Se o OCR nao deixar pendencias, o app gera automaticamente os codigos de macro separados para `Energy / Research` e `Prestige / PowerUps`.
 6. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
@@ -69,8 +69,8 @@ http://localhost:8501
    - `maxed`: upgrade omitido ou no maximo;
    - `ignore`: nao entra no estado;
    - `review`: precisa ser confirmado antes de gerar.
-8. Use `Gerar macro` ou `Atualizar macro` apenas quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR.
-9. Copie o bloco de `Energy / Research` ou `Prestige / PowerUps` para seu app de macro.
+8. Use `Gerar macro`, `Atualizar macro` ou `Recalcular macro` quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR. Nao precisa reprocessar as imagens se os levels nao mudaram.
+9. Use o botao `Copiar` do bloco `Energy / Research` ou `Prestige / PowerUps` para levar o texto ao seu app de macro.
 
 ## Passada residual
 
