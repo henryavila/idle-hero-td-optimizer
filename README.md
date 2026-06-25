@@ -56,20 +56,21 @@ http://localhost:8501
 2. Arraste o print de Prestige.
 3. Informe Energy e Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`.
 4. Clique em `Ler imagens`.
-5. Resolva apenas as pendencias exibidas nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
+5. Se o OCR nao deixar pendencias, o app gera automaticamente os codigos de macro separados para `Energy / Research` e `Prestige / PowerUps`.
+6. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
    - `locked`: item visivel com botao `Wave`/lock;
    - `locked`: item ausente que esta alem do limite visivel/destravado da familia;
    - `maxed`: item ausente antes de uma sequencia visivel consistente da mesma familia;
    - `review`: buraco ambiguo no meio dos tiers visiveis, para evitar confundir OCR falho com maxed;
    - `ignore`: item de uma tela que voce nao anexou.
-6. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
+7. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
    - `available`: upgrade disponivel e com level correto;
    - `locked`: upgrade bloqueado por wave;
    - `maxed`: upgrade omitido ou no maximo;
    - `ignore`: nao entra no estado;
    - `review`: precisa ser confirmado antes de gerar.
-7. Clique em `Gerar macro`.
-8. Copie o bloco da saida para seu app de macro.
+8. Use `Gerar macro` ou `Atualizar macro` apenas quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR.
+9. Copie o bloco de `Energy / Research` ou `Prestige / PowerUps` para seu app de macro.
 
 ## Passada residual
 

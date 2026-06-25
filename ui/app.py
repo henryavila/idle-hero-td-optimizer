@@ -385,6 +385,57 @@ def run_macro_formatter(python_bin: str, result_path: Path, output_path: Path) -
     return output_path.read_text(encoding="utf-8")
 
 
+def split_macro_sections(macro_text: str) -> dict[str, str]:
+    sections = {
+        "Research/Energy": "",
+        "Prestige/PowerUps": "",
+    }
+    current_section: str | None = None
+    buffers: dict[str, list[str]] = {key: [] for key in sections}
+
+    for raw_line in macro_text.splitlines():
+        line = raw_line.strip()
+        if line in {"Research/Energy:", "Prestige/PowerUps:"}:
+            current_section = line.removesuffix(":")
+            continue
+        if current_section in buffers and line:
+            buffers[current_section].append(line)
+
+    return {
+        section: "\n".join(lines) + ("\n" if lines else "")
+        for section, lines in buffers.items()
+    }
+
+
+def generate_macro_result(
+    rows: pd.DataFrame,
+    objective: str,
+    energy: str,
+    prestige_points: str,
+    python_bin: str,
+    run_dir: Path,
+) -> tuple[dict[str, Any] | None, str | None, list[str]]:
+    state, errors = build_optimizer_state(
+        rows=rows,
+        objective=objective,
+        energy=energy,
+        prestige_points=prestige_points,
+    )
+    if errors:
+        return None, None, errors
+
+    state_path = run_dir / f"estado_{objective.lower()}.json"
+    result_path = run_dir / f"resultado_{objective.lower()}.json"
+    macro_path = run_dir / f"macro_clicks_{objective.lower()}.txt"
+    write_json(state_path, state)
+    result = run_optimizer(python_bin, state_path, result_path, objective)
+    macro_text = run_macro_formatter(python_bin, result_path, macro_path)
+    st.session_state["last_result"] = result
+    st.session_state["last_objective"] = objective
+    st.session_state["last_locked"] = state.get("locked_upgrades", [])
+    return result, macro_text, []
+
+
 def show_warnings(ocr_results: list[dict[str, Any]]) -> None:
     warnings = []
     for result in ocr_results:
@@ -712,14 +763,50 @@ def show_upload_block(
 
 
 def render_result(result: dict[str, Any], macro_text: str, run_dir: Path) -> None:
-    st.subheader("Saida para macro")
-    st.text_area("Copie este bloco", macro_text, height=240)
-    st.download_button(
-        "Baixar macro .txt",
-        data=macro_text,
-        file_name="macro_clicks.txt",
-        mime="text/plain",
-    )
+    st.subheader("Codigo para macro")
+    sections = split_macro_sections(macro_text)
+    macro_left, macro_right = st.columns(2, gap="large")
+    with macro_left:
+        st.markdown("#### ENERGIA / RESEARCH")
+        research_text = sections.get("Research/Energy", "")
+        st.text_area(
+            "Copiar macro de Energy",
+            research_text,
+            height=180,
+            placeholder="Nenhum upgrade de Energy recomendado.",
+        )
+        st.download_button(
+            "Baixar Energy .txt",
+            data=research_text,
+            file_name="macro_energy_research.txt",
+            mime="text/plain",
+            disabled=not bool(research_text.strip()),
+        )
+    with macro_right:
+        st.markdown("#### PRESTIGE / POWERUPS")
+        prestige_text = sections.get("Prestige/PowerUps", "")
+        st.text_area(
+            "Copiar macro de Prestige",
+            prestige_text,
+            height=180,
+            placeholder="Nenhum upgrade de Prestige recomendado.",
+        )
+        st.download_button(
+            "Baixar Prestige .txt",
+            data=prestige_text,
+            file_name="macro_prestige_powerups.txt",
+            mime="text/plain",
+            disabled=not bool(prestige_text.strip()),
+        )
+
+    with st.expander("Macro combinada", expanded=False):
+        st.text_area("Copiar tudo", macro_text, height=220)
+        st.download_button(
+            "Baixar macro completa .txt",
+            data=macro_text,
+            file_name="macro_clicks.txt",
+            mime="text/plain",
+        )
 
     col_a, col_b = st.columns(2)
     with col_a:
@@ -834,6 +921,11 @@ def main() -> None:
                     st.session_state["ocr_results"] = ocr_results
                     st.session_state["state_rows"] = build_state_rows(ocr_results)
                     st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
+                    st.session_state["last_macro_text"] = None
+                    st.session_state["last_result"] = None
+                    st.session_state["last_objective"] = None
+                    st.session_state["last_locked"] = []
+                    st.session_state["auto_generate_macro"] = True
                     status.update(label="OCR concluido.", state="complete", expanded=False)
                     st.session_state["ocr_notice"] = "OCR concluido."
             except Exception as exc:
@@ -846,29 +938,55 @@ def main() -> None:
     edited_rows = show_editor()
 
     if edited_rows is not None:
-        if st.button("Gerar macro"):
-            state, errors = build_optimizer_state(
-                rows=edited_rows,
-                objective=objective,
-                energy=energy,
-                prestige_points=prestige_points,
-            )
-            if errors:
-                show_validation_errors(errors)
-            else:
+        has_pending = bool((edited_rows["status"] == "review").any())
+        should_auto_generate = bool(st.session_state.pop("auto_generate_macro", False))
+
+        if should_auto_generate and not has_pending:
+            with st.status("Gerando macros automaticamente...", expanded=True) as status:
                 try:
-                    state_path = run_dir / f"estado_{objective.lower()}.json"
-                    result_path = run_dir / f"resultado_{objective.lower()}.json"
-                    macro_path = run_dir / f"macro_clicks_{objective.lower()}.txt"
-                    write_json(state_path, state)
-                    result = run_optimizer(python_bin, state_path, result_path, objective)
-                    macro_text = run_macro_formatter(python_bin, result_path, macro_path)
-                    st.session_state["last_result"] = result
-                    st.session_state["last_objective"] = objective
-                    st.session_state["last_locked"] = state.get("locked_upgrades", [])
-                    render_result(result, macro_text, run_dir)
+                    st.write("Rodando otimizador...")
+                    result, macro_text, errors = generate_macro_result(
+                        rows=edited_rows,
+                        objective=objective,
+                        energy=energy,
+                        prestige_points=prestige_points,
+                        python_bin=python_bin,
+                        run_dir=run_dir,
+                    )
+                    if errors:
+                        status.update(label="Nao foi possivel gerar a macro.", state="error", expanded=True)
+                        show_validation_errors(errors)
+                    elif result is not None and macro_text is not None:
+                        st.session_state["last_macro_text"] = macro_text
+                        status.update(label="Macros geradas.", state="complete", expanded=False)
                 except Exception as exc:
+                    status.update(label="Falha ao gerar macros.", state="error", expanded=True)
                     st.error(str(exc))
+        elif should_auto_generate and has_pending:
+            st.info("A macro nao foi gerada automaticamente porque ainda existem pendencias de OCR.")
+
+        macro_button_label = "Atualizar macro" if st.session_state.get("last_macro_text") else "Gerar macro"
+        if st.button(macro_button_label, disabled=has_pending):
+            try:
+                result, macro_text, errors = generate_macro_result(
+                    rows=edited_rows,
+                    objective=objective,
+                    energy=energy,
+                    prestige_points=prestige_points,
+                    python_bin=python_bin,
+                    run_dir=run_dir,
+                )
+                if errors:
+                    show_validation_errors(errors)
+                elif result is not None and macro_text is not None:
+                    st.session_state["last_macro_text"] = macro_text
+            except Exception as exc:
+                st.error(str(exc))
+
+        stored_result = st.session_state.get("last_result")
+        stored_macro_text = st.session_state.get("last_macro_text")
+        if stored_result is not None and stored_macro_text:
+            render_result(stored_result, stored_macro_text, run_dir)
 
     st.divider()
     st.subheader("Passada residual")
