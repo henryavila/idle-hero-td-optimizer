@@ -43,6 +43,20 @@ SCREEN_ACCENTS = {
     "Research/Energy": "#39d98a",
     "Prestige/PowerUps": "#bb86fc",
 }
+ROMAN_BY_TIER = {
+    1: "I",
+    2: "II",
+    3: "III",
+    4: "IV",
+    5: "V",
+    6: "VI",
+    7: "VII",
+}
+SUMMARY_GROUPS = [
+    ("damage", "Damage", "#ff4b4b"),
+    ("kill_gold", "Kill Gold", "#f2d33d"),
+    ("prestige_power", "Prestige Power", "#bb4dff"),
+]
 
 
 def page_setup() -> None:
@@ -102,6 +116,20 @@ def family_and_tier(key: str) -> tuple[str, int]:
     if not match:
         return key, 0
     return match.group(1), int(match.group(2))
+
+
+def summary_group_for_key(key: str) -> tuple[str, str, str]:
+    if "KillGold" in key:
+        return "kill_gold", "Kill Gold", "#f2d33d"
+    if "PrestigePower" in key:
+        return "prestige_power", "Prestige Power", "#bb4dff"
+    return "damage", "Damage", "#ff4b4b"
+
+
+def upgrade_display_name(key: str) -> str:
+    _, tier = family_and_tier(key)
+    _, label, _ = summary_group_for_key(key)
+    return f"{label} {ROMAN_BY_TIER.get(tier, str(tier))}"
 
 
 def save_upload(upload: Any, path: Path) -> Path:
@@ -406,6 +434,30 @@ def review_level_default(value: Any) -> int:
     return int(value)
 
 
+def level_display(value: Any) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    try:
+        number = int(float(value))
+    except (TypeError, ValueError):
+        return str(value)
+    return f"{number:,}".replace(",", ".")
+
+
+def status_summary(row: pd.Series) -> str:
+    status = str(row["status"])
+    level = level_display(row.get("level"))
+    if status == "available":
+        return f"Lv {level}" if level is not None else "Lv ?"
+    if status == "maxed":
+        return "Maxed"
+    if status == "locked":
+        return "Locked"
+    if status == "review":
+        return "Revisar"
+    return status_label(status)
+
+
 def screen_slug(screen: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", screen.lower()).strip("_")
 
@@ -452,7 +504,6 @@ def render_pending_cards(
         st.caption("Print nao anexado. Os upgrades desta tela ficam como ignore.")
         return
     if screen_pending.empty:
-        st.success(f"{title}: sem pendencias.")
         return
 
     st.info(f"{title}: resolva somente estes {len(screen_pending)} item(ns).")
@@ -487,6 +538,44 @@ def render_pending_cards(
                 elif decision == "locked":
                     level = 0 if pd.isna(level) else level
                 update_row(merged, key, decision, level)
+
+
+def render_state_summary(rows: pd.DataFrame) -> None:
+    st.subheader("Resumo lido")
+    columns = st.columns(2, gap="large")
+    screen_labels = {
+        "Research/Energy": "RESEARCH",
+        "Prestige/PowerUps": "PRESTIGE",
+    }
+
+    for screen, column in zip(SCREEN_ORDER, columns):
+        subset = rows[(rows["screen"] == screen) & (rows["status"] != "ignore")].copy()
+        subset = subset.sort_values(["family", "tier"])
+        with column:
+            st.markdown(f"#### {screen_labels.get(screen, screen)}")
+            if subset.empty or not bool(subset["screen_loaded"].any()):
+                st.caption("Print nao anexado.")
+                continue
+
+            for group_id, group_label, color in SUMMARY_GROUPS:
+                group_rows = [
+                    row
+                    for _, row in subset.iterrows()
+                    if summary_group_for_key(str(row["upgrade_key"]))[0] == group_id
+                ]
+                if not group_rows:
+                    continue
+                st.markdown(
+                    f"""
+                    <div style="margin: 0.75rem 0 0.25rem 0; border-left: 5px solid {color}; padding-left: 0.55rem; font-weight: 750;">
+                        {group_label}
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                for row in sorted(group_rows, key=lambda item: int(item["tier"])):
+                    name = upgrade_display_name(str(row["upgrade_key"]))
+                    st.markdown(f"{name}: **{status_summary(row)}**")
 
 
 def render_inference_summary(rows: pd.DataFrame) -> None:
@@ -551,29 +640,22 @@ def show_editor() -> pd.DataFrame | None:
         st.info("Arraste as imagens e clique em 'Ler imagens' para montar o estado.")
         return None
 
-    st.subheader("Resolver pendencias")
-    counts = rows["status"].value_counts().to_dict()
-    st.caption(
-        f"{counts.get('available', 0)} prontos | "
-        f"{counts.get('locked', 0)} locked | "
-        f"{counts.get('maxed', 0)} maxed | "
-        f"{counts.get('review', 0)} pendencias"
-    )
-
     merged = rows.copy()
     pending = merged[merged["status"] == "review"].copy()
 
-    if pending.empty:
-        st.success("Nada pendente. O estado ja esta pronto para gerar a macro.")
-    else:
+    if not pending.empty:
+        st.subheader("Resolver pendencias")
         st.info(f"Resolva somente os {len(pending)} item(ns) abaixo. O restante ja foi inferido pelo app.")
+        state_version = st.session_state.get("state_version", "v0")
+        for screen in SCREEN_ORDER:
+            screen_pending = pending[pending["screen"] == screen]
+            if screen_pending.empty:
+                continue
+            subset = merged[merged["screen"] == screen]
+            screen_section_header(screen, subset)
+            render_pending_cards(merged, pending, screen, state_version)
 
-    state_version = st.session_state.get("state_version", "v0")
-    for screen in SCREEN_ORDER:
-        subset = merged[merged["screen"] == screen]
-        screen_section_header(screen, subset)
-        render_pending_cards(merged, pending, screen, state_version)
-
+    render_state_summary(merged)
     render_inference_summary(merged)
     render_advanced_editor(merged)
     render_debug_rows(merged)
@@ -704,7 +786,7 @@ def main() -> None:
 
     ocr_notice = st.session_state.pop("ocr_notice", None)
     if ocr_notice:
-        st.success(str(ocr_notice))
+        st.caption(str(ocr_notice))
     ocr_error = st.session_state.pop("ocr_error", None)
     if ocr_error:
         st.error(str(ocr_error))
@@ -753,7 +835,7 @@ def main() -> None:
                     st.session_state["state_rows"] = build_state_rows(ocr_results)
                     st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
                     status.update(label="OCR concluido.", state="complete", expanded=False)
-                    st.session_state["ocr_notice"] = "OCR concluido. Resolva as pendencias, se houver, e gere a macro."
+                    st.session_state["ocr_notice"] = "OCR concluido."
             except Exception as exc:
                 status.update(label="Falha ao processar imagens.", state="error", expanded=True)
                 st.session_state["ocr_error"] = str(exc)
