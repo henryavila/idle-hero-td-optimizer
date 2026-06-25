@@ -1,0 +1,12 @@
+edge_id,from,to,status,code_evidence,model_role
+E01,Research Damage + Prestige Damage,Hero damage permanent factor,confirmed,Hero.getDmgPermEffect(),Direct multiplier M_D
+E02,Research Kill Gold + Prestige Kill Gold,Base gold drop,confirmed,GameManager.getBaseGoldDrop(int),Direct multiplier M_G
+E03,Research Prestige Power,Prestige points permanent factor,confirmed,GlobalMethods.getPrestigePointsPermEffect(bool),Direct multiplier M_PP
+E04,Wave number,Prestige reward,confirmed,GlobalMethods.getPrestigePointsReward(int,bool),Closed formula reward by W
+E05,Enemy killed,Gold resource,confirmed,Enemy.getKillGoldAmt(...) plus BigDouble.op_Addition,Run gold income
+E06,Gold resource,Hero level/levelDps,confirmed,HeroSelectedLevelPanel.clickedLevelButton and clickedLevelAllButton,Policy dependent conversion
+E07,Hero level/levelDps,Hero damage stats,confirmed,Hero.updDamageStats and HeroManager.addHeroLevelStatsAndCheckChallenges,Run DPS increase
+E08,Hero damage/clear speed,Wave progression,confirmed,Hero/Enemy/GameManager wave flow,Implicit combat transition
+E09,Prestige end,Prestige Points resource,confirmed,GameManager.prestigeEnd calls getPrestigePointsReward then BigDouble.op_Addition,Run reward credited
+E10,Prestige Points,Prestige Damage/Kill Gold upgrades,confirmed,UpgradesPowerUpsCell.clickedUpgradeButton and cost formulas,Future M_D/M_G increase
+E11,Energy,Research Damage/Kill Gold/Prestige Power upgrades,confirmed,UpgradesResearchCell.clickedUpgradeButton and cost formulas,Future M_D/M_G/M_PP increase

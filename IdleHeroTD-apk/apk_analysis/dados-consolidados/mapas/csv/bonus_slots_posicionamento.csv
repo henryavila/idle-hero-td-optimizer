@@ -1,0 +1,11 @@
+bonus_id,bonus_name,available_on_maps,upgrade_object_path_id,upgrade_field_name,upgrade_title,upgrade_short_desc,upgrade_long_desc,base_cost,max_level,stat_amt,wave_req,purpose_categories,source_behaviour_path_id,gameobject_path_id
+1,damage,map1|map2|map3|map4|map5|map6|map7,259153,dmg,Damage,+VALUE% Damage,Increases the damage of all heroes.,1,10,25,0,dano,279356,51689
+2,attSpeed,map1|map2|map3|map4|map5|map6|map7,265186,attSpeed,Attack Speed,+VALUE% Attack Speed,Increases the speed at which a hero can attack.,2,10,3,0,dano,279618,56217
+3,range,map1|map2|map3|map4|map5|map6|map7,260663,range,Range,+VALUE% Range,"Increases the distance that a hero can ""see"" to attack an enemy or synergize with other heroes.",2,10,5,0,alcance,279624,56212
+4,killGold,map1|map2|map3|map4|map5|map6|map7,261126,killGold,Kill Gold,+VALUE% Kill Gold,Increases the amount of gold earned from killing enemies.,2,10,25,0,ouro,279623,56213
+5,killExpPct,map1|map2|map3|map4|map5|map6|map7,267932,killExpPct,Rank Exp (%),+VALUE% Rank Exp,Increases the rank exp that a hero earns from killing enemies.,5,10,2,0,exp,279619,56218
+6,skillPowerPct,map1|map2|map3|map4|map5|map6|map7,260496,skillPowerPct,Skill Power (%),+VALUE% Skill Power,Increases the effects of a hero's skill.,5,10,2,0,skill_spell,279621,56215
+7,skillCd,map1|map2|map3|map4|map5|map6|map7,267061,skillCd,Skill Cooldown,-VALUE% Skill Cooldown,Reduces the time a hero must wait before using a skill again.,3,10,3,0,skill_spell,279616,56219
+8,synergyBonus,map1|map2|map3|map4|map5|map6|map7,268995,synergyBonus,Synergy Bonus,+VALUE% Synergy Bonus,Increases the bonus stats earned from active hero synergies.,10,10,1,35000,sinergia,279617,56220
+9,milestoneBonus,map1|map2|map3|map4|map5|map6|map7,262387,milestoneBonus,Milestone Bonus,+VALUE% Milestone Bonus,Increases the bonus stats earned from hero level milestones.,5,10,2,0,milestone,279620,56216
+10,mastery2xExpChance,map1|map2|map3|map4|map5|map6|map7,257990,masteryExp,2x Mastery Exp Chance,+VALUE% 2x Mastery Exp Chance,Increases the chance that a hero gains 2x Skill Mastery exp.,10,10,2,45000,exp|skill_spell,279622,56214

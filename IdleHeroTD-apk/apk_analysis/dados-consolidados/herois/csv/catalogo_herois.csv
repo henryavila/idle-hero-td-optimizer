@@ -1,0 +1,85 @@
+gameobject_path_id,gameobject_name,script_name,behaviour_path_id
+24321,apprentice (battle),Hero,277314
+24321,apprentice (battle),HeroData,277313
+70718,arbalest (medium),Hero,305299
+70718,arbalest (medium),HeroData,305298
+37510,archer (slow),Hero,284600
+37510,archer (slow),HeroData,284599
+57436,assassin (dual daggers fast),Hero,296877
+57436,assassin (dual daggers fast),HeroData,296876
+66541,ballista (slow),Hero,317683
+66541,ballista (slow),HeroData,317682
+76357,battlemage (battle),Hero,309008
+76357,battlemage (battle),HeroData,309007
+35577,berserker (dual axe fast),Hero,289330
+35577,berserker (dual axe fast),HeroData,289329
+50456,captain (medium),Hero,313636
+50456,captain (medium),HeroData,313635
+63040,champion (1h sword medium),Hero,300301
+63040,champion (1h sword medium),HeroData,300300
+10650,chieftan (1h sword slow),Hero,314374
+10650,chieftan (1h sword slow),HeroData,314373
+85218,crusader (medium),Hero,314873
+85218,crusader (medium),HeroData,314872
+77968,deadeye,Hero,310314
+77968,deadeye,HeroData,310313
+86033,dicemaster,Hero,319449
+86033,dicemaster,HeroData,319448
+75730,druid (battle),Hero,285341
+75730,druid (battle),HeroData,285342
+19467,elementalist (support),Hero,274390
+19467,elementalist (support),HeroData,274389
+81140,forester (fast),Hero,314946
+81140,forester (fast),HeroData,314945
+29879,gladiator (1h axe slow),Hero,295526
+29879,gladiator (1h axe slow),HeroData,295525
+71439,hunter (slow),Hero,294026
+71439,hunter (slow),HeroData,294027
+50703,militia (1h sword medium),Hero,306419
+50703,militia (1h sword medium),HeroData,306420
+26880,necromancer (battle),Hero,278537
+26880,necromancer (battle),HeroData,278536
+75441,ninja (dual daggers fast),Hero,312627
+75441,ninja (dual daggers fast),HeroData,312626
+34840,paladin (2h hammer very slow),Hero,283139
+34840,paladin (2h hammer very slow),HeroData,283138
+87791,peacekeeper (1h sword medium),Hero,316916
+87791,peacekeeper (1h sword medium),HeroData,316915
+90035,praetorian,Hero,318494
+90035,praetorian,HeroData,318493
+11012,ranger (medium),Hero,304705
+11012,ranger (medium),HeroData,304704
+87564,rogue (fast),Hero,316887
+87564,rogue (fast),HeroData,316886
+22477,samurai (1h sword fast),Hero,280121
+22477,samurai (1h sword fast),HeroData,280120
+88985,scout (fast),Hero,317780
+88985,scout (fast),HeroData,317779
+24773,skymage (support),Hero,280408
+24773,skymage (support),HeroData,280407
+81813,sniper (slow),Hero,312907
+81813,sniper (slow),HeroData,312906
+79830,sorcerer (support),Hero,311478
+79830,sorcerer (support),HeroData,311477
+46968,sovereign,Hero,309440
+46968,sovereign,HeroData,309439
+14745,spelldancer (support),Hero,271770
+14745,spelldancer (support),HeroData,271769
+64014,templar (support),Hero,304679
+64014,templar (support),HeroData,304678
+54543,titan,Hero,299058
+54543,titan,HeroData,299057
+29349,veteran,Hero,280126
+29349,veteran,HeroData,280125
+70971,viking (1h sword medium),Hero,305535
+70971,viking (1h sword medium),HeroData,305534
+65364,warden (fast),Hero,302043
+65364,warden (fast),HeroData,302042
+40729,warlock (battle),Hero,287059
+40729,warlock (battle),HeroData,287058
+65292,warlord (1h sword medium),Hero,301908
+65292,warlord (1h sword medium),HeroData,301907
+89428,witch (support),Hero,318062
+89428,witch (support),HeroData,318061
+62437,wizard (battle),Hero,300064
+62437,wizard (battle),HeroData,300063

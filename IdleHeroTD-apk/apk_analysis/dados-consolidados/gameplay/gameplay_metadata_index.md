@@ -1,0 +1,1728 @@
+# Gameplay Metadata Index
+
+Total filtered strings: 20478
+
+## Automation
+
+- `AutomationActiveHudCell`
+- `AutomationActiveHudPanel`
+- `AutomationFunctionActiveCell`
+- `AutomationFunctionCell`
+- `AutomationFunctionDetailsMenu`
+- `AutomationInfoPanel`
+- `autoLevelHeroes`
+- `autoWavePerks`
+- `autoPrestige`
+- `autoLevelHeroesCooldown`
+- `autoWavePerksAmount`
+- `autoPrestigeWaveLimit`
+- `autoBossSpawns`
+- `autoBossBonus`
+- `autoBossCooldown`
+- `autoLevelInstantAfterPrestige`
+- `autoLevelHeroesSpendAmount`
+- `AutomationPanel`
+- `AutomationUpgradeActiveCell`
+- `AutomationUpgradeCell`
+- `runeWorkshopCooldown`
+- `isAutomationActive`
+- `functionUnlockedIdleDamage`
+- `functionUnlockedIdleGold`
+- `functionUnlockedIdleEnergy`
+- `functionUnlockedIdleExp`
+- `functionUnlockedHeroLevels`
+- `functionUnlockedWavePerks`
+- `functionUnlockedClaimAd`
+- `functionUnlockedPrestige`
+- `functionUnlockedBosses`
+- `functionUnlockedGoblins`
+- `functionUnlockedProducers`
+- `functionUnlockedTrainers`
+- `functionUnlockedAliens`
+- `functionUnlockedShadows`
+- `functionUnlockedUltimus`
+- `functionUnlockedSupreme`
+- `functionCooldownIdleDamage`
+- `functionCooldownIdleGold`
+- `functionCooldownIdleEnergy`
+- `functionCooldownIdleExp`
+- `functionCooldownHeroLevels`
+- `functionCooldownClaimAd`
+- `functionCooldownBosses`
+- `functionCooldownGoblins`
+- `functionCooldownProducers`
+- `functionCooldownTrainers`
+- `functionCooldownAliens`
+- `functionCooldownShadows`
+- `functionCooldownUltimus`
+- `functionCooldownSupreme`
+- `functionEffectDamageLevel`
+- `functionEffectGoldLevel`
+- `functionEffectEnergyLevel`
+- `functionEffectExpLevel`
+- `functionEffectPrestigeWavePct`
+- `functionEffectPerkPriority`
+- `functionEffectUltimusWave`
+- `functionEffectUltimusType`
+- `functionEffectSupremeWave`
+- `workshopLevelIdleDamageAmount`
+- `workshopLevelIdleDamageStartVal`
+- `workshopLevelIdleDamageMax`
+- `workshopLevelIdleDamageCooldown`
+- `workshopLevelIdleGoldAmount`
+- `workshopLevelIdleGoldStartVal`
+- `workshopLevelIdleGoldMax`
+- `workshopLevelIdleGoldCooldown`
+- `workshopLevelIdleEnergyAmount`
+- `workshopLevelIdleEnergyStartVal`
+- `workshopLevelIdleEnergyMax`
+- `workshopLevelIdleEnergyCooldown`
+- `workshopLevelIdleExpAmount`
+- `workshopLevelIdleExpStartVal`
+- `workshopLevelIdleExpMax`
+- `workshopLevelIdleExpCooldown`
+- `workshopLevelIdleActivationCooldown`
+- `workshopLevelHeroLevelsCooldown`
+- `workshopLevelHeroLevelsSpendAmount`
+- `workshopLevelInstantHeroLevels`
+- `workshopLevelWavePerksAmount`
+- `workshopLevelClaimAdsCooldown`
+- `workshopLevelPrestigeWaves`
+- `workshopLevelBossSpawns`
+- `workshopLevelBossBonus`
+- `workshopLevelBossCooldown`
+- `workshopLevelGoblinSpawns`
+- `workshopLevelGoblinBonus`
+- `workshopLevelGoblinCooldown`
+- `workshopLevelProducerSpawns`
+- `workshopLevelProducerBonus`
+- `workshopLevelProducerCooldown`
+- `workshopLevelTrainerSpawns`
+- `workshopLevelTrainerBonus`
+- `workshopLevelTrainerCooldown`
+- `workshopLevelShadowSpawns`
+- `workshopLevelShadowBonus`
+- `workshopLevelShadowCooldown`
+- `workshopLevelAlienSpawns`
+- `workshopLevelAlienBonus`
+- `workshopLevelAlienCooldown`
+- `workshopLevelUltimusSpawns`
+- `workshopLevelUltimusBonus`
+- `workshopLevelUltimusCooldown`
+- `workshopLevelUltimusTypeSetting`
+- `workshopLevelUltimusWaveSetting`
+- `workshopLevelSupremeSpawns`
+- `workshopLevelSupremeBonus`
+- `workshopLevelSupremeCooldown`
+- `workshopLevelSupremeWaveSetting`
+- `workshopCooldownIdleDamageAmount`
+- `workshopCooldownIdleDamageStartVal`
+- `workshopCooldownIdleDamageMax`
+- `workshopCooldownIdleDamageCooldown`
+- `workshopCooldownIdleGoldAmount`
+- `workshopCooldownIdleGoldStartVal`
+- `workshopCooldownIdleGoldMax`
+- `workshopCooldownIdleGoldCooldown`
+- `workshopCooldownIdleEnergyAmount`
+- `workshopCooldownIdleEnergyStartVal`
+- `workshopCooldownIdleEnergyMax`
+- `workshopCooldownIdleEnergyCooldown`
+- `workshopCooldownIdleExpAmount`
+- `workshopCooldownIdleExpStartVal`
+- `workshopCooldownIdleExpMax`
+- `workshopCooldownIdleExpCooldown`
+- `workshopCooldownHeroLevelsCooldown`
+- `workshopCooldownHeroLevelsSpendAmount`
+- `workshopCooldownInstantHeroLevels`
+- `workshopCooldownWavePerksAmount`
+- `workshopCooldownClaimAdsCooldown`
+- `workshopCooldownPrestigeWaves`
+- `workshopCooldownBossSpawns`
+- `workshopCooldownBossBonus`
+- `workshopCooldownBossCooldown`
+- `workshopCooldownGoblinSpawns`
+- `workshopCooldownGoblinBonus`
+- `workshopCooldownGoblinCooldown`
+- `workshopCooldownProducerSpawns`
+- `workshopCooldownProducerBonus`
+- `workshopCooldownProducerCooldown`
+- `workshopCooldownTrainerSpawns`
+- `workshopCooldownTrainerBonus`
+- `workshopCooldownTrainerCooldown`
+- `workshopCooldownShadowSpawns`
+- `workshopCooldownShadowBonus`
+- `workshopCooldownShadowCooldown`
+- `workshopCooldownAlienSpawns`
+- `workshopCooldownAlienBonus`
+- `workshopCooldownAlienCooldown`
+- `workshopCooldownUltimusSpawns`
+- `workshopCooldownUltimusBonus`
+- `workshopCooldownUltimusCooldown`
+- `workshopCooldownUltimusTypeSetting`
+- `workshopCooldownUltimusWaveSetting`
+- `workshopCooldownSupremeSpawns`
+- `workshopCooldownSupremeBonus`
+- `workshopCooldownSupremeCooldown`
+- `workshopCooldownSupremeWaveSetting`
+- `achWorkshopLevels`
+- `chalWorkshopLevels`
+- `steamAchWorkshopLevels1`
+- `steamAchWorkshopLevels2`
+- `steamAchWorkshopLevels3`
+- `statWorkshopLevels`
+- `mailReadAutomation`
+- `fromAutomation`
+- `isAutoPrestige`
+- `autoBosses`
+- `workshopLevels`
+- `isFunctionUnlocked`
+- `isAutomationLevel`
+- `iconColorAutomation`
+- `automationResources`
+- `automationPrestigeAndBossKills`
+- `automationIcon`
+- `automationCheck`
+- `automationText`
+- `automationNumActiveText`
+- `automationPanel`
+- `clickedAutomationCheckbox`
+- `updAutomationCheckbox`
+- `automationFunctionDetailsMenu`
+- `automationWavePerkPriorityPanel`
+- `automationWorkshopCooldown`
+- `AutomationRuleNotFound`
+- `AutomationInvalidInput`
+- `AutomationInvalidRuleName`
+- `AutomationRuleAlreadyExists`
+- `AutomationRuleLimitExceeded`
+- `|AutomationActiveHudCell`
+- `|AutomationActiveHudPanel`
+- `|AutomationFunctionActiveCell`
+- `|AutomationFunctionCell`
+- `|AutomationFunctionDetailsMenu`
+- `|AutomationInfoPanel`
+- `|AutomationPanel`
+- `|AutomationUpgradeActiveCell`
+- `|AutomationUpgradeCell`
+- `,\Assets\_1scripts\AutomationActiveHudCell.cs`
+- `-\Assets\_1scripts\AutomationActiveHudPanel.cs`
+- `1\Assets\_1scripts\AutomationFunctionActiveCell.cs`
+- `+\Assets\_1scripts\AutomationFunctionCell.cs`
+- `2\Assets\_1scripts\AutomationFunctionDetailsMenu.cs`
+- `(\Assets\_1scripts\AutomationInfoPanel.cs`
+- `$\Assets\_1scripts\AutomationPanel.cs`
+- `0\Assets\_1scripts\AutomationUpgradeActiveCell.cs`
+- `*\Assets\_1scripts\AutomationUpgradeCell.cs`
+- `Automation`
+- `"Automation Panels`
+- `2Unity.WindowsMRAutomation`
+
+## Bosses
+
+- `+{0:n0} Supreme Tokens+{0:n0}%+{0:n0}%`
+- `4) <indent=4%>Activate the <color=orange>Focus Bosses</color> and <color=orange>Boss Skills Only</color> settings.</indent>`
+- `<i><size=28><color=#C8C8C8>(of each color)</color> Tournament rewards!</color> Trophies</color> Ultimus Tokens</color> Weekly Task!`
+- `<color=green>+{0}%</color> Ancient Shadow Runes`
+- `<color=green>+{0}%</color> Exotic Alien Tech`
+- `<color=green>+{0}%</color> Mimic Boss Chance`
+- `<color=green>+{0}%</color> Shadow/Alien HP Skip Chance`
+- `<color=green>+{0}%</color> Ultimus Tokens`
+- `Event begins in: <color=orange><color=grey>N/A</color><color=grey>Off<color=grey>Rank {0} Required<color=grey>Reduce HP (-{0}%)<color=grey>Supreme Spawn Chance: N/A`
+- `Supreme Tech Drop: N/A</color><color=orange><color=orange>(<color=orange>+<color=orange>+{0:n0}</color> Tickets<color=orange>+{0}</color> Weekly Tickets<color=orange></line-height>`
+- `<color=red>Mage</color> heroes deal 50% damage.<color=red>Supreme</color> Chance: <color=yellow>{0:f3}%</color>`
+- `<color=red>Supreme</color> Chance: <color=yellow>{0:n0}%</color>`
+- `<color=red>Supreme</color> Spawn Chance: <color=yellow>{0:n0}%</color>`
+- `<color=red>Supreme</color> Tech Drop: <color=yellow>{0:n0}</color><color=red>Supreme</color> Tech: <color=yellow>{0:n0}</color><color=red>This Tournament has ended!</color>`
+- `<size=48><color=red>[Boss Already Spawned]Please try again later.`
+- `<size=48>PvpBossDataPvpBoss_QQNameQUITQUIT`
+- `Goblinsx</color>`
+- `settingsUltimus`
+- `ultimusWaveCover`
+- `ultimusWaveButtonText`
+- `ultimusTypeCover`
+- `ultimusTypeButtonImage`
+- `ultimusTypeButtonText`
+- `settingsSupreme`
+- `supremeWaveCover`
+- `supremeWaveButtonText`
+- `spawnBosses`
+- `spawnGoblins`
+- `spawnProducers`
+- `spawnTrainers`
+- `spawnShadows`
+- `spawnAliens`
+- `spawnUltimus`
+- `spawnSupreme`
+- `autoBossSpawns`
+- `autoBossBonus`
+- `autoBossCooldown`
+- `autoGoblinSpawns`
+- `autoGoblinBonus`
+- `autoGoblinCooldown`
+- `autoProducerSpawns`
+- `autoProducerBonus`
+- `autoProducerCooldown`
+- `autoTrainerSpawns`
+- `autoTrainerBonus`
+- `autoTrainerCooldown`
+- `autoShadowSpawns`
+- `autoShadowBonus`
+- `autoShadowCooldown`
+- `autoAlienSpawns`
+- `autoAlienBonus`
+- `autoAlienCooldown`
+- `autoUltimusSpawns`
+- `autoUltimusBonus`
+- `autoUltimusCooldown`
+- `autoSupremeSpawns`
+- `autoSupremeBonus`
+- `autoSupremeCooldown`
+- `autoUltimusType`
+- `autoUltimusWave`
+- `autoSupremeWave`
+- `BossPanel`
+- `_bossNum`
+- `bossNum`
+- `expandedSupremeChancePanels`
+- `expandedUltimusPanel`
+- `goblinRectTransform`
+- `goblinGoldenChanceText`
+- `producerRectTransform`
+- `producerGoldenChanceText`
+- `trainerRectTransform`
+- `trainerGoldenChanceText`
+- `shadowRectTransform`
+- `bossAvailablePanel4`
+- `bossLockedPanel4`
+- `shadowSupremeChanceText`
+- `alienRectTransform`
+- `bossAvailablePanel5`
+- `bossLockedPanel5`
+- `alienSupremeChanceText`
+- `ultimusRectTransform`
+- `bossAvailablePanel6`
+- `bossLockedPanel6`
+- `ultimusTokens1`
+- `ultimusTokens2`
+- `ultimusTokens3`
+- `supUltimusPanel`
+- `supUltimusRewardText`
+- `supUltimusSpawnButton`
+- `supUltimusSpawnButtonTitle`
+- `supUltimusSpawnButtonCost`
+- `supUltimusSpawnButtonIcon`
+- `supUltimusSpawnButtonCover`
+- `supUltimusSpawnButtonCoverText`
+- `supUltimusWaveLockedCover`
+- `listBossInfoPanels`
+- `infoSupAlienHp`
+- `infoSupUltimusHp`
+- `BossPanelSidePanel`
+- `goblinHpRectTransform`
+- `goblinHpText`
+- `goblinResAmount`
+- `goblinResDesc`
+- `goblinSpawnButtonText`
+- `goblinNaCover`
+- `goblinNaCoverText`
+- `producerHpRectTransform`
+- `producerHpText`
+- `producerResAmount`
+- `producerResDesc`
+- `producerSpawnButtonText`
+- `producerNaCover`
+- `producerNaCoverText`
+- `trainerHpRectTransform`
+- `trainerHpText`
+- `trainerResAmount`
+- `trainerResDesc`
+- `trainerSpawnButtonText`
+- `trainerNaCover`
+- `trainerNaCoverText`
+- `shadowLockedPanel`
+- `shadowLockedRect`
+- `shadowLockedHpText`
+- `shadowLockedRewardText`
+- `shadowUnlockedPanel`
+- `shadowUnlockedRect`
+- `shadowHpText`
+- `shadowHpReductionButton`
+- `shadowHpReductionButtonTitle`
+- `shadowHpReductionButtonCost`
+- `shadowHpReductionMaxCover`
+- `shadowResAmount`
+- `shadowContinueSpawnCheckbox`
+- `shadowContinueSpawnCheckmark`
+- `shadowSpawnButton`
+- `shadowSpawnButtonTitle`
+- `shadowSpawnButtonCost`
+- `shadowNaCover`
+- `shadowNaCoverText`
+- `didExpandShadowForSupremeChance`
+- `alienLockedPanel`
+- `alienLockedRect`
+- `alienLockedHpText`
+- `alienLockedRewardText`
+- `alienUnlockedPanel`
+- `alienUnlockedRect`
+- `alienHpText`
+- `alienHpReductionButton`
+- `alienHpReductionButtonTitle`
+- `alienHpReductionButtonCost`
+- `alienHpReductionMaxCover`
+- `alienResAmount`
+- `alienContinueSpawnCheckbox`
+- `alienContinueSpawnCheckmark`
+- `alienSpawnButton`
+- `alienSpawnButtonTitle`
+- `alienSpawnButtonCost`
+- `alienNaCover`
+- `alienNaCoverText`
+- `didExpandAlienForSupremeChance`
+- `ultimusLockedPanel`
+- `ultimusLockedRect`
+- `ultimusLockedHpText`
+- `ultimusLockedRewardText`
+- `ultimusUnlockedPanel`
+- `ultimusUnlockedRect`
+- `ultimusHpText`
+- `ultimusSpawnsSlider`
+- `ultimusSpawnsCurrentText`
+- `ultimusSpawnsCooldownText`
+- `ultimusResAmount`
+- `ultimusMeleeSpawnButton`
+- `ultimusMeleeSpawnButtonTitle`
+- `ultimusMeleeSpawnButtonCost`
+- `ultimusMeleeNaCover`
+- `ultimusMeleeNaCoverText`
+- `ultimusMageSpawnButton`
+- `ultimusMageSpawnButtonTitle`
+- `ultimusMageSpawnButtonCost`
+- `ultimusMageNaCover`
+- `ultimusMageNaCoverText`
+- `ultimusRangeSpawnButton`
+- `ultimusRangeSpawnButtonTitle`
+- `ultimusRangeSpawnButtonCost`
+- `ultimusRangeNaCover`
+- `ultimusRangeNaCoverText`
+- `ultimusSupremePanel`
+- `ultimusSupremeSpawnButton`
+- `ultimusSupremeSpawnButtonTitle`
+- `ultimusSupremeSpawnButtonCost`
+- `ultimusSupremeNaCover`
+- `ultimusSupremeNaCoverText`
+- `didExpandUltimusForSupremeChance`
+- `minGoblinHpText`
+- `minGoblinResAmount`
+- `minGoblinSpawnButtonText`
+- `minGoblinNaCover`
+- `minGoblinNaCoverText`
+- `minProducerHpText`
+- `minProducerResAmount`
+- `minProducerSpawnButtonText`
+- `minProducerNaCover`
+- `minProducerNaCoverText`
+- `minTrainerHpText`
+- `minTrainerResAmount`
+- `minTrainerSpawnButtonText`
+- `minTrainerNaCover`
+- `minTrainerNaCoverText`
+- `minShadowHpText`
+- `minShadowResAmount`
+- `minShadowContinueSpawnCheckbox`
+- `minShadowContinueSpawnCheckmark`
+- `minShadowSpawnButton`
+- `minShadowSpawnButtonTitle`
+- `minShadowSpawnButtonCost`
+- `minShadowNaCover`
+- `minShadowNaCoverText`
+- `minShadowWaveLockedCover`
+- `minAlienHpText`
+- `minAlienResAmount`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all Bosses hits
+
+## Heroes
+
+- `<color=orange>(`
+- `<color=orange><size=22><i>(personal effect)</i></size></color>`
+- `<color=orange><size=24><i>(personal effect)</i></size></color>`
+- `<color=orange><size=28><i>(personal effect)</i></size></color>`
+- `<color=red>-50%</color> Damage`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Chance / <color=yellow>+{1}%</color> Ultra Crit Damage</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Damage</size>`
+- `<color=orange></line-height>`
+- `2) <indent=4%>Find the <color=#00FFFF>Druid</color> hero, then click the <color=green>Unlock</color> button to spend energy to unlock him.</indent>`
+- `2) <indent=4%>Find the <color=#00FFFF>Viking</color> hero, then click the <color=green>Unlock</color> button to spend energy to unlock her.</indent>`
+- `2) <indent=4%>Click the <color=green>Open Upgrades Menu</color> button to open this hero's "Attributes" menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Spells</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Spend energy to unlock any <color=orange>Spell</color> of your choice.</indent>`
+- `2) <indent=4%><color=orange>Drag and drop</color> the two heroes to get them close enough to each other so that they are <color=green>within range</color> of each other.</indent>`
+- `2) <indent=4%>Position them such that <color=orange>BOTH</color> heroes are within range of each other at the same time.</indent>`
+- `2) <indent=4%>Position them such that <color=#00FFFF>Militia</color> and <color=#00FFFF>Scout</color> are both within <color=#00FFFF>Viking's</color> range.</indent>`
+- `2) <indent=4%>Select one of your <color=#00FFFF>Hunter</color> heroes from the map to open his <color=orange>Upgrade Menu</color>.</indent>`
+- `3) <indent=4%>Select the <color=#00FFFF>Targeting</color> button to open this hero's targeting settings.</indent>`
+- `4) <indent=4%>Activate the <color=orange>Focus Bosses</color> and <color=orange>Boss Skills Only</color> settings.</indent>`
+- `2) <indent=4%>Position them such that <color=#00FFFF>Assassin</color> and <color=#00FFFF>Forester</color> are both within <color=#00FFFF>Archer's</color> range.</indent>`
+- `2) <indent=4%>Click the <color=orange>Upgrades</color> button in the bottom left corner of the screen.</indent>`
+- `3) <indent=4%>Click the <color=orange>Runes</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> button in the bottom left corner of the screen.</indent>`
+- `<i><color=green><size=25>(for <u>ALL</u> unlocked heroes)</color> Rank Exp</smallcaps>`
+- `</color> {1}<color=green><color=green>+<color=green>+{0:n0}% damage from {1} Heroes</color>`
+- `<color=green>+{0}%</color> Damage`
+- `<color=green>+{0}%</color> Range`
+- `<color=green>+{0}%</color> Super Crit Damage`
+- `<color=green>+{0}%</color> Ultra Crit Damage`
+- `Event begins in: <color=orange><color=grey>N/A</color><color=grey>Off<color=grey>Rank {0} Required<color=grey>Reduce HP (-{0}%)<color=grey>Supreme Spawn Chance: N/A`
+- `Supreme Tech Drop: N/A</color><color=orange><color=orange>(<color=orange>+<color=orange>+{0:n0}</color> Tickets<color=orange>+{0}</color> Weekly Tickets<color=orange></line-height>`
+- `<color=orange>> [{0:T}]</color> {1}`
+- `<color=orange>Claim today's gift</color> to unlock the next day!<color=purple>+<color=purple>+{0} Mastery Points<color=purple>------------------------------`
+- `<color=red>Mage</color> heroes deal 50% damage.<color=red>Supreme</color> Chance: <color=yellow>{0:f3}%</color>`
+- `+<color=yellow><size=48>You are playing an outdated version of Idle Hero TD!</size></color>`
+- `Time Remaining: <color=orange><color=yellow>Lv. {0:n0} / {1}</color>`
+- `</line-height><color=orange>`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Damage Perks)</color></size>`
+- `<size=28><i> (permanent upgrade)<smallcaps><color=red>+{0}%</color> Damage</smallcaps>`
+- `<color=orange><size=20>10% OFF</size></color>Discount!`
+- `<color=orange><size=20>25% OFF</size></color>Discount!`
+- `<color=orange><size=20>50% OFF</size></color>Discount!`
+- `: Draw points not ready yet (path not initialized) or path tween has been killed. Returning NULLDraw range calls`
+- `: Draw ranges`
+- `Favorite Hero:`
+- `Best Hero:`
+- `<color=orange>{0:D1}d {1:D1}hNext Event In:`
+- `Purchase Hero (Purchase Pending, Waiting for confirmation for {0} seconds - Product: {1}Purchase Processing...`
+- `<color=orange>all Rank {0} > <color=#19AFFF>{1}</color>`
+- `<color=orange>Time Remaining:`
+- `<color=orange><i>Ended!Time Remaining:`
+- `Magesx</color>`
+- `{0}Tier 2:</color> {1}All heroes deal {2}+{3}%</color> extra damage for every 1m distance the enemy is from the hero.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> double-shot chance (instantly perform 2 attacks).</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> instant skill cooldown chance after using a skill.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> splash damage.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> super crit chance.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> super crit damage.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}s</color> skill duration.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Burn the enemies, continually dealing the spell's damage every second for {2}{3}s</color>.</color><line-height=140%>`
+- `bgImage`
+- `ultimusTypeButtonImage`
+- `damageBoost`
+- `autoLevelHeroes`
+- `damageBoostAmount`
+- `damageBoostMax`
+- `damageBoostCooldown`
+- `autoLevelHeroesCooldown`
+- `damageBoostStartVal`
+- `autoLevelHeroesSpendAmount`
+- `ultimusMeleeSpawnButton`
+- `ultimusMeleeSpawnButtonTitle`
+- `ultimusMeleeSpawnButtonCost`
+- `ultimusMeleeNaCover`
+- `ultimusMeleeNaCoverText`
+- `ultimusMageSpawnButton`
+- `ultimusMageSpawnButtonTitle`
+- `ultimusMageSpawnButtonCost`
+- `ultimusMageNaCover`
+- `ultimusMageNaCoverText`
+- `ultimusRangeSpawnButton`
+- `ultimusRangeSpawnButtonTitle`
+- `ultimusRangeSpawnButtonCost`
+- `ultimusRangeNaCover`
+- `ultimusRangeNaCoverText`
+- `minUltimusMeleeSpawnButton`
+- `minUltimusMeleeSpawnButtonTitle`
+- `minUltimusMeleeSpawnButtonCost`
+- `minUltimusMeleeNaCover`
+- `minUltimusMeleeNaCoverText`
+- `minUltimusMageSpawnButton`
+- `minUltimusMageSpawnButtonTitle`
+- `minUltimusMageSpawnButtonCost`
+- `minUltimusMageNaCover`
+- `minUltimusMageNaCoverText`
+- `minUltimusRangeSpawnButton`
+- `minUltimusRangeSpawnButtonTitle`
+- `minUltimusRangeSpawnButtonCost`
+- `minUltimusRangeNaCover`
+- `minUltimusRangeNaCoverText`
+- `iapDamage`
+- `listHeroDataPrefabs`
+- `listHeroDataActive`
+- `listHeroDataRemoved`
+- `bpDamage`
+- `pvpBossTrackedDamage_last`
+- `pvpBossTrackedDamage_bestCurr`
+- `communityEventDamageBonus`
+- `giftcodeDamage`
+- `map1Perks_range`
+- `map1Perks_masteryExpRange`
+- `map1Slots_damage`
+- `map1Slots_range`
+- `map2Perks_masteryExpMage`
+- `map2Slots_damage`
+- `map2Slots_range`
+- `map3Perks_range`
+- `map3Slots_damage`
+- `map3Slots_range`
+- `map4Perks_range`
+- `map4Perks_masteryExpMelee`
+- `map4Slots_damage`
+- `map4Slots_range`
+- `map5Perks_damage`
+- `map5Slots_damage`
+- `map5Slots_range`
+- `map6Perks_powerMageSpawns`
+- `map6Perks_powerMageCooldown`
+- `map6Perks_powerMageGoldenChance`
+- `map6Slots_damage`
+- `map6Slots_range`
+- `map7Slots_damage`
+- `map7Slots_range`
+- `map0Preset1HeroData`
+- `map0Preset2HeroData`
+- `map0Preset3HeroData`
+- `map0Preset4HeroData`
+- `map0Preset5HeroData`
+- `map0Preset6HeroData`
+- `map0Preset7HeroData`
+- `map0Preset8HeroData`
+- `map0Preset9HeroData`
+- `map1Preset1HeroData`
+- `map1Preset2HeroData`
+- `map1Preset3HeroData`
+- `map1Preset4HeroData`
+- `map1Preset5HeroData`
+- `map1Preset6HeroData`
+- `map1Preset7HeroData`
+- `map1Preset8HeroData`
+- `map1Preset9HeroData`
+- `map2Preset1HeroData`
+- `map2Preset2HeroData`
+- `map2Preset3HeroData`
+- `map2Preset4HeroData`
+- `map2Preset5HeroData`
+- `map2Preset6HeroData`
+- `map2Preset7HeroData`
+- `map2Preset8HeroData`
+- `map2Preset9HeroData`
+- `map3Preset1HeroData`
+- `map3Preset2HeroData`
+- `map3Preset3HeroData`
+- `map3Preset4HeroData`
+- `map3Preset5HeroData`
+- `map3Preset6HeroData`
+- `map3Preset7HeroData`
+- `map3Preset8HeroData`
+- `map3Preset9HeroData`
+- `map4Preset1HeroData`
+- `map4Preset2HeroData`
+- `map4Preset3HeroData`
+- `map4Preset4HeroData`
+- `map4Preset5HeroData`
+- `map4Preset6HeroData`
+- `map4Preset7HeroData`
+- `map4Preset8HeroData`
+- `map4Preset9HeroData`
+- `map5Preset1HeroData`
+- `map5Preset2HeroData`
+- `map5Preset3HeroData`
+- `map5Preset4HeroData`
+- `map5Preset5HeroData`
+- `map5Preset6HeroData`
+- `map5Preset7HeroData`
+- `map5Preset8HeroData`
+- `map5Preset9HeroData`
+- `map6Preset1HeroData`
+- `map6Preset2HeroData`
+- `map6Preset3HeroData`
+- `map6Preset4HeroData`
+- `map6Preset5HeroData`
+- `map6Preset6HeroData`
+- `map6Preset7HeroData`
+- `map6Preset8HeroData`
+- `map6Preset9HeroData`
+- `spellHeroDmg`
+- `spellHeroAttSpeed`
+- `spellHeroRange`
+- `spellHeroCritChance`
+- `spellHeroCritDmg`
+- `spellHeroSkillCd`
+- `spellHeroSkillPower`
+- `spellHeroDmgCd`
+- `spellHeroAttSpeedCd`
+- `spellHeroRangeCd`
+- `spellHeroCritChanceCd`
+- `spellHeroCritDmgCd`
+- `spellHeroSkillCdCd`
+- `spellHeroSkillPowerCd`
+- `prestigeRange`
+- `prestigeVideoAdUltraCritDamage`
+- `techRange`
+- `supTechDamage3`
+- `ticketDamage1`
+- `ticketDamage2`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all Heroes hits
+
+## Progression
+
+- `<color=red>-35%</color> Rank Exp`
+- `<color=red>-50%</color> Rank Exp`
+- `<size=24><i>(repeats)+<u>+<u>{0:n0}</u>*+=+Battlepass Exp+Mastery Exp+Runes+Tech Scrolls+{0:f1}%`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Find the <color=green>Max Game Speed</color> upgrade at the bottom of the menu, and spend prestige power to upgrade it.</indent>`
+- `2) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Runes</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> button in the bottom left corner of the screen.</indent>`
+- `<color=#00FFFF>+</color> Energy</color> Gems</color> Gold</color> Presets</color> Prestige</color> Prestige Power</color> Rank Exp`
+- `<i><color=green><size=25>(for <u>ALL</u> unlocked heroes)</color> Rank Exp</smallcaps>`
+- `<i><size=28><color=#C8C8C8>(of each color)</color> Tournament rewards!</color> Trophies</color> Ultimus Tokens</color> Weekly Task!`
+- `<size=24><i><color=grey>Tournament ID = </color></i></size></color></size></color></size>`
+- `<color=#00FFFF>Astral Battleground's</color> perks rotate to <color=yellow><color=#19AFFF><color=#19AFFF>+<color=#19AFFF>+{0}</color> Mastery Points<color=#19AFFF></line-height>`
+- `<color=green>+{0}%</color> Ancient Shadow Runes`
+- `<color=green>+{0}%</color> Battlepass Exp`
+- `<color=green>+{0}%</color> Exotic Alien Tech`
+- `<color=green>+{0}%</color> Milestone Bonus`
+- `<color=green>+{0}%</color> Rank Exp`
+- `<color=green>{0}</color> just ranked up  <color=green><size=28><i><u>{1} times</u></i></size></color>!`
+- `<color=green>{0}</color> just ranked up <color=green>{1} {2}</color>!`
+- `<color=green>{0}</color> just reached <color=#19AFFF>Skill Mastery Lv. {1}</color>!`
+- `Event begins in: <color=orange><color=grey>N/A</color><color=grey>Off<color=grey>Rank {0} Required<color=grey>Reduce HP (-{0}%)<color=grey>Supreme Spawn Chance: N/A`
+- `Supreme Tech Drop: N/A</color><color=orange><color=orange>(<color=orange>+<color=orange>+{0:n0}</color> Tickets<color=orange>+{0}</color> Weekly Tickets<color=orange></line-height>`
+- `<color=orange>Claim today's gift</color> to unlock the next day!<color=purple>+<color=purple>+{0} Mastery Points<color=purple>------------------------------`
+- `<color=red>Supreme</color> Tech Drop: <color=yellow>{0:n0}</color><color=red>Supreme</color> Tech: <color=yellow>{0:n0}</color><color=red>This Tournament has ended!</color>`
+- `<size=24><i><color=grey>Tournament ID = <color=red>Your account is banned [<color=white><color=white>Local Time:</color>`
+- `{2}<color=yellow>Max Game Speed (x6)</color> for <color=green><color=yellow>Rank <color=yellow>{0}/{1}</color> Spawns<color><color>{1,4}<comm.ADP.TraceException|ERR|CATCH> '%ls'`
+- `[{0}]<size=48><color=green>+<smallcaps><color=#19AFFF>+<smallcaps><color=#AF00FF>+{0}%</color> Prestige Power</smallcaps>`
+- `<size=48><color=red>[{0}]Error loading tournament data.`
+- `Error message: OldLaceOliveOliveDrabOmitXmlDeclarationOn Wave: <color=yellow>{0}</color> <color=green><i>(+{1:n0})</i></color>`
+- `Rank Rank 2000 RequiredRank and exp are shared between`
+- `<color=orange>all Rank {0} > <color=#19AFFF>{1}</color>`
+- `Rank {0} RequiredRank, exp, and attributes are shared`
+- `RequiredSkip Ads!Skip Enemy Wave HP ProcsSkip cmd counts`
+- `Total Kills: <color=yellow>Total Players: <color=red>N/ATotal Players: <color=yellow>Total WavesTotal triangles`
+- `Wave`
+- `5000Wave Wave 1 - 499 = {0:n0}`
+- `Wave 1000 - 1999 = {0:n0}`
+- `Wave 10k - 15k = {0:n0}`
+- `Wave 15k - 20k = {0:n0}`
+- `Wave 2000 - 3999 = {0:n0}`
+- `Wave 20k - 25k = {0:n0}`
+- `Wave 25k - 30k = {0:n0}`
+- `Wave 30k+ = {0:n0}Wave 4000 - 5999 = {0:n0}`
+- `Wave 500 - 999 = {0:n0}`
+- `Wave 5000Wave 5000`
+- `RequiredWave 5k RequiredWave 6000 - 10k = {0:n0}`
+- `Wave GrinderWave LimitWave Perks <color=grey>(x0)</color>Wave Perks <color=yellow>(x{0})</color>Wave {0:0}Wave {0:0}`
+- `RequiredWave {0:n0}Wave {0:n0}`
+- `prestigeWave`
+- `waveReq`
+- `onPrestigeSliderChanged`
+- `settingsPrestige`
+- `prestigeWaveSlider`
+- `prestigeMaxValue`
+- `prestigeWavePctText`
+- `prestigeWaveMaxText`
+- `prestigeWaveNumText`
+- `settingsWavePerks`
+- `ultimusWaveCover`
+- `ultimusWaveButtonText`
+- `supremeWaveCover`
+- `supremeWaveButtonText`
+- `autoWavePerks`
+- `autoPrestige`
+- `autoWavePerksAmount`
+- `autoPrestigeWaveLimit`
+- `autoLevelInstantAfterPrestige`
+- `autoUltimusWave`
+- `autoSupremeWave`
+- `supUltimusWaveLockedCover`
+- `updWaveChanges`
+- `minShadowWaveLockedCover`
+- `minAlienWaveLockedCover`
+- `minUltimusWaveLockedCover`
+- `minUltimusSupremeWaveLockedCover`
+- `savedHighestWave`
+- `runeTextFree`
+- `runeRewardFree`
+- `runeTextPremium`
+- `runeRewardPremium`
+- `doDateCheck`
+- `onWaveNum`
+- `paidToContinueWave`
+- `lastPrestigeWave`
+- `lastDateCheck`
+- `resPrestigePoints`
+- `resPrestigePoints_big`
+- `resTechPts`
+- `resTechSupremePts`
+- `resMasteryPoints`
+- `iapPrestigePower`
+- `iapBattlepassExp`
+- `iapBattlepassPremium`
+- `iapMasterySmallPack`
+- `iapMasteryLargePack`
+- `iapMasteryPermBundle`
+- `savedEnemyHpBeginningOfWave`
+- `savedEnemyHpBeginningOfWave_big`
+- `runesToClaim`
+- `runeBossHp`
+- `runeBossHp_big`
+- `techBossHp`
+- `techBossHp_big`
+- `supremeRunesToClaim`
+- `supremeRunesToClaim2`
+- `battlepassNormalClaimed`
+- `battlepassPremiumClaimed`
+- `battlepassNormalRepeatLastClaimLevel`
+- `battlepassPremiumRepeatLastClaimLevel`
+- `bpPrestigePower`
+- `tournHighestWave`
+- `communityEventPrestigeBonus`
+- `taskMasterPermPrestige`
+- `giftcodePrestige`
+- `map1Perks_masteryExpRange`
+- `map1Perks_masterySkillPower`
+- `map1Slots_rankExpPct`
+- `map1Slots_milestoneBonus`
+- `map1Slots_mastery2xExpChance`
+- `map2Perks_wavePerkEffect`
+- `map2Perks_masteryExpMage`
+- `map2Perks_masterySkillPower`
+- `map2Slots_rankExpPct`
+- `map2Slots_milestoneBonus`
+- `map2Slots_mastery2xExpChance`
+- `map3Perks_rankExpPct`
+- `map3Perks_milestoneBonus`
+- `map3Slots_rankExpPct`
+- `map3Slots_milestoneBonus`
+- `map3Slots_mastery2xExpChance`
+- `map4Perks_prestigePower`
+- `map4Perks_battlepassExp`
+- `map4Perks_wavePerkWaves`
+- `map4Perks_masteryExpMelee`
+- `map4Slots_rankExpPct`
+- `map4Slots_milestoneBonus`
+- `map4Slots_mastery2xExpChance`
+- `map5Slots_rankExpPct`
+- `map5Slots_milestoneBonus`
+- `map5Slots_mastery2xExpChance`
+- `map6Slots_rankExpPct`
+- `map6Slots_milestoneBonus`
+- `map6Slots_mastery2xExpChance`
+- `map7Slots_rankExpPct`
+- `map7Slots_milestoneBonus`
+- `map7Slots_mastery2xExpChance`
+- `researchDmg1`
+- `researchAttSpeed`
+- `researchCritChance`
+- `researchEnemyHp`
+- `researchDmg2`
+- `researchSuperCritDmg`
+- `researchSynergyBonus`
+- `researchDmg3`
+- `researchDmg4`
+- `researchDmg5`
+- `researchAttSpeed2`
+- `researchDmg6`
+- `researchSkillDuration`
+- `researchSpellDuration`
+- `researchKillGold1`
+- `researchPrestigePower1`
+- `researchKillExp`
+- `researchBonusGoldAmt`
+- `researchBonusExpAmt`
+- `researchKillGold2`
+- `researchPrestigePower2`
+- `researchBossExp`
+- `researchKillGold3`
+- `researchPrestigePower3`
+- `researchKillGold4`
+- `researchPrestigePower4`
+- `researchKillGold5`
+- `researchPrestigePower5`
+- `researchKillGold6`
+- `researchKillExpPct`
+- `researchHoarderCd`
+- `researchProducerCd`
+- `researchTrainerCd`
+- `researchShadowAlienHpReduction`
+- `researchRuneRarity`
+- `researchUltimusSpawns`
+- `researchMimicGold`
+- `researchMimicPrestigePts`
+- `researchTowerLives`
+- `researchGameSpeed`
+- `researchWavePerksUnlocked`
+- `researchWavePerksWaves`
+- `prestigeDmg1`
+- `prestigeRange`
+- `prestigeCritDmg`
+- `prestigeSuperCritChance`
+- `prestigeDmg2`
+- `prestigeBossDmg`
+- `prestigeDmg3`
+- `prestigeDmg4`
+- `prestigeDmg5`
+- `prestigeDmg6`
+- `prestigeSkillCd`
+- `prestigeSpellCd`
+- `prestigeSkillPower`
+- `prestigeVideoAdUltraCritDamage`
+- `prestigeVideoAdUltraCritChance`
+- `prestigeDmg7`
+- `prestigeSkillPower2`
+- `prestigeMasteryPower`
+- `prestigeKillGold1`
+- `prestigeKillExp`
+- `prestigeBonusGoldChance`
+- `prestigeBonusExpChance`
+- `prestigeKillGold2`
+- `prestigeBossGold`
+- `prestigeBonusEnergyChance`
+- `prestigeEnergyIncome`
+- `prestigeKillGold3`
+- `prestigeKillGold4`
+- `prestigeKillGold5`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all Progression hits
+
+## Economy
+
+- `<color=green>Current Bonus: +{0:n0} energy`
+- `<color=green>Current Bonus: +{0:n0}% energy`
+- `<color=green>Current Bonus: +{0:n0}% exp`
+- `<color=green>Current Bonus: +{0:n0}% gold`
+- `<color=green>Current Bonus: +{0:n0}% super exp`
+- `<color=green>Current Bonus: +{0:n0}% ultra gold`
+- `<color=red>-35%</color> Kill Gold`
+- `<color=red>-35%</color> Rank Exp`
+- `<color=red>-50%</color> Rank Exp`
+- `<size=32><color=yellow>+{0}%</color> Ultra Exp Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Exp Chance / <color=yellow>+{1}%</color> Ultra Exp Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Exp Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Gold Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Gold Chance / <color=yellow>+{1}%</color> Ultra Gold Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Gold Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Income Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Income Chance / <color=yellow>+{1}%</color> Ultra Income Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Income Chance</size>`
+- `Introductory Price Information for`
+- `<size=24><i>(repeats)+<u>+<u>{0:n0}</u>*+=+Battlepass Exp+Mastery Exp+Runes+Tech Scrolls+{0:f1}%`
+- `+{0} exp+{0}%`
+- `2) <indent=4%>Find the <color=#00FFFF>Druid</color> hero, then click the <color=green>Unlock</color> button to spend energy to unlock him.</indent>`
+- `2) <indent=4%>Find the <color=#00FFFF>Viking</color> hero, then click the <color=green>Unlock</color> button to spend energy to unlock her.</indent>`
+- `3) <indent=4%>Spend energy to unlock any <color=orange>Spell</color> of your choice.</indent>`
+- `<color=#00FFFF>+</color> Energy</color> Gems</color> Gold</color> Presets</color> Prestige</color> Prestige Power</color> Rank Exp`
+- `<i><color=green><size=25>(for <u>ALL</u> unlocked heroes)</color> Rank Exp</smallcaps>`
+- `<i><size=28><color=#C8C8C8>(of each color)</color> Tournament rewards!</color> Trophies</color> Ultimus Tokens</color> Weekly Task!`
+- `<color=#00E100><color=#00E100>+<color=#00FFFF><color=#00FFFF>+<color=#00FFFF>+{0:n0}</color> Gems<color=#00FFFF>+{0} Gems</color><color=#00FFFF></line-height>`
+- `<color=#FF00FF>+{0}</color> Gems<color=#FF1900><color=#FF2100><color=#FF2100>`
+- `<color=green>+{0}%</color> Battlepass Exp`
+- `<color=green>+{0}%</color> Kill Gold`
+- `<color=green>+{0}%</color> Rank Exp`
+- `<color=green>+{0}%</color> Super Energy Amount`
+- `<color=green>+{0}%</color> Super Energy Chance`
+- `<color=green>+{0}%</color> Super Exp Amount`
+- `<color=green>+{0}%</color> Super Exp Chance`
+- `<color=green>+{0}%</color> Super Gold Amount`
+- `<color=green>+{0}%</color> Super Gold Chance`
+- `<color=green>+{0}%</color> Ultra Energy Amount`
+- `<color=green>+{0}%</color> Ultra Energy Chance`
+- `<color=green>+{0}%</color> Ultra Exp Amount`
+- `<color=green>+{0}%</color> Ultra Exp Chance`
+- `<color=green>+{0}%</color> Ultra Gold Amount`
+- `<color=green>+{0}%</color> Ultra Gold Chance`
+- `<color=green>+{0}</color> Energy Income`
+- `** If you are experiencing issues, please screenshot the relevant section of this log and share it with the developer on Discord **`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Energy Perks)</color></size>`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Exp Perks)</color></size>`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Gold Perks)</color></size>`
+- `<size=28><i> (permanent upgrade)<smallcaps><color=green>+{0:n0}</color> Energy Income</smallcaps>`
+- `<size=28><i> (permanent upgrade)<smallcaps><color=yellow>+{0}%</color> Kill Gold</smallcaps>`
+- `RequiredActive Play BonusActive Play DurationActive Play PremiumActive Play RewardActive tab cannot be null when there are available tabs.Active!`
+- `Rank Rank 2000 RequiredRank and exp are shared between`
+- `Rank {0} RequiredRank, exp, and attributes are shared`
+- `<size=36><color=#40FFFF>[Diamond League]Rewards`
+- `<size=36><color=#C0C0C0>[Silver League]Rewards`
+- `<size=36><color=#CD7F32>[Bronze League]Rewards`
+- `</line-height>{0}Tier 2:</color> {1}Increase super energy income chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase super exp chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase super gold chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `InitializeRewardedAds`
+- `LoadRewardedAd`
+- `_adReward`
+- `ShowRewardedAd`
+- `OnRewardedAdLoadedEvent`
+- `OnRewardedAdLoadFailedEvent`
+- `OnRewardedAdDisplayedEvent`
+- `OnRewardedAdFailedToDisplayEvent`
+- `OnRewardedAdClickedEvent`
+- `OnRewardedAdHiddenEvent`
+- `reward`
+- `OnRewardedAdReceivedRewardEvent`
+- `giveReward`
+- `OnRewardedAdRevenuePaidEvent`
+- `adReward`
+- `gaveReward`
+- `price`
+- `unlockSlotButtonCost`
+- `unlockSlotCost`
+- `unlockButtonCost`
+- `cost`
+- `prestigeMaxValue`
+- `goldBoost`
+- `energyBoost`
+- `expBoost`
+- `goldBoostAmount`
+- `goldBoostMax`
+- `goldBoostCooldown`
+- `energyBoostAmount`
+- `energyBoostMax`
+- `energyBoostCooldown`
+- `expBoostAmount`
+- `expBoostMax`
+- `expBoostCooldown`
+- `goldBoostStartVal`
+- `energyBoostStartVal`
+- `expBoostStartVal`
+- `nextFunctionUnlockCost`
+- `resetButtonCost`
+- `completeButtonCost`
+- `completeCost`
+- `upgradeButtonCost`
+- `naCoverCost`
+- `baseCost`
+- `costMult`
+- `upgradeCost`
+- `openGoldenInfoPanel`
+- `expandedSupremeChancePanels`
+- `expandedGoldenChancePanels`
+- `expandedUltimusPanel`
+- `rewardText1`
+- `rewardDesc1`
+- `goblinGoldenChanceText`
+- `rewardText2`
+- `rewardDesc2`
+- `producerGoldenChanceText`
+- `rewardText3`
+- `rewardDesc3`
+- `trainerGoldenChanceText`
+- `hpButtonCost4`
+- `rewardText4`
+- `spawnButtonCost4`
+- `lockedRewardText4`
+- `hpButtonCost5`
+- `rewardText5`
+- `spawnButtonCost5`
+- `lockedRewardText5`
+- `spawnButtonCost6_a`
+- `spawnButtonCost6_b`
+- `spawnButtonCost6_c`
+- `lockedRewardText6`
+- `supUltimusRewardText`
+- `supUltimusSpawnButtonCost`
+- `expandedPanel`
+- `expandedContent`
+- `didMoveHpRectsForGoldenChance`
+- `shadowLockedRewardText`
+- `shadowHpReductionButtonCost`
+- `shadowSpawnButtonCost`
+- `didExpandShadowForSupremeChance`
+- `alienLockedRewardText`
+- `alienHpReductionButtonCost`
+- `alienSpawnButtonCost`
+- `didExpandAlienForSupremeChance`
+- `ultimusLockedRewardText`
+- `ultimusMeleeSpawnButtonCost`
+- `ultimusMageSpawnButtonCost`
+- `ultimusRangeSpawnButtonCost`
+- `ultimusSupremeSpawnButtonCost`
+- `didExpandUltimusForSupremeChance`
+- `minShadowSpawnButtonCost`
+- `minAlienSpawnButtonCost`
+- `minUltimusMeleeSpawnButtonCost`
+- `minUltimusMageSpawnButtonCost`
+- `minUltimusRangeSpawnButtonCost`
+- `minUltimusSupremeSpawnButtonCost`
+- `goldTextFree`
+- `energyTextFree`
+- `gemTextFree`
+- `goldRewardFree`
+- `energyRewardFree`
+- `gemRewardFree`
+- `runeRewardFree`
+- `goldTextPremium`
+- `energyTextPremium`
+- `gemTextPremium`
+- `goldRewardPremium`
+- `energyRewardPremium`
+- `gemRewardPremium`
+- `runeRewardPremium`
+- `codeListRewards`
+- `codeResultListRewards`
+- `nextRewardText`
+- `resGold`
+- `resGold_big`
+- `resEnergy`
+- `resEnergy_double`
+- `resGems`
+- `iapKillGold`
+- `iapPrestigePower`
+- `iapKillExp`
+- `iapBattlepassExp`
+- `iapGems1`
+- `iapGems2`
+- `iapGems3`
+- `iapGems4`
+- `iapGems5`
+- `mimicGemsToday`
+- `playerExp`
+- `bpKillGold`
+- `bpPrestigePower`
+- `bpKillExp`
+- `bpKillExp_double`
+- `bpEnergyIncome`
+- `tournCanClaimReward`
+- `pvpBossCanClaimReward`
+- `communityEventGoldBonus`
+- `communityEventEnergyBonus`
+- `taskMasterPermGold`
+- `taskMasterPermExp`
+- `taskMasterPermEnergy`
+- `giftcodeKillGold`
+- `giftcodeEnergy`
+- `giftcodeKillExp`
+- `map1Perks_masteryExpRange`
+- `map1Slots_gold`
+- `map1Slots_rankExpPct`
+- `map1Slots_mastery2xExpChance`
+- `map2Perks_masteryExpMage`
+- `map2Slots_gold`
+- `map2Slots_rankExpPct`
+- `map2Slots_mastery2xExpChance`
+- `map3Perks_rankExpPct`
+- `map3Perks_superExpChance`
+- `map3Perks_superExpAmount`
+- `map3Perks_mimicExp`
+- `map3Slots_gold`
+- `map3Slots_rankExpPct`
+- `map3Slots_mastery2xExpChance`
+- `map4Perks_prestigePower`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all Economy hits
+
+## CombatStats
+
+- `<color=green>Current Bonus: +{0:n0}% crit / +{1:n0}% super / +{2:n0}% ultra`
+- `<color=green>Current Bonus: +{0:n0}% crit dmg`
+- `<color=green>Current Bonus: +{0:n0}% dmg`
+- `<color=green>Current Bonus: +{0:n0}% dmg / +{1:n0}% speed`
+- `<color=green>Current Bonus: +{0:n0}% splash dmg`
+- `<color=green>Current Bonus: +{0:n0}% super crit dmg`
+- `<color=green>Target Enemy: {0:n0}% HP`
+- `<color=orange>(`
+- `<color=orange><size=22><i>(personal effect)</i></size></color>`
+- `<color=orange><size=24><i>(personal effect)</i></size></color>`
+- `<color=orange><size=28><i>(personal effect)</i></size></color>`
+- `<color=red>-20%</color> Attack Speed`
+- `<color=red>-50%</color> Damage`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Chance / <color=yellow>+{1}%</color> Ultra Crit Damage</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Damage</size>`
+- `<color=orange></line-height>`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Find the <color=green>Max Game Speed</color> upgrade at the bottom of the menu, and spend prestige power to upgrade it.</indent>`
+- `2) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Spells</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Spend energy to unlock any <color=orange>Spell</color> of your choice.</indent>`
+- `4) <indent=4%>Click the <color=green>Equip</color> button to equip the spell.</indent>`
+- `2) <indent=4%><color=orange>Drag and drop</color> the two heroes to get them close enough to each other so that they are <color=green>within range</color> of each other.</indent>`
+- `2) <indent=4%>Position them such that <color=orange>BOTH</color> heroes are within range of each other at the same time.</indent>`
+- `2) <indent=4%>Position them such that <color=#00FFFF>Militia</color> and <color=#00FFFF>Scout</color> are both within <color=#00FFFF>Viking's</color> range.</indent>`
+- `2) <indent=4%>Select one of your <color=#00FFFF>Hunter</color> heroes from the map to open his <color=orange>Upgrade Menu</color>.</indent>`
+- `4) <indent=4%>Activate the <color=orange>Focus Bosses</color> and <color=orange>Boss Skills Only</color> settings.</indent>`
+- `2) <indent=4%>Position them such that <color=#00FFFF>Assassin</color> and <color=#00FFFF>Forester</color> are both within <color=#00FFFF>Archer's</color> range.</indent>`
+- `2) <indent=4%>Click the <color=orange>Upgrades</color> button in the bottom left corner of the screen.</indent>`
+- `3) <indent=4%>Click the <color=orange>Runes</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Prestige</color> tab button on the left side of the menu.</indent>`
+- `3) <indent=4%>Click the <color=orange>Research</color> tab button on the left side of the menu.</indent>`
+- `2) <indent=4%>Click the <color=orange>Prestige</color> button in the bottom left corner of the screen.</indent>`
+- `</color> {1}<color=green><color=green>+<color=green>+{0:n0}% damage from {1} Heroes</color>`
+- `<color=green>+{0}%</color> Attack Speed`
+- `<color=green>+{0}%</color> Damage`
+- `<color=green>+{0}%</color> Instant Skill Chance`
+- `<color=green>+{0}%</color> Instant Spell Chance`
+- `<color=green>+{0}%</color> Range`
+- `<color=green>+{0}%</color> Shadow/Alien HP Skip Chance`
+- `<color=green>+{0}%</color> Skill Power`
+- `<color=green>+{0}%</color> Super Crit Chance`
+- `<color=green>+{0}%</color> Super Crit Damage`
+- `<color=green>+{0}%</color> Ultra Crit Chance`
+- `<color=green>+{0}%</color> Ultra Crit Damage`
+- `<color=green>-{0}%</color> Skill Cooldown`
+- `<color=green>-{0}%</color> Spell Cooldown`
+- `<color=green>{0}</color> just reached <color=#19AFFF>Skill Mastery Lv. {1}</color>!`
+- `Event begins in: <color=orange><color=grey>N/A</color><color=grey>Off<color=grey>Rank {0} Required<color=grey>Reduce HP (-{0}%)<color=grey>Supreme Spawn Chance: N/A`
+- `Supreme Tech Drop: N/A</color><color=orange><color=orange>(<color=orange>+<color=orange>+{0:n0}</color> Tickets<color=orange>+{0}</color> Weekly Tickets<color=orange></line-height>`
+- `<color=orange>> [{0:T}]</color> {1}`
+- `<color=orange>Claim today's gift</color> to unlock the next day!<color=purple>+<color=purple>+{0} Mastery Points<color=purple>------------------------------`
+- `<color=red>Mage</color> heroes deal 50% damage.<color=red>Supreme</color> Chance: <color=yellow>{0:f3}%</color>`
+- `<color=red>Supreme</color> Spawn Chance: <color=yellow>{0:n0}%</color>`
+- `Time Remaining: <color=orange><color=yellow>Lv. {0:n0} / {1}</color>`
+- `{2}<color=yellow>Max Game Speed (x6)</color> for <color=green><color=yellow>Rank <color=yellow>{0}/{1}</color> Spawns<color><color>{1,4}<comm.ADP.TraceException|ERR|CATCH> '%ls'`
+- `</line-height><color=orange>`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Damage Perks)</color></size>`
+- `<size=32><color=#00FFFF>Astral Battleground</color> <color=yellow>(Skill Perks)</color></size>`
+- `<size=28><i> (permanent upgrade)<smallcaps><color=red>+{0}%</color> Damage</smallcaps>`
+- `Cooldown`
+- `<size=40>Cooldown`
+- `{0:D1}m {1:D1}sCooldown: <color=yellow>Copied style is null. Using StyleNotFound instead.CopyCoralCore Service not initialized.`
+- `<color=orange><size=20>10% OFF</size></color>Discount!`
+- `<color=orange><size=20>25% OFF</size></color>Discount!`
+- `<color=orange><size=20>50% OFF</size></color>Discount!`
+- `: Draw points not ready yet (path not initialized) or path tween has been killed. Returning NULLDraw range calls`
+- `: Draw ranges`
+- `<color=orange>{0:D1}d {1:D1}hNext Event In:`
+- `PATCHPBSZPC-Multilingual-850+euroPENDINGPERMANENTLY_BANNED_USERPERMISSION_DENIEDPE_PIPINGPKCS 7 DataPMPOBoxPORTPOSIXPOSTPREMIUM`
+- `<color=white><size=20>PROPFINDPROPPATCHPROTPUBPUBLICPURCHASEDPUTPUT payload cannot be empty.PWDPWD`
+- `<size=48><color=red>[Boss Already Spawned]Please try again later.`
+- `<color=orange>all Rank {0} > <color=#19AFFF>{1}</color>`
+- `RequiredSkip Ads!Skip Enemy Wave HP ProcsSkip cmd counts`
+- `<color=yellow>Spawn`
+- `<color=yellow>{0:n0}x</color>Spawn <color=yellow>Spawn <color=yellow>{0:n0}x</color>`
+- `<color=orange>Time Remaining:`
+- `<color=orange><i>Ended!Time Remaining:`
+- `{0}Tier 2:</color> {1}All heroes deal {2}+{3}%</color> extra damage for every 1m distance the enemy is from the hero.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> double-shot chance (instantly perform 2 attacks).</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> instant skill cooldown chance after using a skill.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> splash damage.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> super crit chance.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> super crit damage.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}s</color> skill duration.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Burn the enemies, continually dealing the spell's damage every second for {2}{3}s</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase enemy spawn speed by {2}+{3}%</color>.</color><line-height=140%>`
+- `_translationSpeed`
+- `_movementSpeed`
+- `_boostedSpeed`
+- `_boostSpeed`
+- `_enableSpeedAcceleration`
+- `_speedAccelerationFactor`
+- `PlayAnimAttack`
+- `PlayAttack`
+- `<PlayAttack>d__4`
+- `dropdownWithPlaceholder`
+- `RotationSpeeds`
+- `m_textMeshPro`
+- `damageBoost`
+- `spawnBosses`
+- `spawnGoblins`
+- `spawnProducers`
+- `spawnTrainers`
+- `spawnShadows`
+- `spawnAliens`
+- `spawnUltimus`
+- `spawnSupreme`
+- `damageBoostAmount`
+- `damageBoostMax`
+- `damageBoostCooldown`
+- `goldBoostCooldown`
+- `energyBoostCooldown`
+- `expBoostCooldown`
+- `autoLevelHeroesCooldown`
+- `autoClaimAdsCooldown`
+- `autoBossSpawns`
+- `autoBossCooldown`
+- `autoGoblinSpawns`
+- `autoGoblinCooldown`
+- `autoProducerSpawns`
+- `autoProducerCooldown`
+- `autoTrainerSpawns`
+- `autoTrainerCooldown`
+- `autoShadowSpawns`
+- `autoShadowCooldown`
+- `autoAlienSpawns`
+- `autoAlienCooldown`
+- `autoUltimusSpawns`
+- `autoUltimusCooldown`
+- `autoSupremeSpawns`
+- `autoSupremeCooldown`
+- `idleActivationCooldown`
+- `damageBoostStartVal`
+- `spawnButton`
+- `buyHpReduction`
+- `autoSpawnButton`
+- `hpText1`
+- `spawnButtonText1`
+- `hpText2`
+- `spawnButtonText2`
+- `hpText3`
+- `spawnButtonText3`
+- `hpText4`
+- `hpReductionStatText4`
+- `hpButton4`
+- `hpButtonCost4`
+- `hpButtonMaxCover4`
+- `spawnButton4`
+- `spawnButtonTitle4`
+- `spawnButtonCost4`
+- `autoSpawnText4`
+- `lockedHpText4`
+- `hpText5`
+- `hpReductionStatText5`
+- `hpButton5`
+- `hpButtonCost5`
+- `hpButtonMaxCover5`
+- `spawnButton5`
+- `spawnButtonTitle5`
+- `spawnButtonCost5`
+- `autoSpawnText5`
+- `lockedHpText5`
+- `hpText6`
+- `spawnsText6`
+- `spawnsSlider6`
+- `spawnsSliderText`
+- `spawnButton6_a`
+- `spawnButtonTitle6_a`
+- `spawnButtonCost6_a`
+- `spawnButtonIcon6_a`
+- `spawnButtonCover6_a`
+- `spawnButtonCoverText6_a`
+- `spawnButton6_b`
+- `spawnButtonTitle6_b`
+- `spawnButtonCost6_b`
+- `spawnButtonIcon6_b`
+- `spawnButtonCover6_b`
+- `spawnButtonCoverText6_b`
+- `spawnButton6_c`
+- `spawnButtonTitle6_c`
+- `spawnButtonCost6_c`
+- `spawnButtonIcon6_c`
+- `spawnButtonCover6_c`
+- `spawnButtonCoverText6_c`
+- `lockedHpText6`
+- `supUltimusSpawnButton`
+- `supUltimusSpawnButtonTitle`
+- `supUltimusSpawnButtonCost`
+- `supUltimusSpawnButtonIcon`
+- `supUltimusSpawnButtonCover`
+- `supUltimusSpawnButtonCoverText`
+- `infoSupAlienHp`
+- `infoSupUltimusHp`
+- `updKillableHp`
+- `didMoveHpRectsForGoldenChance`
+- `goblinHpRectTransform`
+- `goblinHpText`
+- `goblinSpawnButtonText`
+- `producerHpRectTransform`
+- `producerHpText`
+- `producerSpawnButtonText`
+- `trainerHpRectTransform`
+- `trainerHpText`
+- `trainerSpawnButtonText`
+- `shadowLockedHpText`
+- `shadowHpText`
+- `shadowHpReductionButton`
+- `shadowHpReductionButtonTitle`
+- `shadowHpReductionButtonCost`
+- `shadowHpReductionMaxCover`
+- `shadowContinueSpawnCheckbox`
+- `shadowContinueSpawnCheckmark`
+- `shadowSpawnButton`
+- `shadowSpawnButtonTitle`
+- `shadowSpawnButtonCost`
+- `alienLockedHpText`
+- `alienHpText`
+- `alienHpReductionButton`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all CombatStats hits
+
+## WavePerks
+
+- `: DisabledDisallowedDiscardDiscount!`
+- `AnimationCardOpener`
+- `PlayCardOpen`
+- `PlayCardClosed`
+- `animationCardOpen`
+- `CardPack`
+- `PlayCards`
+- `PlayCardsBack`
+- `settingsWavePerks`
+- `autoWavePerks`
+- `autoWavePerksAmount`
+- `map2Perks_wavePerkEffect`
+- `map4Perks_wavePerkWaves`
+- `researchWavePerksUnlocked`
+- `researchWavePerksWaves`
+- `techWavePerkRerolls`
+- `tournWavePerkEffect`
+- `ticketWavePerkEffect`
+- `ultimusWavePerkWaves`
+- `runeWavePerkWaves`
+- `runeWavePerkEffect`
+- `masteryWavePerksBonus`
+- `wavePerkOnNum`
+- `wavePerkCard1`
+- `wavePerkCard2`
+- `wavePerkCard3`
+- `wavePerkPaidRerolls`
+- `wavePerkFreeRerolls`
+- `wavePerkDamage`
+- `wavePerkKillGold`
+- `wavePerkPrestigePower`
+- `wavePerkCritDmg`
+- `wavePerkEnemyHp`
+- `wavePerkRange`
+- `wavePerkCritChance`
+- `wavePerkAttSpeed`
+- `wavePerkHoarderGold`
+- `wavePerkKillExp`
+- `wavePerkEnergyIncome`
+- `wavePerkSkillPower`
+- `wavePerkSkillCd`
+- `wavePerkSpellCd`
+- `wavePerkProducerEnergy`
+- `wavePerkBattlepassExp`
+- `wavePerkWavesRequired`
+- `wavePerkHoarderSpawns`
+- `wavePerkProducerSpawns`
+- `wavePerkTrainerSpawns`
+- `wavePerkTrainerExp`
+- `wavePerkShadowRunes`
+- `wavePerkAlienTech`
+- `wavePerkUltimusTokens`
+- `wavePerkGameSpeed`
+- `functionUnlockedWavePerks`
+- `workshopLevelWavePerksAmount`
+- `workshopCooldownWavePerksAmount`
+- `chalWavePerksDamage15`
+- `statMostDamageWavePerks`
+- `stat_wavePerks_mostActive`
+- `mailReadWavePerks`
+- `wavePerkEffect`
+- `wavePerkBonus_global`
+- `damageWavePerks15`
+- `getWavePerkWaveRequired`
+- `getWavePerkWaveRequiredGlobalEffect`
+- `getWavePerkEffect`
+- `getNewWavePerks`
+- `numCards`
+- `synergyWavePerkBonusAll`
+- `iconColorWavePerk`
+- `map2_wavePerkEffect`
+- `map4_wavePerkWaves`
+- `wavePerkIcon`
+- `wavePerkCheck`
+- `wavePerkText`
+- `wavePerkNumAvailText`
+- `wavePerkButton`
+- `wavePerkSlider`
+- `wavePerkSliderImage`
+- `wavePerkBorder`
+- `wavePerkIconAnimator`
+- `automationWavePerkPriorityPanel`
+- `wavePerksPanel`
+- `wavePerkUnlocked`
+- `wavePerkWaves`
+- `wavePerkEffects`
+- `wavePerkRerolls`
+- `WavePerkPriorityCell`
+- `WavePerkPriorityPanel`
+- `WavePerksCard`
+- `updCard`
+- `cardNum`
+- `WavePerksCell`
+- `WavePerksPanel`
+- `rerollWavePerks`
+- `confirmRerollWavePerks`
+- `noCardsPanel`
+- `noCardsText`
+- `claimCardsPanel`
+- `listCards`
+- `LoadSceneCards`
+- `DiscardWhiteSpaces`
+- `useExtendedWildcards`
+- `s_wildcardChars`
+- `s_simpleWildcardChars`
+- `Wildcard`
+- `firstWildCardSelector`
+- `ShaderDiscard`
+- `SmartcardLogonRequired`
+- `get_Discard`
+- `set_Discard`
+- `DiscardAttributeName`
+- `m_discard`
+- `Discard`
+- `hasWildcard`
+- `wildcard`
+- `AddWildcard`
+- `wildcards`
+- `derivedAttributeWildcard`
+- `baseAttributeWildcard`
+- `get_AttributeWildcard`
+- `set_AttributeWildcard`
+- `attributeWildcard`
+- `SetAttributeWildcard`
+- `set_HasWildCard`
+- `HasWildCard`
+- `ChangeTypeWildcardDestination`
+- `ChangeTypeWildcardSource`
+- `BurstDiscardAttribute`
+- `discardColor`
+- `discardDepth`
+- `DiscardContents`
+- `DiscardContents_Injected`
+- `DiscardLeastSignificantDecimal`
+- `ExperimentationNoScorecard`
+- `CardChecklist`
+- `CardHeading`
+- `CardImage`
+- `CardList`
+- `CardText`
+- `CreditCard2BackFill`
+- `CreditCard2Back`
+- `CreditCard2FrontFill`
+- `CreditCard2Front`
+- `CreditCardFill`
+- `CreditCard`
+- `SdCardFill`
+- `SdCard`
+- `GpuCard`
+- `PciCard`
+- `_discard`
+- `|AnimationCardOpener`
+- `|WavePerkPriorityCell`
+- `|WavePerkPriorityPanel`
+- `|WavePerksCard`
+- `|WavePerksCell`
+- `|WavePerksPanel`
+- `A\Assets\GUI Kit Pro - Knight Fight\Scripts\AnimationCardOpener.cs`
+- `)\Assets\_1scripts\WavePerkPriorityCell.cs`
+- `*\Assets\_1scripts\WavePerkPriorityPanel.cs`
+- `"\Assets\_1scripts\WavePerksCard.cs`
+- `"\Assets\_1scripts\WavePerksCell.cs`
+- `#\Assets\_1scripts\WavePerksPanel.cs`
+
+## Functions
+
+- `IF ALL THE TYPES ARE IN THE SUPPORT LIST AND YOU STILL GET THIS ERROR, PLEASE REPORT AN ISSUE.The exception contained the following message:`
+- `var unityObject = kongregateUnitySupport.getUnityObject();`
+- `var params=[services.getUserId(), services.getUsername(),`
+- `services.getGameAuthToken()].join('|');`
+- `<color=green>Current Bonus: +{0:n0} energy`
+- `<color=green>Current Bonus: +{0:n0}% crit / +{1:n0}% super / +{2:n0}% ultra`
+- `<color=green>Current Bonus: +{0:n0}% crit dmg`
+- `<color=green>Current Bonus: +{0:n0}% dmg`
+- `<color=green>Current Bonus: +{0:n0}% dmg / +{1:n0}% speed`
+- `<color=green>Current Bonus: +{0:n0}% energy`
+- `<color=green>Current Bonus: +{0:n0}% exp`
+- `<color=green>Current Bonus: +{0:n0}% gold`
+- `<color=green>Current Bonus: +{0:n0}% splash dmg`
+- `<color=green>Current Bonus: +{0:n0}% super crit dmg`
+- `<color=green>Current Bonus: +{0:n0}% super exp`
+- `<color=green>Current Bonus: +{0:n0}% ultra gold`
+- `<color=green>Target Enemy is N/A`
+- `<color=green>Target Enemy: {0:n0}% HP`
+- `<color=red>-35%</color> Rank Exp`
+- `<color=red>-50%</color> Rank Exp`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Chance / <color=yellow>+{1}%</color> Ultra Crit Damage</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Crit Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Exp Chance / <color=yellow>+{1}%</color> Ultra Exp Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Exp Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Gold Chance / <color=yellow>+{1}%</color> Ultra Gold Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Gold Chance</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Income Chance / <color=yellow>+{1}%</color> Ultra Income Amount</size>`
+- `<size=32><color=yellow>+{0}%</color> Ultra Income Chance</size>`
+- `First 100 Bonus Chance: <color=green>+{0:f2}%</color>`
+- `2) <indent=4%><color=orange>Drag and drop</color> the two heroes to get them close enough to each other so that they are <color=green>within range</color> of each other.</indent>`
+- `3) <indent=4%>Select the <color=#00FFFF>Targeting</color> button to open this hero's targeting settings.</indent>`
+- `We apologize for this inconvenience, but please update your game to continue playing.</color>`
+- `<color=#00FFFF>+</color> Energy</color> Gems</color> Gold</color> Presets</color> Prestige</color> Prestige Power</color> Rank Exp`
+- `<i><color=green><size=25>(for <u>ALL</u> unlocked heroes)</color> Rank Exp</smallcaps>`
+- `<i><size=28><color=#C8C8C8>(of each color)</color> Tournament rewards!</color> Trophies</color> Ultimus Tokens</color> Weekly Task!`
+- `<color=green>+{0}%</color> Instant Skill Chance`
+- `<color=green>+{0}%</color> Instant Spell Chance`
+- `<color=green>+{0}%</color> Milestone Bonus`
+- `<color=green>+{0}%</color> Mimic Boss Chance`
+- `<color=green>+{0}%</color> Rank Exp`
+- `<color=green>+{0}%</color> Shadow/Alien HP Skip Chance`
+- `<color=green>+{0}%</color> Super Crit Chance`
+- `<color=green>+{0}%</color> Super Energy Chance`
+- `<color=green>+{0}%</color> Super Exp Chance`
+- `<color=green>+{0}%</color> Super Gold Chance`
+- `<color=green>+{0}%</color> Synergy Bonus`
+- `<color=green>+{0}%</color> Ultra Crit Chance`
+- `<color=green>+{0}%</color> Ultra Energy Chance`
+- `<color=green>+{0}%</color> Ultra Exp Chance`
+- `<color=green>+{0}%</color> Ultra Gold Chance`
+- `<color=green>{0}</color> just ranked up  <color=green><size=28><i><u>{1} times</u></i></size></color>!`
+- `<color=green>{0}</color> just ranked up <color=green>{1} {2}</color>!`
+- `Event begins in: <color=orange><color=grey>N/A</color><color=grey>Off<color=grey>Rank {0} Required<color=grey>Reduce HP (-{0}%)<color=grey>Supreme Spawn Chance: N/A`
+- `<color=red>Mage</color> heroes deal 50% damage.<color=red>Supreme</color> Chance: <color=yellow>{0:f3}%</color>`
+- `<color=red>Supreme</color> Chance: <color=yellow>{0:n0}%</color>`
+- `<color=red>Supreme</color> Spawn Chance: <color=yellow>{0:n0}%</color>`
+- `{2}<color=yellow>Max Game Speed (x6)</color> for <color=green><color=yellow>Rank <color=yellow>{0}/{1}</color> Spawns<color><color>{1,4}<comm.ADP.TraceException|ERR|CATCH> '%ls'`
+- `<size=28><i> (permanent upgrade)<smallcaps>Level</smallcaps>`
+- `RequiredActive Play BonusActive Play DurationActive Play PremiumActive Play RewardActive tab cannot be null when there are available tabs.Active!`
+- `An error occured while trying to get the project configuration for services.`
+- `: Clip update total`
+- `{0}%Max Max BonusMax LimitMax Limit`
+- `: Mesh allocs updated`
+- `Oh, something went wrong while getting the hash!`
+- `: Opacity update roots`
+- `: Opacity update total`
+- `<size=48><color=red>[Boss Already Spawned]Please try again later.`
+- `Rank Rank 2000 RequiredRank and exp are shared between`
+- `<color=orange>all Rank {0} > <color=#19AFFF>{1}</color>`
+- `Rank {0} RequiredRank, exp, and attributes are shared`
+- `<size=36><color=#40FFFF>[Diamond League]Rewards`
+- `<size=36><color=#C0C0C0>[Silver League]Rewards`
+- `<size=36><color=#CD7F32>[Bronze League]Rewards`
+- `<color=yellow>Spawn`
+- `<color=yellow>{0:n0}x</color>Spawn <color=yellow>Spawn <color=yellow>{0:n0}x</color>`
+- `Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.FixedUpdate);This exception can probably be fixed by adding "CancelWith(gameObject)" when you run the coroutine.`
+- `Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.LateUpdate);This exception can probably be fixed by adding "CancelWith(gameObject)" when you run the coroutine.`
+- `: Visual update roots`
+- `: Visual update total`
+- `: Xform update total`
+- `<color=grey>{0}</color>[AUTH] failed to re-update server username:`
+- `{0}Tier 2:</color> {1}All heroes deal {2}+{3}%</color> extra damage for every 1m distance the enemy is from the hero.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> double-shot chance (instantly perform 2 attacks).</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> instant skill cooldown chance after using a skill.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}All heroes gain {2}+{3}%</color> super crit chance.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Burn the enemies, continually dealing the spell's damage every second for {2}{3}s</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase enemy spawn speed by {2}+{3}%</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase super energy income chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase super exp chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `</line-height>{0}Tier 2:</color> {1}Increase super gold chance by {2}+{3}%</color>.</color><line-height=140%>`
+- `CalculateCurrentIncrease`
+- `Update`
+- `InitializeRewardedAds`
+- `LoadRewardedAd`
+- `_adReward`
+- `ShowRewardedAd`
+- `OnRewardedAdLoadedEvent`
+- `OnRewardedAdLoadFailedEvent`
+- `OnRewardedAdDisplayedEvent`
+- `OnRewardedAdFailedToDisplayEvent`
+- `OnRewardedAdClickedEvent`
+- `OnRewardedAdHiddenEvent`
+- `reward`
+- `OnRewardedAdReceivedRewardEvent`
+- `giveReward`
+- `OnRewardedAdRevenuePaidEvent`
+- `adReward`
+- `gaveReward`
+- `updSliders`
+- `updPanel`
+- `_updUiSizeAfterFrame`
+- `updTimer`
+- `<updPanel>b__11_0`
+- `<_updUiSizeAfterFrame>d__12`
+- `updCell`
+- `updSlider`
+- `unlockSlotButtonCost`
+- `unlockSlotCost`
+- `unlockButtonCost`
+- `cost`
+- `autoLevelHeroes`
+- `spawnBosses`
+- `spawnGoblins`
+- `spawnProducers`
+- `spawnTrainers`
+- `spawnShadows`
+- `spawnAliens`
+- `spawnUltimus`
+- `spawnSupreme`
+- `autoLevelHeroesCooldown`
+- `autoBossSpawns`
+- `autoBossBonus`
+- `autoGoblinSpawns`
+- `autoGoblinBonus`
+- `autoProducerSpawns`
+- `autoProducerBonus`
+- `autoTrainerSpawns`
+- `autoTrainerBonus`
+- `autoShadowSpawns`
+- `autoShadowBonus`
+- `autoAlienSpawns`
+- `autoAlienBonus`
+- `autoUltimusSpawns`
+- `autoUltimusBonus`
+- `autoSupremeSpawns`
+- `autoSupremeBonus`
+- `autoLevelInstantAfterPrestige`
+- `autoLevelHeroesSpendAmount`
+- `nextFunctionUnlockCost`
+- `resetButtonCost`
+- `completeButtonCost`
+- `completeCost`
+- `upgradeButtonCost`
+- `naCoverCost`
+- `currLevel`
+- `maxLevel`
+- `baseCost`
+- `costMult`
+- `upgradeCost`
+- `spawnButton`
+- `autoSpawnButton`
+- `expandedSupremeChancePanels`
+- `expandedGoldenChancePanels`
+- `rewardText1`
+- `rewardDesc1`
+- `spawnButtonText1`
+- `goblinGoldenChanceText`
+- `rewardText2`
+- `rewardDesc2`
+- `spawnButtonText2`
+- `producerGoldenChanceText`
+- `rewardText3`
+- `rewardDesc3`
+- `spawnButtonText3`
+- `trainerGoldenChanceText`
+- `hpButtonCost4`
+- `rewardText4`
+- `spawnButton4`
+- `spawnButtonTitle4`
+- `spawnButtonCost4`
+- `autoSpawnText4`
+- `lockedRewardText4`
+- `shadowSupremeChanceText`
+- `hpButtonCost5`
+- `rewardText5`
+- `spawnButton5`
+- `spawnButtonTitle5`
+- `spawnButtonCost5`
+- `autoSpawnText5`
+- `lockedRewardText5`
+- `alienSupremeChanceText`
+- `spawnsText6`
+- `spawnsSlider6`
+- `spawnsSliderText`
+- `spawnButton6_a`
+- `spawnButtonTitle6_a`
+- `spawnButtonCost6_a`
+- `spawnButtonIcon6_a`
+- `spawnButtonCover6_a`
+- `spawnButtonCoverText6_a`
+- `spawnButton6_b`
+- `spawnButtonTitle6_b`
+- `spawnButtonCost6_b`
+- `spawnButtonIcon6_b`
+- `spawnButtonCover6_b`
+- `spawnButtonCoverText6_b`
+- `spawnButton6_c`
+- `spawnButtonTitle6_c`
+- `spawnButtonCost6_c`
+- `spawnButtonIcon6_c`
+- `spawnButtonCover6_c`
+- `spawnButtonCoverText6_c`
+- `lockedRewardText6`
+- `supUltimusRewardText`
+- `supUltimusSpawnButton`
+- `supUltimusSpawnButtonTitle`
+- `supUltimusSpawnButtonCost`
+- `supUltimusSpawnButtonIcon`
+- `supUltimusSpawnButtonCover`
+- `supUltimusSpawnButtonCoverText`
+- ... truncated; see `csv/gameplay_metadata_terms.csv` for all Functions hits

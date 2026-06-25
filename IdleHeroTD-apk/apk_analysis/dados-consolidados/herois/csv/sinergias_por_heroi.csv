@@ -1,0 +1,673 @@
+hero_id,hero_name,hero_class,hero_rarity,synergy_num,tier,rank_required,requirements,active_heroes_needed_including_self,base_bonus_value,base_bonus_raw,base_bonus_text,effect_stat,effect_with_value,effect_scope,effect_key,synergy_upgrade_id,required_hero_ids,source
+0,Militia,0,1,1,1,0,Apprentice,2,10,10.0,+10%,Damage,+10% Damage,global,damage_global,0,12,Hero MonoBehaviour synergy fields
+0,Militia,0,1,2,1,0,Viking + Scout,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,personal,skillCd_personal,12,1|24,Hero MonoBehaviour synergy fields
+0,Militia,0,1,3,2,15,Peacekeeper,2,100,100.0,+100%,Kill Gold,+100% Kill Gold,personal,killGold_personal,15,4,Hero MonoBehaviour synergy fields
+0,Militia,0,1,4,2,15,Druid + Battlemage,3,60,60.0,+60%,Damage,+60% Damage,global,damage_global,0,13|18,Hero MonoBehaviour synergy fields
+0,Militia,0,1,5,3,50,Gladiator,2,16,16.0,+16%,Crit Chance,+16% Crit Chance,global,critChance_global,5,7,Hero MonoBehaviour synergy fields
+0,Militia,0,1,6,3,50,Warlock + Captain,3,100,100.0,+100%,Attack Speed,+100% Attack Speed,personal,attSpeed_personal,3,21|34,Hero MonoBehaviour synergy fields
+0,Militia,0,1,7,4,100,Witch,2,1,1.0,+1,Energy Income,+1 Energy Income,global,energyIncome_global,40,15,Hero MonoBehaviour synergy fields
+0,Militia,0,1,8,4,100,Champion + Crusader,3,6,6.0,+6%,Gold Super Chance,+6% Gold Super Chance,global,goldSuperChance_global,24,10|33,Hero MonoBehaviour synergy fields
+0,Militia,0,1,9,5,150,Praetorian,2,10,10.0,+10%,Exp Super Amount,+10% Exp Super Amount,global,expSuperAmount_global,33,36,Hero MonoBehaviour synergy fields
+0,Militia,0,1,10,5,150,Necromancer + Arbalest,3,25,25.0,+25%,Super Crit Chance,+25% Super Crit Chance,personal,superCritChance_personal,17,23|29,Hero MonoBehaviour synergy fields
+0,Militia,0,1,11,6,250,Warden,2,500,500.0,+500%,Kill Gold,+500% Kill Gold,personal,killGold_personal,15,35,Hero MonoBehaviour synergy fields
+0,Militia,0,1,12,6,250,Titan + Archer,3,600,600.0,+600%,Damage,+600% Damage,personal,damage_personal,1,37|27,Hero MonoBehaviour synergy fields
+0,Militia,0,1,13,7,500,Ballista,2,20,20.0,+20%,Exp Super Amount,+20% Exp Super Amount,global,expSuperAmount_global,33,32,Hero MonoBehaviour synergy fields
+0,Militia,0,1,14,7,500,Spelldancer + Arbalest,3,8,8.0,+8,Energy Income,+8 Energy Income,global,energyIncome_global,40,19|29,Hero MonoBehaviour synergy fields
+0,Militia,0,1,15,8,1000,Gladiator + Sorcerer + Captain,4,10,10.0,+10,Energy Income,+10 Energy Income,global,energyIncome_global,40,7|14|34,Hero MonoBehaviour synergy fields
+0,Militia,0,1,16,8,1000,Ninja + Arbalest + Captain,4,75,75.0,+75%,Energy Ultra Amount,+75% Energy Ultra Amount,global,energyUltraAmount_global,39,2|29|34,Hero MonoBehaviour synergy fields
+1,Viking,0,1,1,1,0,Druid,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,personal,attSpeed_personal,3,13,Hero MonoBehaviour synergy fields
+1,Viking,0,1,2,1,0,Militia + Scout,3,3,3.0,+3%,Kill Exp,+3% Kill Exp,global,killExp_global,14,0|24,Hero MonoBehaviour synergy fields
+1,Viking,0,1,3,2,15,Spelldancer,2,100,100.0,+100%,Crit Damage,+100% Crit Damage,personal,critDmg_personal,8,19,Hero MonoBehaviour synergy fields
+1,Viking,0,1,4,2,15,Assassin + Arbalest,3,7,7.0,-7%,Skill Cooldown,-7% Skill Cooldown,global,skillCd_global,11,3|29,Hero MonoBehaviour synergy fields
+1,Viking,0,1,5,3,50,Hunter,2,1,1.0,+1%,Skill Power,+1% Skill Power,global,skillPower_global,41,25,Hero MonoBehaviour synergy fields
+1,Viking,0,1,6,3,50,Sorcerer + Dicemaster,3,250,250.0,+250%,Damage,+250% Damage,personal,damage_personal,1,14|39,Hero MonoBehaviour synergy fields
+1,Viking,0,1,7,4,100,Gladiator,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,personal,superCritDmg_personal,19,7,Hero MonoBehaviour synergy fields
+1,Viking,0,1,8,4,100,Titan + Necromancer,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,global,killGold_global,13,37|23,Hero MonoBehaviour synergy fields
+1,Viking,0,1,9,5,150,Deadeye,2,8,8.0,+8%,Super Crit Chance,+8% Super Crit Chance,global,superCritChance_global,16,40,Hero MonoBehaviour synergy fields
+1,Viking,0,1,10,5,150,Samurai + Elementalist,3,1250,1250.0,+1250%,Gold Super Amount,+1250% Gold Super Amount,personal,goldSuperAmount_personal,27,5|17,Hero MonoBehaviour synergy fields
+1,Viking,0,1,11,6,250,Chieftain,2,250,250.0,+250%,Damage,+250% Damage,global,damage_global,0,9,Hero MonoBehaviour synergy fields
+1,Viking,0,1,12,6,250,Ranger + Crusader,3,6,6.0,+6%,Skill Power,+6% Skill Power,global,skillPower_global,41,28|33,Hero MonoBehaviour synergy fields
+1,Viking,0,1,13,7,500,Warlord,2,1400,1400.0,+1400%,Ultra Boss Damage,+1400% Ultra Boss Damage,global,ultraBossDmg_global,49,11,Hero MonoBehaviour synergy fields
+1,Viking,0,1,14,7,500,Forester + Veteran,3,8,8.0,+8%,Skill Power,+8% Skill Power,global,skillPower_global,41,26|41,Hero MonoBehaviour synergy fields
+1,Viking,0,1,15,8,1000,Wizard + Necromancer + Ballista,4,40,40.0,+40%,Boss Exp,+40% Boss Exp,global,bossExp_global,44,16|23|32,Hero MonoBehaviour synergy fields
+1,Viking,0,1,16,8,1000,Archer + Ballista + Veteran,4,15,15.0,+15%,Skill Power,+15% Skill Power,global,skillPower_global,41,27|32|41,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,1,1,0,Assassin,2,25,25.0,+25%,Damage,+25% Damage,personal,damage_personal,1,3,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,2,1,0,Sorcerer + Witch,3,50,50.0,+50%,Crit Damage,+50% Crit Damage,personal,critDmg_personal,8,14|15,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,3,2,15,Rogue,2,8,8.0,+8%,Crit Chance,+8% Crit Chance,global,critChance_global,5,31,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,4,2,15,Berserker + Scout,3,6,6.0,+6,Skill Duration,+6 Skill Duration,personal,skillDuration_personal,10,8|24,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,5,3,50,Wizard,2,80,80.0,+80%,Kill Gold,+80% Kill Gold,global,killGold_global,13,16,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,6,3,50,Archer + Rogue,3,30,30.0,+30%,Attack Speed,+30% Attack Speed,global,attSpeed_global,2,27|31,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,7,4,100,Praetorian,2,125,125.0,+125%,Damage,+125% Damage,global,damage_global,0,36,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,8,4,100,Peacekeeper + Spelldancer,3,4,4.0,+4%,Exp Super Chance,+4% Exp Super Chance,global,expSuperChance_global,32,4|19,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,9,5,150,Ranger,2,3,3.0,+3%,Skill Power,+3% Skill Power,global,skillPower_global,41,28,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,10,5,150,Chieftain + Veteran,3,4,4.0,+4%,Energy Super Chance,+4% Energy Super Chance,global,energySuperChance_global,36,9|41,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,11,6,250,Apprentice,2,2,2.0,+2%,Gold Ultra Chance,+2% Gold Ultra Chance,global,goldUltraChance_global,28,12,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,12,6,250,Gladiator + Warlock,3,600,600.0,+600%,Kill Gold,+600% Kill Gold,personal,killGold_personal,15,7|21,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,13,7,500,Arbalest,2,5,5.0,+5%,Energy Super Chance,+5% Energy Super Chance,global,energySuperChance_global,36,29,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,14,7,500,Assassin + Rogue,3,14,14.0,+14%,Gold Super Chance,+14% Gold Super Chance,global,goldSuperChance_global,24,3|31,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,15,8,1000,Assassin + Elementalist + Warden,4,2250,2250.0,+2250%,Boss Gold,+2250% Boss Gold,personal,bossGold_personal,42,3|17|35,Hero MonoBehaviour synergy fields
+2,Ninja,0,2,16,8,1000,Militia + Arbalest + Captain,4,15,15.0,+15,Energy Income,+15 Energy Income,global,energyIncome_global,40,0|29|34,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,1,1,0,Ninja,2,5,5.0,+5%,Crit Chance,+5% Crit Chance,personal,critChance_personal,6,2,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,2,1,0,Forester + Archer,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,personal,skillCd_personal,12,26|27,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,3,2,15,Gladiator,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,7,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,4,2,15,Viking + Arbalest,3,150,150.0,+150%,Crit Damage,+150% Crit Damage,personal,critDmg_personal,8,1|29,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,5,3,50,Ranger,2,200,200.0,+200%,Damage,+200% Damage,personal,damage_personal,1,28,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,6,3,50,Apprentice + Spelldancer,3,250,250.0,+250%,Kill Gold,+250% Kill Gold,personal,killGold_personal,15,12|19,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,7,4,100,Peacekeeper,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,4,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,8,4,100,Berserker + Sorcerer,3,2,2.0,+2,Energy Income,+2 Energy Income,global,energyIncome_global,40,8|14,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,9,5,150,Dicemaster,2,175,175.0,+175%,Damage,+175% Damage,global,damage_global,0,39,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,10,5,150,Hunter + Captain,3,625,625.0,+625%,Super Crit Damage,+625% Super Crit Damage,global,superCritDmg_global,18,25|34,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,11,6,250,Skymage,2,2,2.0,+2%,Exp Ultra Chance,+2% Exp Ultra Chance,global,expUltraChance_global,34,20,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,12,6,250,Warlord + Wizard,3,7,7.0,+7%,Ultra Crit Chance,+7% Ultra Crit Chance,personal,ultraCritChance_personal,21,11|16,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,13,7,500,Deadeye,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,40,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,14,7,500,Ninja + Rogue,3,1600,1600.0,+1600%,Ultra Boss Damage,+1600% Ultra Boss Damage,global,ultraBossDmg_global,49,2|31,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,15,8,1000,Ninja + Elementalist + Warden,4,3000,3000.0,+3000%,Ultra Crit Damage,+3000% Ultra Crit Damage,global,ultraCritDmg_global,22,2|17|35,Hero MonoBehaviour synergy fields
+3,Assassin,0,2,16,8,1000,Praetorian + Wizard + Spelldancer,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,36|16|19,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,1,1,0,Ranger,2,10,10.0,+10%,Kill Gold,+10% Kill Gold,global,killGold_global,13,28,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,2,1,0,Samurai + Wizard,3,20,20.0,+20%,Crit Damage,+20% Crit Damage,global,critDmg_global,7,5|16,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,3,2,15,Militia,2,5,5.0,+5%,Skill Power,+5% Skill Power,personal,skillPower_personal,9,0,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,4,2,15,Warlord + Ballista,3,60,60.0,+60%,Damage,+60% Damage,global,damage_global,0,11|32,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,5,3,50,Chieftain,2,8,8.0,-8%,Skill Cooldown,-8% Skill Cooldown,global,skillCd_global,11,9,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,6,3,50,Berserker + Forester,3,1,1.0,+1%,Exp Super Chance,+1% Exp Super Chance,global,expSuperChance_global,32,8|26,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,7,4,100,Assassin,2,300,300.0,+300%,Damage,+300% Damage,personal,damage_personal,1,3,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,8,4,100,Ninja + Spelldancer,3,7,7.0,+7%,Exp Super Amount,+7% Exp Super Amount,global,expSuperAmount_global,33,2|19,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,9,5,150,Witch,2,400,400.0,+400%,Kill Gold,+400% Kill Gold,personal,killGold_personal,15,15,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,10,5,150,Apprentice + Rogue,3,4,4.0,+4%,Skill Power,+4% Skill Power,global,skillPower_global,41,12|31,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,11,6,250,Scout,2,2000,2000.0,+2000%,Ultra Crit Damage,+2000% Ultra Crit Damage,global,ultraCritDmg_global,22,24,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,12,6,250,Sovereign + Warden,3,3,3.0,+3%,Energy Ultra Chance,+3% Energy Ultra Chance,global,energyUltraChance_global,38,38|35,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,13,7,500,Captain,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,34,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,14,7,500,Gladiator + Warlord,3,20,20.0,+20%,Energy Super Amount,+20% Energy Super Amount,global,energySuperAmount_global,37,7|11,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,15,8,1000,Warlord + Apprentice + Arbalest,4,1000,1000.0,+1000%,Damage,+1000% Damage,personal,damage_personal,1,11|12|29,Hero MonoBehaviour synergy fields
+4,Peacekeeper,0,3,16,8,1000,Gladiator + Berserker + Warden,4,3,3.0,+3%,Alien Tech,+3% Alien Tech,global,alienTech_global,47,7|8|35,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,1,1,0,Arbalest,2,10,10.0,+10%,Damage,+10% Damage,global,damage_global,0,29,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,2,1,0,Peacekeeper + Wizard,3,10,10.0,+10%,Crit Chance,+10% Crit Chance,personal,critChance_personal,6,4|16,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,3,2,15,Witch,2,5,5.0,+5,Skill Duration,+5 Skill Duration,personal,skillDuration_personal,10,15,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,4,2,15,Skymage + Templar,3,60,60.0,+60%,Kill Gold,+60% Kill Gold,global,killGold_global,13,20|22,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,5,3,50,Deadeye,2,80,80.0,+80%,Crit Damage,+80% Crit Damage,global,critDmg_global,7,40,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,6,3,50,Necromancer + Hunter,3,100,100.0,+100%,Attack Speed,+100% Attack Speed,personal,attSpeed_personal,3,23|25,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,7,4,100,Ballista,2,2,2.0,+2%,Exp Super Chance,+2% Exp Super Chance,global,expSuperChance_global,32,32,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,8,4,100,Scout + Warden,3,950,950.0,+950%,Super Crit Damage,+950% Super Crit Damage,personal,superCritDmg_personal,19,24|35,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,9,5,150,Berserker,2,8,8.0,+8%,Gold Super Chance,+8% Gold Super Chance,global,goldSuperChance_global,24,8,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,10,5,150,Viking + Elementalist,3,450,450.0,+450%,Damage,+450% Damage,personal,damage_personal,1,1|17,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,11,6,250,Praetorian,2,5,5.0,+5,Energy Income,+5 Energy Income,global,energyIncome_global,40,36,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,12,6,250,Paladin + Champion,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,6|10,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,13,7,500,Gladiator,2,5,5.0,+5%,Energy Super Chance,+5% Energy Super Chance,global,energySuperChance_global,36,7,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,14,7,500,Druid + Captain,3,8,8.0,+8%,Skill Power,+8% Skill Power,global,skillPower_global,41,13|34,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,15,8,1000,Berserker + Forester + Ranger,4,12,12.0,+12%,Skill Power,+12% Skill Power,global,skillPower_global,41,8|26|28,Hero MonoBehaviour synergy fields
+5,Samurai,0,3,16,8,1000,Paladin + Champion + Battlemage,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,6|10|18,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,1,1,0,Gladiator,2,2,2.0,+2%,Skill Power,+2% Skill Power,personal,skillPower_personal,9,7,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,2,1,0,Spelldancer + Sniper,3,50,50.0,+50%,Kill Gold,+50% Kill Gold,personal,killGold_personal,15,19|30,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,3,2,15,Scout,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,24,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,4,2,15,Sorcerer + Crusader,3,10,10.0,+10%,Kill Exp,+10% Kill Exp,global,killExp_global,14,14|33,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,5,3,50,Witch,2,8,8.0,+8,Skill Duration,+8 Skill Duration,personal,skillDuration_personal,10,15,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,6,3,50,Praetorian + Veteran,3,250,250.0,+250%,Crit Damage,+250% Crit Damage,personal,critDmg_personal,8,36|41,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,7,4,100,Templar,2,10,10.0,+10%,Gold Super Chance,+10% Gold Super Chance,personal,goldSuperChance_personal,25,22,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,8,4,100,Chieftain + Sniper,3,4,4.0,+4%,Energy Super Amount,+4% Energy Super Amount,global,energySuperAmount_global,37,9|30,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,9,5,150,Forester,2,10,10.0,+10%,Exp Super Amount,+10% Exp Super Amount,global,expSuperAmount_global,33,26,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,10,5,150,Warlord + Druid,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,11|13,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,11,6,250,Battlemage,2,500,500.0,+500%,Damage,+500% Damage,personal,damage_personal,1,18,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,12,6,250,Samurai + Champion,3,6,6.0,+6%,Skill Power,+6% Skill Power,global,skillPower_global,41,5|10,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,13,7,500,Sorcerer,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,14,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,14,7,500,Berserker + Templar,3,6,6.0,+6%,Energy Super Chance,+6% Energy Super Chance,global,energySuperChance_global,36,8|22,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,15,8,1000,Scout + Hunter + Rogue,4,3000,3000.0,+3000%,Gold Ultra Amount,+3000% Gold Ultra Amount,global,goldUltraAmount_global,30,24|25|31,Hero MonoBehaviour synergy fields
+6,Paladin,0,4,16,8,1000,Samurai + Champion + Battlemage,4,2,2.0,+2%,Shadow Runes,+2% Shadow Runes,personal,shadowRunes_personal,46,5|10|18,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,1,1,0,Paladin,2,25,25.0,+25%,Crit Damage,+25% Crit Damage,personal,critDmg_personal,8,6,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,2,1,0,Battlemage + Rogue,3,50,50.0,+50%,Damage,+50% Damage,personal,damage_personal,1,18|31,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,3,2,15,Assassin,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,global,skillCd_global,11,3,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,4,2,15,Forester + Ranger,3,60,60.0,+60%,Attack Speed,+60% Attack Speed,personal,attSpeed_personal,3,26|28,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,5,3,50,Militia,2,200,200.0,+200%,Kill Gold,+200% Kill Gold,personal,killGold_personal,15,0,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,6,3,50,Champion + Elementalist,3,20,20.0,+20%,Crit Chance,+20% Crit Chance,global,critChance_global,5,10|17,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,7,4,100,Viking,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,1,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,8,4,100,Apprentice + Archer,3,150,150.0,+150%,Damage,+150% Damage,global,damage_global,0,12|27,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,9,5,150,Templar,2,3,3.0,+3,Energy Income,+3 Energy Income,global,energyIncome_global,40,22,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,10,5,150,Skymage + Deadeye,3,625,625.0,+625%,Gold Super Amount,+625% Gold Super Amount,global,goldSuperAmount_global,26,20|40,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,11,6,250,Ballista,2,45,45.0,+45%,Exp Ultra Amount,+45% Exp Ultra Amount,global,expUltraAmount_global,35,32,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,12,6,250,Ninja + Warlock,3,4250,4250.0,+4250%,Ultra Crit Damage,+4250% Ultra Crit Damage,personal,ultraCritDmg_personal,23,2|21,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,13,7,500,Samurai,2,15,15.0,+15%,Energy Super Amount,+15% Energy Super Amount,global,energySuperAmount_global,37,5,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,14,7,500,Peacekeeper + Warlord,3,8,8.0,+8,Energy Income,+8 Energy Income,global,energyIncome_global,40,4|11,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,15,8,1000,Militia + Sorcerer + Captain,4,7,7.0,+7%,Energy Ultra Chance,+7% Energy Ultra Chance,global,energyUltraChance_global,38,0|14|34,Hero MonoBehaviour synergy fields
+7,Gladiator,0,4,16,8,1000,Peacekeeper + Berserker + Warden,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,4|8|35,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,1,1,0,Skymage,2,10,10.0,+10%,Damage,+10% Damage,global,damage_global,0,20,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,2,1,0,Chieftain + Ballista,3,20,20.0,+20%,Crit Damage,+20% Crit Damage,global,critDmg_global,7,9|32,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,3,2,15,Veteran,2,1,1.0,+1%,Exp Super Chance,+1% Exp Super Chance,global,expSuperChance_global,32,41,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,4,2,15,Ninja + Scout,3,6,6.0,+6%,Skill Power,+6% Skill Power,personal,skillPower_personal,9,2|24,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,5,3,50,Apprentice,2,22,22.0,+22%,Attack Speed,+22% Attack Speed,global,attSpeed_global,2,12,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,6,3,50,Peacekeeper + Forester,3,35,35.0,+35%,Kill Exp,+35% Kill Exp,global,killExp_global,14,4|26,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,7,4,100,Arbalest,2,4,4.0,+4%,Super Crit Chance,+4% Super Crit Chance,global,superCritChance_global,16,29,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,8,4,100,Assassin + Sorcerer,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,3|14,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,9,5,150,Samurai,2,400,400.0,+400%,Damage,+400% Damage,personal,damage_personal,1,5,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,10,5,150,Titan + Wizard,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,37|16,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,11,6,250,Sovereign,2,5,5.0,+5%,Gold Ultra Chance,+5% Gold Ultra Chance,personal,goldUltraChance_personal,29,38,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,12,6,250,Druid + Hunter,3,35,35.0,+35%,Energy Ultra Amount,+35% Energy Ultra Amount,global,energyUltraAmount_global,39,13|25,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,13,7,500,Battlemage,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,18,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,14,7,500,Paladin + Templar,3,8,8.0,+8,Energy Income,+8 Energy Income,global,energyIncome_global,40,6|22,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,15,8,1000,Samurai + Forester + Ranger,4,400,400.0,+400%,Damage,+400% Damage,global,damage_global,0,5|26|28,Hero MonoBehaviour synergy fields
+8,Berserker,0,5,16,8,1000,Peacekeeper + Gladiator + Warden,4,8,8.0,+8%,Ultra Crit Chance,+8% Ultra Crit Chance,global,ultraCritChance_global,20,4|7|35,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,1,1,0,Warlock,2,2,2.0,-2%,Skill Cooldown,-2% Skill Cooldown,global,skillCd_global,11,21,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,2,1,0,Berserker + Ballista,3,25,25.0,+25%,Attack Speed,+25% Attack Speed,personal,attSpeed_personal,3,8|32,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,3,2,15,Archer,2,8,8.0,+8%,Crit Chance,+8% Crit Chance,global,critChance_global,5,27,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,4,2,15,Sovereign + Captain,3,60,60.0,+60%,Crit Damage,+60% Crit Damage,global,critDmg_global,7,38|34,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,5,3,50,Peacekeeper,2,80,80.0,+80%,Kill Gold,+80% Kill Gold,global,killGold_global,13,4,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,6,3,50,Arbalest + Sniper,3,250,250.0,+250%,Damage,+250% Damage,personal,damage_personal,1,29|30,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,7,4,100,Druid,2,2,2.0,+2%,Energy Super Amount,+2% Energy Super Amount,global,energySuperAmount_global,37,13,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,8,4,100,Paladin + Sniper,3,950,950.0,+950%,Gold Super Amount,+950% Gold Super Amount,personal,goldSuperAmount_personal,27,6|30,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,9,5,150,Battlemage,2,175,175.0,+175%,Kill Gold,+175% Kill Gold,global,killGold_global,13,18,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,10,5,150,Ninja + Veteran,3,7,7.0,+7%,Exp Super Chance,+7% Exp Super Chance,global,expSuperChance_global,32,2|41,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,11,6,250,Viking,2,5,5.0,+5%,Skill Power,+5% Skill Power,global,skillPower_global,41,1,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,12,6,250,Witch + Spelldancer,3,275,275.0,+275%,Damage,+275% Damage,global,damage_global,0,15|19,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,13,7,500,Forester,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,26,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,14,7,500,Elementalist + Sovereign,3,350,350.0,+350%,Kill Gold,+350% Kill Gold,global,killGold_global,13,17|38,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,15,8,1000,Druid + Warlock + Archer,4,400,400.0,+400%,Damage,+400% Damage,global,damage_global,0,13|21|27,Hero MonoBehaviour synergy fields
+9,Chieftain,0,5,16,8,1000,Druid + Elementalist + Ranger,4,20,20.0,-20%,Skill Cooldown,-20% Skill Cooldown,global,skillCd_global,11,13|17|28,Hero MonoBehaviour synergy fields
+10,Champion,0,6,1,1,0,Warlord,2,25,25.0,+25%,Kill Gold,+25% Kill Gold,personal,killGold_personal,15,11,Hero MonoBehaviour synergy fields
+10,Champion,0,6,2,1,0,Templar + Warden,3,6,6.0,+6%,Attack Speed,+6% Attack Speed,global,attSpeed_global,2,22|35,Hero MonoBehaviour synergy fields
+10,Champion,0,6,3,2,15,Sorcerer,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,14,Hero MonoBehaviour synergy fields
+10,Champion,0,6,4,2,15,Praetorian + Rogue,3,20,20.0,-20%,Skill Cooldown,-20% Skill Cooldown,personal,skillCd_personal,12,36|31,Hero MonoBehaviour synergy fields
+10,Champion,0,6,5,3,50,Spelldancer,2,35,35.0,+35%,Crit Chance,+35% Crit Chance,personal,critChance_personal,6,19,Hero MonoBehaviour synergy fields
+10,Champion,0,6,6,3,50,Gladiator + Elementalist,3,100,100.0,+100%,Crit Damage,+100% Crit Damage,global,critDmg_global,7,7|17,Hero MonoBehaviour synergy fields
+10,Champion,0,6,7,4,100,Hunter,2,4,4.0,+4%,Gold Super Chance,+4% Gold Super Chance,global,goldSuperChance_global,24,25,Hero MonoBehaviour synergy fields
+10,Champion,0,6,8,4,100,Militia + Crusader,3,350,350.0,+350%,Damage,+350% Damage,personal,damage_personal,1,0|33,Hero MonoBehaviour synergy fields
+10,Champion,0,6,9,5,150,Ballista,2,400,400.0,+400%,Kill Gold,+400% Kill Gold,personal,killGold_personal,15,32,Hero MonoBehaviour synergy fields
+10,Champion,0,6,10,5,150,Warlock + Archer,3,10,10.0,+10%,Super Crit Chance,+10% Super Crit Chance,global,superCritChance_global,16,21|27,Hero MonoBehaviour synergy fields
+10,Champion,0,6,11,6,250,Sniper,2,5,5.0,+5,Energy Income,+5 Energy Income,global,energyIncome_global,40,30,Hero MonoBehaviour synergy fields
+10,Champion,0,6,12,6,250,Samurai + Paladin,3,3,3.0,+3%,Exp Ultra Chance,+3% Exp Ultra Chance,global,expUltraChance_global,34,5|6,Hero MonoBehaviour synergy fields
+10,Champion,0,6,13,7,500,Scout,2,20,20.0,+20%,Exp Super Amount,+20% Exp Super Amount,global,expSuperAmount_global,33,24,Hero MonoBehaviour synergy fields
+10,Champion,0,6,14,7,500,Apprentice + Deadeye,3,8,8.0,+8%,Skill Power,+8% Skill Power,global,skillPower_global,41,12|40,Hero MonoBehaviour synergy fields
+10,Champion,0,6,15,8,1000,Skymage + Sniper + Veteran,4,40,40.0,+40%,Boss Exp,+40% Boss Exp,global,bossExp_global,44,20|30|41,Hero MonoBehaviour synergy fields
+10,Champion,0,6,16,8,1000,Samurai + Paladin + Battlemage,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,5|6|18,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,1,1,0,Champion,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,personal,attSpeed_personal,3,10,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,2,1,0,Necromancer + Captain,3,3,3.0,+3,Skill Duration,+3 Skill Duration,personal,skillDuration_personal,10,23|34,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,3,2,15,Crusader,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,33,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,4,2,15,Peacekeeper + Ballista,3,150,150.0,+150%,Crit Damage,+150% Crit Damage,personal,critDmg_personal,8,4|32,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,5,3,50,Sniper,2,80,80.0,+80%,Damage,+80% Damage,global,damage_global,0,30,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,6,3,50,Witch + Wizard,3,50,50.0,+50%,Crit Chance,+50% Crit Chance,personal,critChance_personal,6,15|16,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,7,4,100,Scout,2,300,300.0,+300%,Damage,+300% Damage,personal,damage_personal,1,24,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,8,4,100,Skymage + Veteran,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,20|41,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,9,5,150,Titan,2,8,8.0,+8%,Super Crit Chance,+8% Super Crit Chance,global,superCritChance_global,16,37,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,10,5,150,Paladin + Druid,3,200,200.0,+200%,Kill Gold,+200% Kill Gold,global,killGold_global,13,6|13,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,11,6,250,Dicemaster,2,5,5.0,+5%,Ultra Crit Chance,+5% Ultra Crit Chance,personal,ultraCritChance_personal,21,39,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,12,6,250,Assassin + Wizard,3,4250,4250.0,+4250%,Gold Ultra Amount,+4250% Gold Ultra Amount,personal,goldUltraAmount_personal,31,3|16,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,13,7,500,Viking,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,1,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,14,7,500,Peacekeeper + Gladiator,3,1600,1600.0,+1600%,Ultra Boss Damage,+1600% Ultra Boss Damage,global,ultraBossDmg_global,49,4|7,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,15,8,1000,Peacekeeper + Apprentice + Arbalest,4,10,10.0,+10,Energy Income,+10 Energy Income,global,energyIncome_global,40,4|12|29,Hero MonoBehaviour synergy fields
+11,Warlord,0,6,16,8,1000,Titan + Warlock + Warlock,4,75,75.0,+75%,Energy Ultra Amount,+75% Energy Ultra Amount,global,energyUltraAmount_global,39,37|21|21,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,1,1,0,Militia,2,3,3.0,+3%,Attack Speed,+3% Attack Speed,global,attSpeed_global,2,0,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,2,1,0,Druid + Hunter,3,4,4.0,-4%,Skill Cooldown,-4% Skill Cooldown,global,skillCd_global,11,13|25,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,3,2,15,Skymage,2,40,40.0,+40%,Crit Damage,+40% Crit Damage,global,critDmg_global,7,20,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,4,2,15,Elementalist + Sniper,3,60,60.0,+60%,Damage,+60% Damage,global,damage_global,0,17|30,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,5,3,50,Berserker,2,200,200.0,+200%,Kill Gold,+200% Kill Gold,personal,killGold_personal,15,8,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,6,3,50,Assassin + Spelldancer,3,20,20.0,+20%,Crit Chance,+20% Crit Chance,global,critChance_global,5,3|19,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,7,4,100,Titan,2,2,2.0,+2%,Exp Super Chance,+2% Exp Super Chance,global,expSuperChance_global,32,37,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,8,4,100,Gladiator + Archer,3,4,4.0,+4%,Energy Super Amount,+4% Energy Super Amount,global,energySuperAmount_global,37,7|27,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,9,5,150,Necromancer,2,1100,1100.0,+1100%,Gold Super Amount,+1100% Gold Super Amount,personal,goldSuperAmount_personal,27,23,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,10,5,150,Peacekeeper + Rogue,3,200,200.0,+200%,Damage,+200% Damage,global,damage_global,0,4|31,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,11,6,250,Ninja,2,5,5.0,+5%,Skill Power,+5% Skill Power,global,skillPower_global,41,2,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,12,6,250,Praetorian + Sniper,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,36|30,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,13,7,500,Dicemaster,2,15,15.0,+15%,Skill Power,+15% Skill Power,personal,skillPower_personal,9,39,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,14,7,500,Champion + Deadeye,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,10|40,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,15,8,1000,Peacekeeper + Warlord + Arbalest,4,1000,1000.0,+1000%,Super Crit Damage,+1000% Super Crit Damage,global,superCritDmg_global,18,4|11|29,Hero MonoBehaviour synergy fields
+12,Apprentice,1,1,16,8,1000,Witch + Skymage + Dicemaster,4,15,15.0,+15%,Skill Power,+15% Skill Power,global,skillPower_global,41,15|20|39,Hero MonoBehaviour synergy fields
+13,Druid,1,1,1,1,0,Viking,2,2,2.0,+2,Skill Duration,+2 Skill Duration,personal,skillDuration_personal,10,1,Hero MonoBehaviour synergy fields
+13,Druid,1,1,2,1,0,Apprentice + Hunter,3,3,3.0,+3%,Skill Power,+3% Skill Power,personal,skillPower_personal,9,12|25,Hero MonoBehaviour synergy fields
+13,Druid,1,1,3,2,15,Arbalest,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,29,Hero MonoBehaviour synergy fields
+13,Druid,1,1,4,2,15,Militia + Battlemage,3,12,12.0,+12%,Crit Chance,+12% Crit Chance,global,critChance_global,5,0|18,Hero MonoBehaviour synergy fields
+13,Druid,1,1,5,3,50,Skymage,2,200,200.0,+200%,Crit Damage,+200% Crit Damage,personal,critDmg_personal,8,20,Hero MonoBehaviour synergy fields
+13,Druid,1,1,6,3,50,Templar + Scout,3,250,250.0,+250%,Kill Gold,+250% Kill Gold,personal,killGold_personal,15,22|24,Hero MonoBehaviour synergy fields
+13,Druid,1,1,7,4,100,Chieftain,2,300,300.0,+300%,Damage,+300% Damage,personal,damage_personal,1,9,Hero MonoBehaviour synergy fields
+13,Druid,1,1,8,4,100,Dicemaster + Rogue,3,6,6.0,+6%,Super Crit Chance,+6% Super Crit Chance,global,superCritChance_global,16,39|31,Hero MonoBehaviour synergy fields
+13,Druid,1,1,9,5,150,Captain,2,400,400.0,+400%,Kill Gold,+400% Kill Gold,personal,killGold_personal,15,34,Hero MonoBehaviour synergy fields
+13,Druid,1,1,10,5,150,Paladin + Warlord,3,4,4.0,+4,Energy Income,+4 Energy Income,global,energyIncome_global,40,6|11,Hero MonoBehaviour synergy fields
+13,Druid,1,1,11,6,250,Witch,2,2000,2000.0,+2000%,Ultra Crit Damage,+2000% Ultra Crit Damage,global,ultraCritDmg_global,22,15,Hero MonoBehaviour synergy fields
+13,Druid,1,1,12,6,250,Berserker + Hunter,3,3,3.0,+3%,Gold Ultra Chance,+3% Gold Ultra Chance,global,goldUltraChance_global,28,8|25,Hero MonoBehaviour synergy fields
+13,Druid,1,1,13,7,500,Spelldancer,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,19,Hero MonoBehaviour synergy fields
+13,Druid,1,1,14,7,500,Samurai + Captain,3,8,8.0,+8,Energy Income,+8 Energy Income,global,energyIncome_global,40,5|34,Hero MonoBehaviour synergy fields
+13,Druid,1,1,15,8,1000,Chieftain + Warlock + Archer,4,105,105.0,+105%,Exp Ultra Amount,+105% Exp Ultra Amount,global,expUltraAmount_global,35,9|21|27,Hero MonoBehaviour synergy fields
+13,Druid,1,1,16,8,1000,Chieftain + Elementalist + Ranger,4,8,8.0,+8%,Energy Ultra Chance,+8% Energy Ultra Chance,global,energyUltraChance_global,38,9|17|28,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,1,1,0,Archer,2,25,25.0,+25%,Kill Gold,+25% Kill Gold,personal,killGold_personal,15,27,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,2,1,0,Ninja + Witch,3,4,4.0,+4%,Crit Chance,+4% Crit Chance,global,critChance_global,5,2|15,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,3,2,15,Champion,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,10,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,4,2,15,Paladin + Crusader,3,20,20.0,-20%,Skill Cooldown,-20% Skill Cooldown,personal,skillCd_personal,12,6|33,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,5,3,50,Necromancer,2,80,80.0,+80%,Attack Speed,+80% Attack Speed,personal,attSpeed_personal,3,23,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,6,3,50,Viking + Dicemaster,3,250,250.0,+250%,Crit Damage,+250% Crit Damage,personal,critDmg_personal,8,1|39,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,7,4,100,Elementalist,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,17,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,8,4,100,Assassin + Berserker,3,2,2.0,+2%,Energy Super Chance,+2% Energy Super Chance,global,energySuperChance_global,36,3|8,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,9,5,150,Scout,2,3,3.0,+3%,Skill Power,+3% Skill Power,global,skillPower_global,41,24,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,10,5,150,Praetorian + Crusader,3,25,25.0,+25%,Gold Super Chance,+25% Gold Super Chance,personal,goldSuperChance_personal,25,36|33,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,11,6,250,Templar,2,250,250.0,+250%,Damage,+250% Damage,global,damage_global,0,22,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,12,6,250,Skymage + Ballista,3,3,3.0,+3%,Exp Ultra Chance,+3% Exp Ultra Chance,global,expUltraChance_global,34,20|32,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,13,7,500,Paladin,2,12,12.0,+12%,Gold Super Chance,+12% Gold Super Chance,global,goldSuperChance_global,24,6,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,14,7,500,Wizard + Skymage,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,16|20,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,15,8,1000,Militia + Gladiator + Captain,4,3000,3000.0,+3000%,Ultra Crit Damage,+3000% Ultra Crit Damage,global,ultraCritDmg_global,22,0|7|34,Hero MonoBehaviour synergy fields
+14,Sorcerer,1,2,16,8,1000,Necromancer + Forester + Deadeye,4,15,15.0,+15%,Skill Power,+15% Skill Power,global,skillPower_global,41,23|26|40,Hero MonoBehaviour synergy fields
+15,Witch,1,2,1,1,0,Forester,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,personal,skillCd_personal,12,26,Hero MonoBehaviour synergy fields
+15,Witch,1,2,2,1,0,Ninja + Sorcerer,3,20,20.0,+20%,Crit Damage,+20% Crit Damage,global,critDmg_global,7,2|14,Hero MonoBehaviour synergy fields
+15,Witch,1,2,3,2,15,Samurai,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,5,Hero MonoBehaviour synergy fields
+15,Witch,1,2,4,2,15,Necromancer + Hunter,3,10,10.0,+10%,Kill Exp,+10% Kill Exp,global,killExp_global,14,23|25,Hero MonoBehaviour synergy fields
+15,Witch,1,2,5,3,50,Paladin,2,80,80.0,+80%,Kill Gold,+80% Kill Gold,global,killGold_global,13,6,Hero MonoBehaviour synergy fields
+15,Witch,1,2,6,3,50,Warlord + Wizard,3,100,100.0,+100%,Damage,+100% Damage,global,damage_global,0,11|16,Hero MonoBehaviour synergy fields
+15,Witch,1,2,7,4,100,Militia,2,10,10.0,+10%,Super Crit Chance,+10% Super Crit Chance,personal,superCritChance_personal,17,0,Hero MonoBehaviour synergy fields
+15,Witch,1,2,8,4,100,Ranger + Ballista,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,28|32,Hero MonoBehaviour synergy fields
+15,Witch,1,2,9,5,150,Peacekeeper,2,400,400.0,+400%,Damage,+400% Damage,personal,damage_personal,1,4,Hero MonoBehaviour synergy fields
+15,Witch,1,2,10,5,150,Battlemage + Sovereign,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,18|38,Hero MonoBehaviour synergy fields
+15,Witch,1,2,11,6,250,Druid,2,25,25.0,+25%,Energy Ultra Amount,+25% Energy Ultra Amount,global,energyUltraAmount_global,39,13,Hero MonoBehaviour synergy fields
+15,Witch,1,2,12,6,250,Chieftain + Spelldancer,3,2250,2250.0,+2250%,Gold Ultra Amount,+2250% Gold Ultra Amount,global,goldUltraAmount_global,30,9|19,Hero MonoBehaviour synergy fields
+15,Witch,1,2,13,7,500,Titan,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,37,Hero MonoBehaviour synergy fields
+15,Witch,1,2,14,7,500,Necromancer + Warden,3,15,15.0,+15,Skill Duration,+15 Skill Duration,personal,skillDuration_personal,10,23|35,Hero MonoBehaviour synergy fields
+15,Witch,1,2,15,8,1000,Battlemage + Spelldancer + Templar,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,18|19|22,Hero MonoBehaviour synergy fields
+15,Witch,1,2,16,8,1000,Apprentice + Skymage + Dicemaster,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,12|20|39,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,1,1,0,Elementalist,2,10,10.0,+10%,Damage,+10% Damage,global,damage_global,0,17,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,2,1,0,Peacekeeper + Samurai,3,20,20.0,+20%,Kill Gold,+20% Kill Gold,global,killGold_global,13,4|5,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,3,2,15,Battlemage,2,8,8.0,+8%,Crit Chance,+8% Crit Chance,global,critChance_global,5,18,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,4,2,15,Titan + Dicemaster,3,15,15.0,+15%,Attack Speed,+15% Attack Speed,global,attSpeed_global,2,37|39,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,5,3,50,Ninja,2,20,20.0,+20%,Kill Exp,+20% Kill Exp,global,killExp_global,14,2,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,6,3,50,Warlord + Witch,3,100,100.0,+100%,Crit Damage,+100% Crit Damage,global,critDmg_global,7,11|15,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,7,4,100,Deadeye,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,40,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,8,4,100,Praetorian + Battlemage,3,40,40.0,+40%,Attack Speed,+40% Attack Speed,global,attSpeed_global,2,36|18,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,9,5,150,Warlock,2,3,3.0,+3,Energy Income,+3 Energy Income,global,energyIncome_global,40,21,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,10,5,150,Berserker + Titan,3,450,450.0,+450%,Damage,+450% Damage,personal,damage_personal,1,8|37,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,11,6,250,Ranger,2,25,25.0,+25%,Energy Ultra Amount,+25% Energy Ultra Amount,global,energyUltraAmount_global,39,28,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,12,6,250,Assassin + Warlord,3,7,7.0,+7%,Ultra Crit Chance,+7% Ultra Crit Chance,personal,ultraCritChance_personal,21,3|11,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,13,7,500,Crusader,2,40,40.0,+40%,Attack Speed,+40% Attack Speed,global,attSpeed_global,2,33,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,14,7,500,Sorcerer + Skymage,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,14|20,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,15,8,1000,Viking + Necromancer + Ballista,4,105,105.0,+105%,Exp Ultra Amount,+105% Exp Ultra Amount,global,expUltraAmount_global,35,1|23|32,Hero MonoBehaviour synergy fields
+16,Wizard,1,3,16,8,1000,Assassin + Praetorian + Spelldancer,4,15,15.0,+15%,Skill Power,+15% Skill Power,global,skillPower_global,41,3|36|19,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,1,1,0,Wizard,2,2,2.0,+2%,Crit Chance,+2% Crit Chance,global,critChance_global,5,16,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,2,1,0,Ranger + Arbalest,3,50,50.0,+50%,Damage,+50% Damage,personal,damage_personal,1,28|29,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,3,2,15,Hunter,2,6,6.0,+6%,Kill Exp,+6% Kill Exp,global,killExp_global,14,25,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,4,2,15,Apprentice + Sniper,3,6,6.0,+6,Skill Duration,+6 Skill Duration,personal,skillDuration_personal,10,12|30,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,5,3,50,Forester,2,22,22.0,+22%,Attack Speed,+22% Attack Speed,global,attSpeed_global,2,26,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,6,3,50,Gladiator + Champion,3,100,100.0,+100%,Crit Damage,+100% Crit Damage,global,critDmg_global,7,7|10,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,7,4,100,Sorcerer,2,2,2.0,+2%,Energy Super Amount,+2% Energy Super Amount,global,energySuperAmount_global,37,14,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,8,4,100,Warlock + Deadeye,3,350,350.0,+350%,Kill Gold,+350% Kill Gold,personal,killGold_personal,15,21|40,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,9,5,150,Warden,2,10,10.0,+10%,Exp Super Amount,+10% Exp Super Amount,global,expSuperAmount_global,33,35,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,10,5,150,Viking + Samurai,3,200,200.0,+200%,Damage,+200% Damage,global,damage_global,0,1|5,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,11,6,250,Necromancer,2,3750,3750.0,+3750%,Gold Ultra Amount,+3750% Gold Ultra Amount,personal,goldUltraAmount_personal,31,23,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,12,6,250,Dicemaster + Scout,3,6,6.0,+6%,Skill Power,+6% Skill Power,global,skillPower_global,41,39|24,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,13,7,500,Rogue,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,31,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,14,7,500,Chieftain + Sovereign,3,20,20.0,+20%,Skill Power,+20% Skill Power,personal,skillPower_personal,9,9|38,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,15,8,1000,Ninja + Assassin + Warden,4,3000,3000.0,+3000%,Gold Ultra Amount,+3000% Gold Ultra Amount,global,goldUltraAmount_global,30,2|3|35,Hero MonoBehaviour synergy fields
+17,Elementalist,1,3,16,8,1000,Chieftain + Druid + Ranger,4,8,8.0,+8%,Energy Ultra Chance,+8% Energy Ultra Chance,global,energyUltraChance_global,38,9|13|28,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,1,1,0,Spelldancer,2,1,1.0,+1%,Kill Exp,+1% Kill Exp,global,killExp_global,14,19,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,2,1,0,Gladiator + Rogue,3,25,25.0,+25%,Attack Speed,+25% Attack Speed,personal,attSpeed_personal,3,7|31,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,3,2,15,Wizard,2,5,5.0,+5%,Skill Power,+5% Skill Power,personal,skillPower_personal,9,16,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,4,2,15,Militia + Druid,3,60,60.0,+60%,Crit Damage,+60% Crit Damage,global,critDmg_global,7,0|13,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,5,3,50,Veteran,2,80,80.0,+80%,Damage,+80% Damage,global,damage_global,0,41,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,6,3,50,Ballista + Warden,3,30,30.0,-30%,Skill Cooldown,-30% Skill Cooldown,personal,skillCd_personal,12,32|35,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,7,4,100,Ranger,2,450,450.0,+450%,Gold Super Amount,+450% Gold Super Amount,global,goldSuperAmount_global,26,28,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,8,4,100,Praetorian + Wizard,3,150,150.0,+150%,Damage,+150% Damage,global,damage_global,0,36|16,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,9,5,150,Chieftain,2,20,20.0,+20%,Gold Super Chance,+20% Gold Super Chance,personal,goldSuperChance_personal,25,9,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,10,5,150,Witch + Sovereign,3,625,625.0,+625%,Super Crit Damage,+625% Super Crit Damage,global,superCritDmg_global,18,15|38,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,11,6,250,Paladin,2,250,250.0,+250%,Kill Gold,+250% Kill Gold,global,killGold_global,13,6,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,12,6,250,Forester + Deadeye,3,6,6.0,+6,Energy Income,+6 Energy Income,global,energyIncome_global,40,26|40,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,13,7,500,Berserker,2,40,40.0,+40%,Attack Speed,+40% Attack Speed,global,attSpeed_global,2,8,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,14,7,500,Sniper + Crusader,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,30|33,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,15,8,1000,Witch + Spelldancer + Templar,4,3000,3000.0,+3000%,Ultra Crit Damage,+3000% Ultra Crit Damage,global,ultraCritDmg_global,22,15|19|22,Hero MonoBehaviour synergy fields
+18,Battlemage,1,4,16,8,1000,Samurai + Paladin + Champion,4,15,15.0,+15%,Skill Power,+15% Skill Power,global,skillPower_global,41,5|6|10,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,1,1,0,Battlemage,2,10,10.0,+10%,Kill Gold,+10% Kill Gold,global,killGold_global,13,18,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,2,1,0,Paladin + Sniper,3,25,25.0,+25%,Attack Speed,+25% Attack Speed,personal,attSpeed_personal,3,6|30,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,3,2,15,Viking,2,40,40.0,+40%,Crit Damage,+40% Crit Damage,global,critDmg_global,7,1,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,4,2,15,Archer + Warden,3,7,7.0,-7%,Skill Cooldown,-7% Skill Cooldown,global,skillCd_global,11,27|35,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,5,3,50,Champion,2,80,80.0,+80%,Damage,+80% Damage,global,damage_global,0,10,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,6,3,50,Assassin + Apprentice,3,12,12.0,+12%,Skill Power,+12% Skill Power,personal,skillPower_personal,9,3|12,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,7,4,100,Warlock,2,450,450.0,+450%,Super Crit Damage,+450% Super Crit Damage,global,superCritDmg_global,18,21,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,8,4,100,Ninja + Peacekeeper,3,4,4.0,+4%,Exp Super Chance,+4% Exp Super Chance,global,expSuperChance_global,32,2|4,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,9,5,150,Sniper,2,3,3.0,+3%,Skill Power,+3% Skill Power,global,skillPower_global,41,30,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,10,5,150,Scout + Ballista,3,4,4.0,+4%,Energy Super Chance,+4% Energy Super Chance,global,energySuperChance_global,36,24|32,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,11,6,250,Veteran,2,5,5.0,+5%,Skill Power,+5% Skill Power,global,skillPower_global,41,41,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,12,6,250,Chieftain + Witch,3,275,275.0,+275%,Damage,+275% Damage,global,damage_global,0,9|15,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,13,7,500,Druid,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,global,superCritDmg_global,18,13,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,14,7,500,Militia + Arbalest,3,6,6.0,+6%,Energy Super Chance,+6% Energy Super Chance,global,energySuperChance_global,36,0|29,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,15,8,1000,Witch + Battlemage + Templar,4,20,20.0,+20,Skill Duration,+20 Skill Duration,personal,skillDuration_personal,10,15|18|22,Hero MonoBehaviour synergy fields
+19,Spelldancer,1,4,16,8,1000,Assassin + Praetorian + Wizard,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,3|36|16,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,1,1,0,Berserker,2,10,10.0,+10%,Crit Damage,+10% Crit Damage,global,critDmg_global,7,8,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,2,1,0,Warlock + Crusader,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,personal,skillCd_personal,12,21|33,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,3,2,15,Apprentice,2,40,40.0,+40%,Kill Gold,+40% Kill Gold,global,killGold_global,13,12,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,4,2,15,Samurai + Templar,3,10,10.0,+10%,Kill Exp,+10% Kill Exp,global,killExp_global,14,5|22,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,5,3,50,Druid,2,35,35.0,+35%,Crit Chance,+35% Crit Chance,personal,critChance_personal,6,13,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,6,3,50,Ranger + Crusader,3,250,250.0,+250%,Damage,+250% Damage,personal,damage_personal,1,28|33,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,7,4,100,Dicemaster,2,4,4.0,+4%,Gold Super Chance,+4% Gold Super Chance,global,goldSuperChance_global,24,39,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,8,4,100,Warlord + Veteran,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,11|41,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,9,5,150,Hunter,2,175,175.0,+175%,Damage,+175% Damage,global,damage_global,0,25,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,10,5,150,Gladiator + Deadeye,3,8,8.0,+8%,Energy Super Amount,+8% Energy Super Amount,global,energySuperAmount_global,37,7|40,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,11,6,250,Assassin,2,2,2.0,+2%,Ultra Crit Chance,+2% Ultra Crit Chance,global,ultraCritChance_global,20,3,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,12,6,250,Sorcerer + Ballista,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,14|32,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,13,7,500,Warden,2,12,12.0,+12%,Super Crit Chance,+12% Super Crit Chance,global,superCritChance_global,16,35,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,14,7,500,Sorcerer + Wizard,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,14|16,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,15,8,1000,Champion + Sniper + Veteran,4,105,105.0,+105%,Exp Ultra Amount,+105% Exp Ultra Amount,global,expUltraAmount_global,35,10|30|41,Hero MonoBehaviour synergy fields
+20,Skymage,1,5,16,8,1000,Apprentice + Witch + Dicemaster,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,12|15|39,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,1,1,0,Chieftain,2,5,5.0,+5%,Crit Chance,+5% Crit Chance,personal,critChance_personal,6,9,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,2,1,0,Crusader + Skymage,3,20,20.0,+20%,Kill Gold,+20% Kill Gold,global,killGold_global,13,33|20,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,3,2,15,Praetorian,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,global,skillCd_global,11,36,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,4,2,15,Deadeye + Veteran,3,60,60.0,+60%,Damage,+60% Damage,global,damage_global,0,40|41,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,5,3,50,Sovereign,2,8,8.0,+8,Skill Duration,+8 Skill Duration,personal,skillDuration_personal,10,38,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,6,3,50,Militia + Captain,3,35,35.0,+35%,Kill Exp,+35% Kill Exp,global,killExp_global,14,0|34,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,7,4,100,Spelldancer,2,1,1.0,+1%,Skill Power,+1% Skill Power,global,skillPower_global,41,19,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,8,4,100,Elementalist + Deadeye,3,500,500.0,+500%,Gold Super Amount,+500% Gold Super Amount,global,goldSuperAmount_global,26,17|40,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,9,5,150,Wizard,2,550,550.0,+550%,Super Crit Damage,+550% Super Crit Damage,global,superCritDmg_global,18,16,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,10,5,150,Champion + Archer,3,450,450.0,+450%,Damage,+450% Damage,personal,damage_personal,1,10|27,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,11,6,250,Forester,2,30,30.0,-30%,Skill Cooldown,-30% Skill Cooldown,personal,skillCd_personal,12,26,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,12,6,250,Ninja + Gladiator,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,2|7,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,13,7,500,Sovereign,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,38,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,14,7,500,Titan + Archer,3,25,25.0,+25%,Exp Super Amount,+25% Exp Super Amount,global,expSuperAmount_global,33,37|27,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,15,8,1000,Chieftain + Druid + Archer,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,9|13|27,Hero MonoBehaviour synergy fields
+21,Warlock,1,5,16,8,1000,Warlord + Titan + Warlock,4,15,15.0,+15,Energy Income,+15 Energy Income,global,energyIncome_global,40,11|37|21,Hero MonoBehaviour synergy fields
+22,Templar,1,6,1,1,0,Captain,2,2,2.0,+2%,Skill Power,+2% Skill Power,personal,skillPower_personal,9,34,Hero MonoBehaviour synergy fields
+22,Templar,1,6,2,1,0,Champion + Warden,3,50,50.0,+50%,Crit Damage,+50% Crit Damage,personal,critDmg_personal,8,10|35,Hero MonoBehaviour synergy fields
+22,Templar,1,6,3,2,15,Deadeye,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,40,Hero MonoBehaviour synergy fields
+22,Templar,1,6,4,2,15,Samurai + Skymage,3,60,60.0,+60%,Kill Gold,+60% Kill Gold,global,killGold_global,13,5|20,Hero MonoBehaviour synergy fields
+22,Templar,1,6,5,3,50,Arbalest,2,8,8.0,-8%,Skill Cooldown,-8% Skill Cooldown,global,skillCd_global,11,29,Hero MonoBehaviour synergy fields
+22,Templar,1,6,6,3,50,Druid + Scout,3,100,100.0,+100%,Attack Speed,+100% Attack Speed,personal,attSpeed_personal,3,13|24,Hero MonoBehaviour synergy fields
+22,Templar,1,6,7,4,100,Paladin,2,300,300.0,+300%,Damage,+300% Damage,personal,damage_personal,1,6,Hero MonoBehaviour synergy fields
+22,Templar,1,6,8,4,100,Sovereign + Forester,3,15,15.0,+15%,Super Crit Chance,+15% Super Crit Chance,personal,superCritChance_personal,17,38|26,Hero MonoBehaviour synergy fields
+22,Templar,1,6,9,5,150,Gladiator,2,3,3.0,+3,Energy Income,+3 Energy Income,global,energyIncome_global,40,7,Hero MonoBehaviour synergy fields
+22,Templar,1,6,10,5,150,Dicemaster + Sniper,3,12,12.0,+12%,Exp Super Amount,+12% Exp Super Amount,global,expSuperAmount_global,33,39|30,Hero MonoBehaviour synergy fields
+22,Templar,1,6,11,6,250,Sorcerer,2,250,250.0,+250%,Kill Gold,+250% Kill Gold,global,killGold_global,13,14,Hero MonoBehaviour synergy fields
+22,Templar,1,6,12,6,250,Necromancer + Rogue,3,3,3.0,+3%,Gold Ultra Chance,+3% Gold Ultra Chance,global,goldUltraChance_global,28,23|31,Hero MonoBehaviour synergy fields
+22,Templar,1,6,13,7,500,Veteran,2,20,20.0,+20%,Exp Super Amount,+20% Exp Super Amount,global,expSuperAmount_global,33,41,Hero MonoBehaviour synergy fields
+22,Templar,1,6,14,7,500,Paladin + Berserker,3,20,20.0,+20%,Energy Super Amount,+20% Energy Super Amount,global,energySuperAmount_global,37,6|8,Hero MonoBehaviour synergy fields
+22,Templar,1,6,15,8,1000,Witch + Battlemage + Spelldancer,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,15|18|19,Hero MonoBehaviour synergy fields
+22,Templar,1,6,16,8,1000,Templar + Scout + Sniper,4,15,15.0,+15,Energy Income,+15 Energy Income,global,energyIncome_global,40,22|24|30,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,1,1,0,Warden,2,25,25.0,+25%,Damage,+25% Damage,personal,damage_personal,1,35,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,2,1,0,Warlord + Captain,3,3,3.0,+3,Skill Duration,+3 Skill Duration,personal,skillDuration_personal,10,11|34,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,3,2,15,Sniper,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,30,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,4,2,15,Witch + Hunter,3,12,12.0,+12%,Crit Chance,+12% Crit Chance,global,critChance_global,5,15|25,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,5,3,50,Sorcerer,2,200,200.0,+200%,Kill Gold,+200% Kill Gold,personal,killGold_personal,15,14,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,6,3,50,Samurai + Hunter,3,100,100.0,+100%,Crit Damage,+100% Crit Damage,global,critDmg_global,7,5|25,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,7,4,100,Veteran,2,1,1.0,+1%,Energy Super Chance,+1% Energy Super Chance,global,energySuperChance_global,36,41,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,8,4,100,Viking + Titan,3,150,150.0,+150%,Damage,+150% Damage,global,damage_global,0,1|37,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,9,5,150,Apprentice,2,400,400.0,+400%,Kill Gold,+400% Kill Gold,personal,killGold_personal,15,12,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,10,5,150,Militia + Arbalest,3,1250,1250.0,+1250%,Gold Super Amount,+1250% Gold Super Amount,personal,goldSuperAmount_personal,27,0|29,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,11,6,250,Elementalist,2,3750,3750.0,+3750%,Ultra Crit Damage,+3750% Ultra Crit Damage,personal,ultraCritDmg_personal,23,17,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,12,6,250,Templar + Rogue,3,6,6.0,+6,Energy Income,+6 Energy Income,global,energyIncome_global,40,22|31,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,13,7,500,Praetorian,2,1400,1400.0,+1400%,Ultra Boss Damage,+1400% Ultra Boss Damage,global,ultraBossDmg_global,49,36,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,14,7,500,Witch + Warden,3,20,20.0,+20%,Skill Power,+20% Skill Power,personal,skillPower_personal,9,15|35,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,15,8,1000,Viking + Wizard + Ballista,4,800,800.0,+800%,Boss Damage,+800% Boss Damage,global,bossDmg_global,52,1|16|32,Hero MonoBehaviour synergy fields
+23,Necromancer,1,6,16,8,1000,Sorcerer + Forester + Deadeye,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,14|26|40,Hero MonoBehaviour synergy fields
+24,Scout,2,1,1,1,0,Hunter,2,25,25.0,+25%,Damage,+25% Damage,personal,damage_personal,1,25,Hero MonoBehaviour synergy fields
+24,Scout,2,1,2,1,0,Militia + Viking,3,4,4.0,+4%,Crit Chance,+4% Crit Chance,global,critChance_global,5,0|1,Hero MonoBehaviour synergy fields
+24,Scout,2,1,3,2,15,Paladin,2,100,100.0,+100%,Kill Gold,+100% Kill Gold,personal,killGold_personal,15,6,Hero MonoBehaviour synergy fields
+24,Scout,2,1,4,2,15,Ninja + Berserker,3,60,60.0,+60%,Attack Speed,+60% Attack Speed,personal,attSpeed_personal,3,2|8,Hero MonoBehaviour synergy fields
+24,Scout,2,1,5,3,50,Ballista,2,80,80.0,+80%,Crit Damage,+80% Crit Damage,global,critDmg_global,7,32,Hero MonoBehaviour synergy fields
+24,Scout,2,1,6,3,50,Druid + Templar,3,30,30.0,-30%,Skill Cooldown,-30% Skill Cooldown,personal,skillCd_personal,12,13|22,Hero MonoBehaviour synergy fields
+24,Scout,2,1,7,4,100,Warlord,2,450,450.0,+450%,Gold Super Amount,+450% Gold Super Amount,global,goldSuperAmount_global,26,11,Hero MonoBehaviour synergy fields
+24,Scout,2,1,8,4,100,Samurai + Warden,3,150,150.0,+150%,Damage,+150% Damage,global,damage_global,0,5|35,Hero MonoBehaviour synergy fields
+24,Scout,2,1,9,5,150,Sorcerer,2,3,3.0,+3,Energy Income,+3 Energy Income,global,energyIncome_global,40,14,Hero MonoBehaviour synergy fields
+24,Scout,2,1,10,5,150,Spelldancer + Ballista,3,25,25.0,+25%,Super Crit Chance,+25% Super Crit Chance,personal,superCritChance_personal,17,19|32,Hero MonoBehaviour synergy fields
+24,Scout,2,1,11,6,250,Peacekeeper,2,250,250.0,+250%,Kill Gold,+250% Kill Gold,global,killGold_global,13,4,Hero MonoBehaviour synergy fields
+24,Scout,2,1,12,6,250,Elementalist + Dicemaster,3,60,60.0,+60%,Exp Ultra Amount,+60% Exp Ultra Amount,global,expUltraAmount_global,35,17|39,Hero MonoBehaviour synergy fields
+24,Scout,2,1,13,7,500,Champion,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,10,Hero MonoBehaviour synergy fields
+24,Scout,2,1,14,7,500,Praetorian + Hunter,3,14,14.0,+14%,Gold Super Chance,+14% Gold Super Chance,global,goldSuperChance_global,24,36|25,Hero MonoBehaviour synergy fields
+24,Scout,2,1,15,8,1000,Paladin + Hunter + Rogue,4,7,7.0,+7%,Gold Ultra Chance,+7% Gold Ultra Chance,global,goldUltraChance_global,28,6|25|31,Hero MonoBehaviour synergy fields
+24,Scout,2,1,16,8,1000,Templar + Templar + Sniper,4,1,1.0,+1%,Battlepass Exp,+1% Battlepass Exp,global,battlepassExp_global,50,22|22|30,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,1,1,0,Scout,2,10,10.0,+10%,Kill Gold,+10% Kill Gold,global,killGold_global,13,24,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,2,1,0,Apprentice + Druid,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,personal,skillCd_personal,12,12|13,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,3,2,15,Elementalist,2,100,100.0,+100%,Damage,+100% Damage,personal,damage_personal,1,17,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,4,2,15,Witch + Necromancer,3,60,60.0,+60%,Kill Gold,+60% Kill Gold,global,killGold_global,13,15|23,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,5,3,50,Viking,2,8,8.0,+8%,Skill Power,+8% Skill Power,personal,skillPower_personal,9,1,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,6,3,50,Samurai + Necromancer,3,50,50.0,+50%,Crit Chance,+50% Crit Chance,personal,critChance_personal,6,5|23,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,7,4,100,Champion,2,125,125.0,+125%,Damage,+125% Damage,global,damage_global,0,10,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,8,4,100,Arbalest + Captain,3,15,15.0,+15%,Gold Super Chance,+15% Gold Super Chance,personal,goldSuperChance_personal,25,29|34,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,9,5,150,Skymage,2,8,8.0,+8%,Super Crit Chance,+8% Super Crit Chance,global,superCritChance_global,16,20,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,10,5,150,Assassin + Captain,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,3|34,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,11,6,250,Crusader,2,5,5.0,+5%,Skill Power,+5% Skill Power,global,skillPower_global,41,33,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,12,6,250,Berserker + Druid,3,2250,2250.0,+2250%,Gold Ultra Amount,+2250% Gold Ultra Amount,global,goldUltraAmount_global,30,8|13,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,13,7,500,Sniper,2,7,7.0,+7%,Skill Power,+7% Skill Power,global,skillPower_global,41,30,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,14,7,500,Praetorian + Scout,3,2000,2000.0,+2000%,Gold Super Amount,+2000% Gold Super Amount,personal,goldSuperAmount_personal,27,36|24,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,15,8,1000,Paladin + Scout + Rogue,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,6|24|31,Hero MonoBehaviour synergy fields
+25,Hunter,2,1,16,8,1000,Sovereign + Rogue + Crusader,4,3250,3250.0,+3250%,Gold Ultra Amount,+3250% Gold Ultra Amount,global,goldUltraAmount_global,30,38|31|33,Hero MonoBehaviour synergy fields
+26,Forester,2,2,1,1,0,Witch,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,personal,skillCd_personal,12,15,Hero MonoBehaviour synergy fields
+26,Forester,2,2,2,1,0,Assassin + Archer,3,25,25.0,+25%,Attack Speed,+25% Attack Speed,personal,attSpeed_personal,3,3|27,Hero MonoBehaviour synergy fields
+26,Forester,2,2,3,2,15,Captain,2,40,40.0,+40%,Crit Damage,+40% Crit Damage,global,critDmg_global,7,34,Hero MonoBehaviour synergy fields
+26,Forester,2,2,4,2,15,Gladiator + Ranger,3,6,6.0,+6,Skill Duration,+6 Skill Duration,personal,skillDuration_personal,10,7|28,Hero MonoBehaviour synergy fields
+26,Forester,2,2,5,3,50,Elementalist,2,200,200.0,+200%,Kill Gold,+200% Kill Gold,personal,killGold_personal,15,17,Hero MonoBehaviour synergy fields
+26,Forester,2,2,6,3,50,Peacekeeper + Berserker,3,3,3.0,+3%,Exp Super Amount,+3% Exp Super Amount,global,expSuperAmount_global,33,4|8,Hero MonoBehaviour synergy fields
+26,Forester,2,2,7,4,100,Rogue,2,450,450.0,+450%,Super Crit Damage,+450% Super Crit Damage,global,superCritDmg_global,18,31,Hero MonoBehaviour synergy fields
+26,Forester,2,2,8,4,100,Templar + Sovereign,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,22|38,Hero MonoBehaviour synergy fields
+26,Forester,2,2,9,5,150,Paladin,2,10,10.0,+10%,Exp Super Amount,+10% Exp Super Amount,global,expSuperAmount_global,33,6,Hero MonoBehaviour synergy fields
+26,Forester,2,2,10,5,150,Ranger + Warden,3,450,450.0,+450%,Damage,+450% Damage,personal,damage_personal,1,28|35,Hero MonoBehaviour synergy fields
+26,Forester,2,2,11,6,250,Warlock,2,3750,3750.0,+3750%,Gold Ultra Amount,+3750% Gold Ultra Amount,personal,goldUltraAmount_personal,31,21,Hero MonoBehaviour synergy fields
+26,Forester,2,2,12,6,250,Battlemage + Deadeye,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,18|40,Hero MonoBehaviour synergy fields
+26,Forester,2,2,13,7,500,Chieftain,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,global,superCritDmg_global,18,9,Hero MonoBehaviour synergy fields
+26,Forester,2,2,14,7,500,Viking + Veteran,3,350,350.0,+350%,Damage,+350% Damage,global,damage_global,0,1|41,Hero MonoBehaviour synergy fields
+26,Forester,2,2,15,8,1000,Samurai + Berserker + Ranger,4,3000,3000.0,+3000%,Gold Ultra Amount,+3000% Gold Ultra Amount,global,goldUltraAmount_global,30,5|8|28,Hero MonoBehaviour synergy fields
+26,Forester,2,2,16,8,1000,Sorcerer + Necromancer + Deadeye,4,8,8.0,+8%,Ultra Crit Chance,+8% Ultra Crit Chance,global,ultraCritChance_global,20,14|23|40,Hero MonoBehaviour synergy fields
+27,Archer,2,2,1,1,0,Sorcerer,2,10,10.0,+10%,Kill Gold,+10% Kill Gold,global,killGold_global,13,14,Hero MonoBehaviour synergy fields
+27,Archer,2,2,2,1,0,Assassin + Forester,3,3,3.0,+3%,Kill Exp,+3% Kill Exp,global,killExp_global,14,3|26,Hero MonoBehaviour synergy fields
+27,Archer,2,2,3,2,15,Chieftain,2,8,8.0,+8%,Crit Chance,+8% Crit Chance,global,critChance_global,5,9,Hero MonoBehaviour synergy fields
+27,Archer,2,2,4,2,15,Spelldancer + Warden,3,60,60.0,+60%,Damage,+60% Damage,global,damage_global,0,19|35,Hero MonoBehaviour synergy fields
+27,Archer,2,2,5,3,50,Warden,2,22,22.0,+22%,Attack Speed,+22% Attack Speed,global,attSpeed_global,2,35,Hero MonoBehaviour synergy fields
+27,Archer,2,2,6,3,50,Ninja + Rogue,3,250,250.0,+250%,Crit Damage,+250% Crit Damage,personal,critDmg_personal,8,2|31,Hero MonoBehaviour synergy fields
+27,Archer,2,2,7,4,100,Captain,2,1,1.0,+1%,Energy Super Chance,+1% Energy Super Chance,global,energySuperChance_global,36,34,Hero MonoBehaviour synergy fields
+27,Archer,2,2,8,4,100,Gladiator + Apprentice,3,350,350.0,+350%,Kill Gold,+350% Kill Gold,personal,killGold_personal,15,7|12,Hero MonoBehaviour synergy fields
+27,Archer,2,2,9,5,150,Crusader,2,3,3.0,+3%,Skill Power,+3% Skill Power,global,skillPower_global,41,33,Hero MonoBehaviour synergy fields
+27,Archer,2,2,10,5,150,Champion + Warlock,3,625,625.0,+625%,Gold Super Amount,+625% Gold Super Amount,global,goldSuperAmount_global,26,10|21,Hero MonoBehaviour synergy fields
+27,Archer,2,2,11,6,250,Deadeye,2,500,500.0,+500%,Damage,+500% Damage,personal,damage_personal,1,40,Hero MonoBehaviour synergy fields
+27,Archer,2,2,12,6,250,Militia + Titan,3,2250,2250.0,+2250%,Ultra Crit Damage,+2250% Ultra Crit Damage,global,ultraCritDmg_global,22,0|37,Hero MonoBehaviour synergy fields
+27,Archer,2,2,13,7,500,Ranger,2,20,20.0,+20%,Exp Super Amount,+20% Exp Super Amount,global,expSuperAmount_global,33,28,Hero MonoBehaviour synergy fields
+27,Archer,2,2,14,7,500,Titan + Warlock,3,10,10.0,+10%,Exp Super Chance,+10% Exp Super Chance,global,expSuperChance_global,32,37|21,Hero MonoBehaviour synergy fields
+27,Archer,2,2,15,8,1000,Chieftain + Druid + Warlock,4,7,7.0,+7%,Exp Ultra Chance,+7% Exp Ultra Chance,global,expUltraChance_global,34,9|13|21,Hero MonoBehaviour synergy fields
+27,Archer,2,2,16,8,1000,Viking + Ballista + Veteran,4,40,40.0,+40%,Skill Power,+40% Skill Power,personal,skillPower_personal,9,1|32|41,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,1,1,0,Peacekeeper,2,2,2.0,+2%,Skill Power,+2% Skill Power,personal,skillPower_personal,9,4,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,2,1,0,Elementalist + Arbalest,3,3,3.0,+3,Skill Duration,+3 Skill Duration,personal,skillDuration_personal,10,17|29,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,3,2,15,Dicemaster,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,39,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,4,2,15,Gladiator + Forester,3,10,10.0,+10%,Kill Exp,+10% Kill Exp,global,killExp_global,14,7|26,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,5,3,50,Assassin,2,200,200.0,+200%,Damage,+200% Damage,personal,damage_personal,1,3,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,6,3,50,Skymage + Crusader,3,250,250.0,+250%,Kill Gold,+250% Kill Gold,personal,killGold_personal,15,20|33,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,7,4,100,Battlemage,2,1,1.0,+1,Energy Income,+1 Energy Income,global,energyIncome_global,40,18,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,8,4,100,Witch + Ballista,3,15,15.0,+15%,Super Crit Chance,+15% Super Crit Chance,personal,superCritChance_personal,17,15|32,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,9,5,150,Ninja,2,8,8.0,+8%,Gold Super Chance,+8% Gold Super Chance,global,goldSuperChance_global,24,2,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,10,5,150,Forester + Warden,3,625,625.0,+625%,Super Crit Damage,+625% Super Crit Damage,global,superCritDmg_global,18,26|35,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,11,6,250,Wizard,2,250,250.0,+250%,Kill Gold,+250% Kill Gold,global,killGold_global,13,16,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,12,6,250,Viking + Crusader,3,275,275.0,+275%,Damage,+275% Damage,global,damage_global,0,1|33,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,13,7,500,Archer,2,7,7.0,+7%,Skill Power,+7% Skill Power,global,skillPower_global,41,27,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,14,7,500,Dicemaster + Ballista,3,10,10.0,+10%,Exp Super Chance,+10% Exp Super Chance,global,expSuperChance_global,32,39|32,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,15,8,1000,Samurai + Berserker + Forester,4,800,800.0,+800%,Boss Gold,+800% Boss Gold,global,bossGold_global,43,5|8|26,Hero MonoBehaviour synergy fields
+28,Ranger,2,3,16,8,1000,Chieftain + Druid + Elementalist,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,9|13|17,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,1,1,0,Samurai,2,2,2.0,-2%,Skill Cooldown,-2% Skill Cooldown,global,skillCd_global,11,5,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,2,1,0,Elementalist + Ranger,3,10,10.0,+10%,Crit Chance,+10% Crit Chance,personal,critChance_personal,6,17|28,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,3,2,15,Druid,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,13,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,4,2,15,Viking + Assassin,3,1,1.0,+1,Energy Income,+1 Energy Income,global,energyIncome_global,40,1|3,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,5,3,50,Templar,2,20,20.0,+20%,Kill Exp,+20% Kill Exp,global,killExp_global,14,22,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,6,3,50,Chieftain + Sniper,3,100,100.0,+100%,Attack Speed,+100% Attack Speed,personal,attSpeed_personal,3,9|30,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,7,4,100,Berserker,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,personal,goldSuperAmount_personal,27,8,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,8,4,100,Hunter + Captain,3,350,350.0,+350%,Kill Gold,+350% Kill Gold,personal,killGold_personal,15,25|34,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,9,5,150,Sovereign,2,400,400.0,+400%,Damage,+400% Damage,personal,damage_personal,1,38,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,10,5,150,Militia + Necromancer,3,8,8.0,+8%,Energy Super Amount,+8% Energy Super Amount,global,energySuperAmount_global,37,0|23,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,11,6,250,Titan,2,2,2.0,+2%,Exp Ultra Chance,+2% Exp Ultra Chance,global,expUltraChance_global,34,37,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,12,6,250,Captain + Veteran,3,6,6.0,+6%,Skill Power,+6% Skill Power,global,skillPower_global,41,34|41,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,13,7,500,Ninja,2,15,15.0,+15%,Energy Super Amount,+15% Energy Super Amount,global,energySuperAmount_global,37,2,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,14,7,500,Militia + Spelldancer,3,12,12.0,+12%,Power Mage Energy,+12% Power Mage Energy,global,powerMageEnergy_global,45,0|19,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,15,8,1000,Peacekeeper + Warlord + Apprentice,4,65,65.0,+65%,Energy Ultra Amount,+65% Energy Ultra Amount,global,energyUltraAmount_global,39,4|11|12,Hero MonoBehaviour synergy fields
+29,Arbalest,2,3,16,8,1000,Militia + Ninja + Captain,4,40,40.0,+40%,Skill Power,+40% Skill Power,personal,skillPower_personal,9,0|2|34,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,1,1,0,Rogue,2,25,25.0,+25%,Damage,+25% Damage,personal,damage_personal,1,31,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,2,1,0,Paladin + Spelldancer,3,20,20.0,+20%,Crit Damage,+20% Crit Damage,global,critDmg_global,7,6|19,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,3,2,15,Necromancer,2,17,17.0,+17%,Crit Chance,+17% Crit Chance,personal,critChance_personal,6,23,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,4,2,15,Apprentice + Elementalist,3,15,15.0,+15%,Attack Speed,+15% Attack Speed,global,attSpeed_global,2,12|17,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,5,3,50,Warlord,2,25,25.0,-25%,Skill Cooldown,-25% Skill Cooldown,personal,skillCd_personal,12,11,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,6,3,50,Chieftain + Arbalest,3,100,100.0,+100%,Kill Gold,+100% Kill Gold,global,killGold_global,13,9|29,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,7,4,100,Warden,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,35,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,8,4,100,Paladin + Chieftain,3,950,950.0,+950%,Super Crit Damage,+950% Super Crit Damage,personal,superCritDmg_personal,19,6|9,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,9,5,150,Spelldancer,2,400,400.0,+400%,Damage,+400% Damage,personal,damage_personal,1,19,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,10,5,150,Templar + Dicemaster,3,200,200.0,+200%,Damage,+200% Damage,global,damage_global,0,22|39,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,11,6,250,Champion,2,2,2.0,+2%,Ultra Crit Chance,+2% Ultra Crit Chance,global,ultraCritChance_global,20,10,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,12,6,250,Praetorian + Apprentice,3,4250,4250.0,+4250%,Ultra Crit Damage,+4250% Ultra Crit Damage,personal,ultraCritDmg_personal,23,36|12,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,13,7,500,Hunter,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,25,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,14,7,500,Battlemage + Crusader,3,1600,1600.0,+1600%,Ultra Boss Damage,+1600% Ultra Boss Damage,global,ultraBossDmg_global,49,18|33,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,15,8,1000,Champion + Skymage + Veteran,4,175,175.0,+175%,Attack Speed,+175% Attack Speed,personal,attSpeed_personal,3,10|20|41,Hero MonoBehaviour synergy fields
+30,Sniper,2,4,16,8,1000,Templar + Templar + Scout,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,22|22|24,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,1,1,0,Sniper,2,3,3.0,+3%,Attack Speed,+3% Attack Speed,global,attSpeed_global,2,30,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,2,1,0,Gladiator + Battlemage,3,20,20.0,+20%,Damage,+20% Damage,global,damage_global,0,7|18,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,3,2,15,Ninja,2,15,15.0,-15%,Skill Cooldown,-15% Skill Cooldown,personal,skillCd_personal,12,2,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,4,2,15,Champion + Praetorian,3,60,60.0,+60%,Kill Gold,+60% Kill Gold,global,killGold_global,13,10|36,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,5,3,50,Captain,2,16,16.0,+16%,Crit Chance,+16% Crit Chance,global,critChance_global,5,34,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,6,3,50,Ninja + Archer,3,35,35.0,+35%,Kill Exp,+35% Kill Exp,global,killExp_global,14,2|27,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,7,4,100,Forester,2,1,1.0,+1%,Skill Power,+1% Skill Power,global,skillPower_global,41,26,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,8,4,100,Druid + Dicemaster,3,7,7.0,+7%,Exp Super Amount,+7% Exp Super Amount,global,expSuperAmount_global,33,13|39,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,9,5,150,Veteran,2,3,3.0,+3%,Energy Super Chance,+3% Energy Super Chance,global,energySuperChance_global,36,41,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,10,5,150,Peacekeeper + Apprentice,3,25,25.0,+25%,Gold Super Chance,+25% Gold Super Chance,personal,goldSuperChance_personal,25,4|12,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,11,6,250,Captain,2,500,500.0,+500%,Kill Gold,+500% Kill Gold,personal,killGold_personal,15,34,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,12,6,250,Templar + Necromancer,3,600,600.0,+600%,Damage,+600% Damage,personal,damage_personal,1,22|23,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,13,7,500,Elementalist,2,850,850.0,+850%,Gold Super Amount,+850% Gold Super Amount,global,goldSuperAmount_global,26,17,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,14,7,500,Ninja + Assassin,3,20,20.0,+20%,Skill Power,+20% Skill Power,personal,skillPower_personal,9,2|3,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,15,8,1000,Paladin + Scout + Hunter,4,800,800.0,+800%,Boss Gold,+800% Boss Gold,global,bossGold_global,43,6|24|25,Hero MonoBehaviour synergy fields
+31,Rogue,2,4,16,8,1000,Sovereign + Hunter + Crusader,4,3250,3250.0,+3250%,Gold Ultra Amount,+3250% Gold Ultra Amount,global,goldUltraAmount_global,30,38|25|33,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,1,1,0,Crusader,2,25,25.0,+25%,Kill Gold,+25% Kill Gold,personal,killGold_personal,15,33,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,2,1,0,Berserker + Chieftain,3,4,4.0,-4%,Skill Cooldown,-4% Skill Cooldown,global,skillCd_global,11,8|9,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,3,2,15,Sovereign,2,100,100.0,+100%,Crit Damage,+100% Crit Damage,personal,critDmg_personal,8,38,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,4,2,15,Peacekeeper + Warlord,3,150,150.0,+150%,Damage,+150% Damage,personal,damage_personal,1,4|11,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,5,3,50,Scout,2,8,8.0,+8%,Skill Power,+8% Skill Power,personal,skillPower_personal,9,24,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,6,3,50,Battlemage + Warden,3,100,100.0,+100%,Attack Speed,+100% Attack Speed,personal,attSpeed_personal,3,18|35,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,7,4,100,Samurai,2,2,2.0,+2%,Exp Super Chance,+2% Exp Super Chance,global,expSuperChance_global,32,5,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,8,4,100,Witch + Ranger,3,150,150.0,+150%,Damage,+150% Damage,global,damage_global,0,15|28,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,9,5,150,Champion,2,175,175.0,+175%,Kill Gold,+175% Kill Gold,global,killGold_global,13,10,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,10,5,150,Spelldancer + Scout,3,4,4.0,+4%,Skill Power,+4% Skill Power,global,skillPower_global,41,19|24,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,11,6,250,Gladiator,2,25,25.0,+25%,Energy Ultra Amount,+25% Energy Ultra Amount,global,energyUltraAmount_global,39,7,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,12,6,250,Sorcerer + Skymage,3,3,3.0,+3%,Gold Ultra Chance,+3% Gold Ultra Chance,global,goldUltraChance_global,28,14|20,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,13,7,500,Militia,2,8,8.0,+8%,Exp Super Chance,+8% Exp Super Chance,global,expSuperChance_global,32,0,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,14,7,500,Dicemaster + Ranger,3,25,25.0,+25%,Exp Super Amount,+25% Exp Super Amount,global,expSuperAmount_global,33,39|28,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,15,8,1000,Viking + Wizard + Necromancer,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,1|16|23,Hero MonoBehaviour synergy fields
+32,Ballista,2,5,16,8,1000,Viking + Archer + Veteran,4,10,10.0,+10%,Exp Ultra Chance,+10% Exp Ultra Chance,global,expUltraChance_global,34,1|27|41,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,1,1,0,Ballista,2,2,2.0,-2%,Skill Cooldown,-2% Skill Cooldown,global,skillCd_global,11,32,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,2,1,0,Skymage + Warlock,3,6,6.0,+6%,Attack Speed,+6% Attack Speed,global,attSpeed_global,2,20|21,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,3,2,15,Warlord,2,40,40.0,+40%,Kill Gold,+40% Kill Gold,global,killGold_global,13,11,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,4,2,15,Paladin + Sorcerer,3,150,150.0,+150%,Damage,+150% Damage,personal,damage_personal,1,6|14,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,5,3,50,Titan,2,8,8.0,+8,Skill Duration,+8 Skill Duration,personal,skillDuration_personal,10,37,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,6,3,50,Skymage + Ranger,3,50,50.0,+50%,Crit Chance,+50% Crit Chance,personal,critChance_personal,6,20|28,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,7,4,100,Sovereign,2,12,12.0,+12%,Skill Power,+12% Skill Power,personal,skillPower_personal,9,38,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,8,4,100,Militia + Champion,3,4,4.0,+4%,Energy Super Amount,+4% Energy Super Amount,global,energySuperAmount_global,37,0|10,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,9,5,150,Archer,2,1100,1100.0,+1100%,Gold Super Amount,+1100% Gold Super Amount,personal,goldSuperAmount_personal,27,27,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,10,5,150,Praetorian + Sorcerer,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,36|14,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,11,6,250,Hunter,2,10,10.0,+10,Skill Duration,+10 Skill Duration,personal,skillDuration_personal,10,25,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,12,6,250,Viking + Ranger,3,6,6.0,+6%,Skill Power,+6% Skill Power,global,skillPower_global,41,1|28,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,13,7,500,Wizard,2,15,15.0,+15%,Skill Power,+15% Skill Power,personal,skillPower_personal,9,16,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,14,7,500,Battlemage + Sniper,3,2000,2000.0,+2000%,Gold Super Amount,+2000% Gold Super Amount,personal,goldSuperAmount_personal,27,18|30,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,15,8,1000,Sovereign + Crusader + Crusader,4,7,7.0,+7%,Gold Ultra Chance,+7% Gold Ultra Chance,global,goldUltraChance_global,28,38|33|33,Hero MonoBehaviour synergy fields
+33,Crusader,2,5,16,8,1000,Sovereign + Hunter + Rogue,4,200,200.0,+200%,Attack Speed,+200% Attack Speed,personal,attSpeed_personal,3,38|25|31,Hero MonoBehaviour synergy fields
+34,Captain,2,6,1,1,0,Templar,2,10,10.0,+10%,Crit Damage,+10% Crit Damage,global,critDmg_global,7,22,Hero MonoBehaviour synergy fields
+34,Captain,2,6,2,1,0,Warlord + Necromancer,3,3,3.0,+3%,Skill Power,+3% Skill Power,personal,skillPower_personal,9,11|23,Hero MonoBehaviour synergy fields
+34,Captain,2,6,3,2,15,Forester,2,5,5.0,+5,Skill Duration,+5 Skill Duration,personal,skillDuration_personal,10,26,Hero MonoBehaviour synergy fields
+34,Captain,2,6,4,2,15,Chieftain + Sovereign,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,personal,killGold_personal,15,9|38,Hero MonoBehaviour synergy fields
+34,Captain,2,6,5,3,50,Rogue,2,80,80.0,+80%,Attack Speed,+80% Attack Speed,personal,attSpeed_personal,3,31,Hero MonoBehaviour synergy fields
+34,Captain,2,6,6,3,50,Militia + Warlock,3,100,100.0,+100%,Damage,+100% Damage,global,damage_global,0,0|21,Hero MonoBehaviour synergy fields
+34,Captain,2,6,7,4,100,Archer,2,10,10.0,+10%,Gold Super Chance,+10% Gold Super Chance,personal,goldSuperChance_personal,25,27,Hero MonoBehaviour synergy fields
+34,Captain,2,6,8,4,100,Hunter + Arbalest,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,global,killGold_global,13,25|29,Hero MonoBehaviour synergy fields
+34,Captain,2,6,9,5,150,Druid,2,10,10.0,+10%,Exp Super Amount,+10% Exp Super Amount,global,expSuperAmount_global,33,13,Hero MonoBehaviour synergy fields
+34,Captain,2,6,10,5,150,Assassin + Hunter,3,10,10.0,+10%,Super Crit Chance,+10% Super Crit Chance,global,superCritChance_global,16,3|25,Hero MonoBehaviour synergy fields
+34,Captain,2,6,11,6,250,Rogue,2,5,5.0,+5,Energy Income,+5 Energy Income,global,energyIncome_global,40,31,Hero MonoBehaviour synergy fields
+34,Captain,2,6,12,6,250,Arbalest + Veteran,3,600,600.0,+600%,Damage,+600% Damage,personal,damage_personal,1,29|41,Hero MonoBehaviour synergy fields
+34,Captain,2,6,13,7,500,Peacekeeper,2,15,15.0,+15%,Skill Power,+15% Skill Power,personal,skillPower_personal,9,4,Hero MonoBehaviour synergy fields
+34,Captain,2,6,14,7,500,Samurai + Druid,3,6,6.0,+6%,Energy Super Chance,+6% Energy Super Chance,global,energySuperChance_global,36,5|13,Hero MonoBehaviour synergy fields
+34,Captain,2,6,15,8,1000,Militia + Gladiator + Sorcerer,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,0|7|14,Hero MonoBehaviour synergy fields
+34,Captain,2,6,16,8,1000,Militia + Ninja + Arbalest,4,75,75.0,+75%,Attack Speed,+75% Attack Speed,global,attSpeed_global,2,0|2|29,Hero MonoBehaviour synergy fields
+35,Warden,2,6,1,1,0,Necromancer,2,2,2.0,+2%,Crit Chance,+2% Crit Chance,global,critChance_global,5,23,Hero MonoBehaviour synergy fields
+35,Warden,2,6,2,1,0,Champion + Templar,3,3,3.0,+3%,Kill Exp,+3% Kill Exp,global,killExp_global,14,10|22,Hero MonoBehaviour synergy fields
+35,Warden,2,6,3,2,15,Titan,2,40,40.0,+40%,Damage,+40% Damage,global,damage_global,0,37,Hero MonoBehaviour synergy fields
+35,Warden,2,6,4,2,15,Spelldancer + Archer,3,6,6.0,+6%,Skill Power,+6% Skill Power,personal,skillPower_personal,9,19|27,Hero MonoBehaviour synergy fields
+35,Warden,2,6,5,3,50,Archer,2,200,200.0,+200%,Kill Gold,+200% Kill Gold,personal,killGold_personal,15,27,Hero MonoBehaviour synergy fields
+35,Warden,2,6,6,3,50,Battlemage + Ballista,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,global,skillCd_global,11,18|32,Hero MonoBehaviour synergy fields
+35,Warden,2,6,7,4,100,Sniper,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,personal,superCritDmg_personal,19,30,Hero MonoBehaviour synergy fields
+35,Warden,2,6,8,4,100,Samurai + Scout,3,2,2.0,+2%,Skill Power,+2% Skill Power,global,skillPower_global,41,5|24,Hero MonoBehaviour synergy fields
+35,Warden,2,6,9,5,150,Elementalist,2,400,400.0,+400%,Kill Gold,+400% Kill Gold,personal,killGold_personal,15,17,Hero MonoBehaviour synergy fields
+35,Warden,2,6,10,5,150,Forester + Ranger,3,450,450.0,+450%,Damage,+450% Damage,personal,damage_personal,1,26|28,Hero MonoBehaviour synergy fields
+35,Warden,2,6,11,6,250,Militia,2,5,5.0,+5%,Gold Ultra Chance,+5% Gold Ultra Chance,personal,goldUltraChance_personal,29,0,Hero MonoBehaviour synergy fields
+35,Warden,2,6,12,6,250,Peacekeeper + Sovereign,3,3,3.0,+3%,Energy Ultra Chance,+3% Energy Ultra Chance,global,energyUltraChance_global,38,4|38,Hero MonoBehaviour synergy fields
+35,Warden,2,6,13,7,500,Skymage,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,global,superCritDmg_global,18,20,Hero MonoBehaviour synergy fields
+35,Warden,2,6,14,7,500,Witch + Necromancer,3,150,150.0,+150%,Attack Speed,+150% Attack Speed,personal,attSpeed_personal,3,15|23,Hero MonoBehaviour synergy fields
+35,Warden,2,6,15,8,1000,Ninja + Assassin + Elementalist,4,12,12.0,+12%,Skill Power,+12% Skill Power,global,skillPower_global,41,2|3|17,Hero MonoBehaviour synergy fields
+35,Warden,2,6,16,8,1000,Peacekeeper + Gladiator + Berserker,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,4|7|8,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,1,1,0,Sovereign,2,2,2.0,+2%,Crit Chance,+2% Crit Chance,global,critChance_global,5,38,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,2,1,0,Titan + Deadeye,3,20,20.0,+20%,Kill Gold,+20% Kill Gold,global,killGold_global,13,37|40,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,3,2,15,Warlock,2,100,100.0,+100%,Damage,+100% Damage,personal,damage_personal,1,21,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,4,2,15,Champion + Rogue,3,15,15.0,+15%,Attack Speed,+15% Attack Speed,global,attSpeed_global,2,10|31,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,5,3,50,Dicemaster,2,8,8.0,+8%,Skill Power,+8% Skill Power,personal,skillPower_personal,9,39,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,6,3,50,Paladin + Veteran,3,30,30.0,-30%,Skill Cooldown,-30% Skill Cooldown,personal,skillCd_personal,12,6|41,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,7,4,100,Ninja,2,1,1.0,+1,Energy Income,+1 Energy Income,global,energyIncome_global,40,2,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,8,4,100,Wizard + Battlemage,3,15,15.0,+15%,Super Crit Chance,+15% Super Crit Chance,personal,superCritChance_personal,17,16|18,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,9,5,150,Militia,2,550,550.0,+550%,Super Crit Damage,+550% Super Crit Damage,global,superCritDmg_global,18,0,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,10,5,150,Sorcerer + Crusader,3,200,200.0,+200%,Damage,+200% Damage,global,damage_global,0,14|33,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,11,6,250,Samurai,2,2000,2000.0,+2000%,Gold Ultra Amount,+2000% Gold Ultra Amount,global,goldUltraAmount_global,30,5,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,12,6,250,Apprentice + Sniper,3,2250,2250.0,+2250%,Ultra Crit Damage,+2250% Ultra Crit Damage,global,ultraCritDmg_global,22,12|30,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,13,7,500,Necromancer,2,125,125.0,+125%,Attack Speed,+125% Attack Speed,personal,attSpeed_personal,3,23,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,14,7,500,Scout + Hunter,3,8,8.0,+8%,Skill Power,+8% Skill Power,global,skillPower_global,41,24|25,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,15,8,1000,Titan + Dicemaster + Deadeye,4,3000,3000.0,+3000%,Ultra Crit Damage,+3000% Ultra Crit Damage,global,ultraCritDmg_global,22,37|39|40,Hero MonoBehaviour synergy fields
+36,Praetorian,0,7,16,8,1000,Assassin + Wizard + Spelldancer,4,20,20.0,+20%,Ultra Crit Chance,+20% Ultra Crit Chance,personal,ultraCritChance_personal,21,3|16|19,Hero MonoBehaviour synergy fields
+37,Titan,0,7,1,1,0,Veteran,2,2,2.0,+2,Skill Duration,+2 Skill Duration,personal,skillDuration_personal,10,41,Hero MonoBehaviour synergy fields
+37,Titan,0,7,2,1,0,Praetorian + Deadeye,3,4,4.0,-4%,Skill Cooldown,-4% Skill Cooldown,global,skillCd_global,11,36|40,Hero MonoBehaviour synergy fields
+37,Titan,0,7,3,2,15,Warden,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,global,attSpeed_global,2,35,Hero MonoBehaviour synergy fields
+37,Titan,0,7,4,2,15,Wizard + Dicemaster,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,personal,killGold_personal,15,16|39,Hero MonoBehaviour synergy fields
+37,Titan,0,7,5,3,50,Crusader,2,200,200.0,+200%,Crit Damage,+200% Crit Damage,personal,critDmg_personal,8,33,Hero MonoBehaviour synergy fields
+37,Titan,0,7,6,3,50,Sovereign + Deadeye,3,100,100.0,+100%,Damage,+100% Damage,global,damage_global,0,38|40,Hero MonoBehaviour synergy fields
+37,Titan,0,7,7,4,100,Apprentice,2,850,850.0,+850%,Super Crit Damage,+850% Super Crit Damage,personal,superCritDmg_personal,19,12,Hero MonoBehaviour synergy fields
+37,Titan,0,7,8,4,100,Viking + Necromancer,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,global,killGold_global,13,1|23,Hero MonoBehaviour synergy fields
+37,Titan,0,7,9,5,150,Warlord,2,12,12.0,+12%,Skill Power,+12% Skill Power,personal,skillPower_personal,9,11,Hero MonoBehaviour synergy fields
+37,Titan,0,7,10,5,150,Berserker + Wizard,3,4,4.0,+4,Energy Income,+4 Energy Income,global,energyIncome_global,40,8|16,Hero MonoBehaviour synergy fields
+37,Titan,0,7,11,6,250,Arbalest,2,500,500.0,+500%,Damage,+500% Damage,personal,damage_personal,1,29,Hero MonoBehaviour synergy fields
+37,Titan,0,7,12,6,250,Militia + Archer,3,600,600.0,+600%,Kill Gold,+600% Kill Gold,personal,killGold_personal,15,0|27,Hero MonoBehaviour synergy fields
+37,Titan,0,7,13,7,500,Witch,2,300,300.0,+300%,Damage,+300% Damage,global,damage_global,0,15,Hero MonoBehaviour synergy fields
+37,Titan,0,7,14,7,500,Warlock + Archer,3,8,8.0,+8%,Skill Power,+8% Skill Power,global,skillPower_global,41,21|27,Hero MonoBehaviour synergy fields
+37,Titan,0,7,15,8,1000,Praetorian + Dicemaster + Deadeye,4,30,30.0,+30%,Skill Power,+30% Skill Power,personal,skillPower_personal,9,36|39|40,Hero MonoBehaviour synergy fields
+37,Titan,0,7,16,8,1000,Warlord + Warlock + Warlock,4,3250,3250.0,+3250%,Ultra Crit Damage,+3250% Ultra Crit Damage,global,ultraCritDmg_global,22,11|21|21,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,1,1,0,Praetorian,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,personal,skillCd_personal,12,36,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,2,1,0,Dicemaster + Veteran,3,20,20.0,+20%,Damage,+20% Damage,global,damage_global,0,39|41,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,3,2,15,Ballista,2,40,40.0,+40%,Crit Damage,+40% Crit Damage,global,critDmg_global,7,32,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,4,2,15,Chieftain + Captain,3,150,150.0,+150%,Kill Gold,+150% Kill Gold,personal,killGold_personal,15,9|34,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,5,3,50,Warlock,2,8,8.0,+8%,Skill Power,+8% Skill Power,personal,skillPower_personal,9,21,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,6,3,50,Titan + Deadeye,3,1,1.0,+1%,Skill Power,+1% Skill Power,global,skillPower_global,41,37|40,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,7,4,100,Crusader,2,125,125.0,+125%,Kill Gold,+125% Kill Gold,global,killGold_global,13,33,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,8,4,100,Templar + Forester,3,6,6.0,+6%,Gold Super Chance,+6% Gold Super Chance,global,goldSuperChance_global,24,22|26,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,9,5,150,Arbalest,2,8,8.0,+8%,Super Crit Chance,+8% Super Crit Chance,global,superCritChance_global,16,29,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,10,5,150,Witch + Battlemage,3,4,4.0,+4,Energy Income,+4 Energy Income,global,energyIncome_global,40,15|18,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,11,6,250,Berserker,2,45,45.0,+45%,Exp Ultra Amount,+45% Exp Ultra Amount,global,expUltraAmount_global,35,8,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,12,6,250,Peacekeeper + Warden,3,600,600.0,+600%,Damage,+600% Damage,personal,damage_personal,1,4|35,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,13,7,500,Warlock,2,7,7.0,+7%,Skill Power,+7% Skill Power,global,skillPower_global,41,21,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,14,7,500,Chieftain + Elementalist,3,925,925.0,+925%,Gold Super Amount,+925% Gold Super Amount,global,goldSuperAmount_global,26,9|17,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,15,8,1000,Crusader + Crusader + Crusader,4,3000,3000.0,+3000%,Gold Ultra Amount,+3000% Gold Ultra Amount,global,goldUltraAmount_global,30,33|33|33,Hero MonoBehaviour synergy fields
+38,Sovereign,1,7,16,8,1000,Hunter + Rogue + Crusader,4,40,40.0,+40%,Skill Power,+40% Skill Power,personal,skillPower_personal,9,25|31|33,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,1,1,0,Deadeye,2,10,10.0,+10%,Attack Speed,+10% Attack Speed,personal,attSpeed_personal,3,40,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,2,1,0,Sovereign + Veteran,3,4,4.0,-4%,Skill Cooldown,-4% Skill Cooldown,global,skillCd_global,11,38|41,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,3,2,15,Ranger,2,5,5.0,+5,Skill Duration,+5 Skill Duration,personal,skillDuration_personal,10,28,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,4,2,15,Titan + Wizard,3,150,150.0,+150%,Damage,+150% Damage,personal,damage_personal,1,37|16,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,5,3,50,Praetorian,2,16,16.0,+16%,Crit Chance,+16% Crit Chance,global,critChance_global,5,36,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,6,3,50,Viking + Sorcerer,3,100,100.0,+100%,Kill Gold,+100% Kill Gold,global,killGold_global,13,1|14,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,7,4,100,Skymage,2,1,1.0,+1,Energy Income,+1 Energy Income,global,energyIncome_global,40,20,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,8,4,100,Druid + Rogue,3,500,500.0,+500%,Super Crit Damage,+500% Super Crit Damage,global,superCritDmg_global,18,13|31,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,9,5,150,Assassin,2,175,175.0,+175%,Damage,+175% Damage,global,damage_global,0,3,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,10,5,150,Templar + Sniper,3,450,450.0,+450%,Kill Gold,+450% Kill Gold,personal,killGold_personal,15,22|30,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,11,6,250,Warlord,2,5,5.0,+5%,Gold Ultra Chance,+5% Gold Ultra Chance,personal,goldUltraChance_personal,29,11,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,12,6,250,Elementalist + Scout,3,3,3.0,+3%,Ultra Crit Chance,+3% Ultra Crit Chance,global,ultraCritChance_global,20,17|24,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,13,7,500,Apprentice,2,700,700.0,+700%,Damage,+700% Damage,personal,damage_personal,1,12,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,14,7,500,Ranger + Ballista,3,25,25.0,+25%,Exp Super Amount,+25% Exp Super Amount,global,expSuperAmount_global,33,28|32,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,15,8,1000,Praetorian + Titan + Deadeye,4,60,60.0,+60%,Attack Speed,+60% Attack Speed,global,attSpeed_global,2,36|37|40,Hero MonoBehaviour synergy fields
+39,Dicemaster,1,7,16,8,1000,Apprentice + Witch + Skymage,4,6500,6500.0,+6500%,Ultra Crit Damage,+6500% Ultra Crit Damage,personal,ultraCritDmg_personal,23,12|15|20,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,1,1,0,Dicemaster,2,5,5.0,-5%,Skill Cooldown,-5% Skill Cooldown,personal,skillCd_personal,12,39,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,2,1,0,Praetorian + Titan,3,50,50.0,+50%,Damage,+50% Damage,personal,damage_personal,1,36|37,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,3,2,15,Templar,2,5,5.0,+5%,Skill Power,+5% Skill Power,personal,skillPower_personal,9,22,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,4,2,15,Warlock + Veteran,3,25,25.0,+25%,Crit Chance,+25% Crit Chance,personal,critChance_personal,6,21|41,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,5,3,50,Samurai,2,80,80.0,+80%,Kill Gold,+80% Kill Gold,global,killGold_global,13,5,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,6,3,50,Titan + Sovereign,3,30,30.0,+30%,Attack Speed,+30% Attack Speed,global,attSpeed_global,2,37|38,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,7,4,100,Wizard,2,125,125.0,+125%,Damage,+125% Damage,global,damage_global,0,16,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,8,4,100,Elementalist + Warlock,3,500,500.0,+500%,Gold Super Amount,+500% Gold Super Amount,global,goldSuperAmount_global,26,17|21,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,9,5,150,Viking,2,175,175.0,+175%,Damage,+175% Damage,global,damage_global,0,1,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,10,5,150,Gladiator + Skymage,3,10,10.0,+10%,Super Crit Chance,+10% Super Crit Chance,global,superCritChance_global,16,7|20,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,11,6,250,Archer,2,5,5.0,+5%,Ultra Crit Chance,+5% Ultra Crit Chance,personal,ultraCritChance_personal,21,27,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,12,6,250,Battlemage + Forester,3,275,275.0,+275%,Kill Gold,+275% Kill Gold,global,killGold_global,13,18|26,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,13,7,500,Assassin,2,15,15.0,+15%,Skill Power,+15% Skill Power,personal,skillPower_personal,9,3,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,14,7,500,Champion + Apprentice,3,2000,2000.0,+2000%,Super Crit Damage,+2000% Super Crit Damage,personal,superCritDmg_personal,19,10|12,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,15,8,1000,Praetorian + Titan + Dicemaster,4,7,7.0,+7%,Ultra Crit Chance,+7% Ultra Crit Chance,global,ultraCritChance_global,20,36|37|39,Hero MonoBehaviour synergy fields
+40,Deadeye,2,7,16,8,1000,Sorcerer + Necromancer + Forester,4,200,200.0,+200%,Attack Speed,+200% Attack Speed,personal,attSpeed_personal,3,14|23|26,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,1,1,0,Titan,2,2,2.0,+2,Skill Duration,+2 Skill Duration,personal,skillDuration_personal,10,37,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,2,1,0,Sovereign + Dicemaster,3,50,50.0,+50%,Kill Gold,+50% Kill Gold,personal,killGold_personal,15,38|39,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,3,2,15,Berserker,2,5,5.0,+5%,Skill Power,+5% Skill Power,personal,skillPower_personal,9,8,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,4,2,15,Warlock + Deadeye,3,150,150.0,+150%,Crit Damage,+150% Crit Damage,personal,critDmg_personal,8,21|40,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,5,3,50,Battlemage,2,80,80.0,+80%,Damage,+80% Damage,global,damage_global,0,18,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,6,3,50,Paladin + Praetorian,3,10,10.0,-10%,Skill Cooldown,-10% Skill Cooldown,global,skillCd_global,11,6|36,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,7,4,100,Necromancer,2,300,300.0,+300%,Damage,+300% Damage,personal,damage_personal,1,23,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,8,4,100,Warlord + Skymage,3,7,7.0,+7%,Exp Super Amount,+7% Exp Super Amount,global,expSuperAmount_global,33,11|20,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,9,5,150,Rogue,2,1100,1100.0,+1100%,Super Crit Damage,+1100% Super Crit Damage,personal,superCritDmg_personal,19,31,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,10,5,150,Ninja + Chieftain,3,7,7.0,+7%,Exp Super Chance,+7% Exp Super Chance,global,expSuperChance_global,32,2|9,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,11,6,250,Spelldancer,2,500,500.0,+500%,Kill Gold,+500% Kill Gold,personal,killGold_personal,15,19,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,12,6,250,Arbalest + Captain,3,6,6.0,+6,Energy Income,+6 Energy Income,global,energyIncome_global,40,29|34,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,13,7,500,Templar,2,20,20.0,+20%,Boss Exp,+20% Boss Exp,global,bossExp_global,44,22,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,14,7,500,Viking + Forester,3,25,25.0,+25%,Exp Super Amount,+25% Exp Super Amount,global,expSuperAmount_global,33,1|26,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,15,8,1000,Champion + Skymage + Sniper,4,12,12.0,+12%,Skill Power,+12% Skill Power,global,skillPower_global,41,10|20|30,Hero MonoBehaviour synergy fields
+41,Veteran,2,7,16,8,1000,Viking + Archer + Ballista,4,125,125.0,+125%,Exp Ultra Amount,+125% Exp Ultra Amount,global,expUltraAmount_global,35,1|27|32,Hero MonoBehaviour synergy fields

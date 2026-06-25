@@ -1,0 +1,32 @@
+system,metric,upgrade_key,upgrade_num,data_manager_field,data_manager_offset,stat_amt_percent,percent_per_level,wave_req,max_level,base_cost,mult_cost,override_formula_endgame,formula_factor,source_method,source_address,unity_path_id,gameobject_name
+research_energy,damage,researchDmg1,1,researchDmg1,0xAE0,5,0.05,0,999999,5.0,1.0,,1 + level * 0.05,Hero.getDmgPermEffect,0x01BB3BF0,308530,damage 1
+research_energy,damage,researchDmg2,2,researchDmg2,0xAF0,10,0.10,250,999999,75.0,1.0,,1 + level * 0.10,Hero.getDmgPermEffect,0x01BB3C44,303999,damage 2
+research_energy,damage,researchDmg3,3,researchDmg3,0xAFC,25,0.25,750,999999,1000.0,1.0,,1 + level * 0.25,Hero.getDmgPermEffect,0x01BB3C94,303997,damage 3
+research_energy,damage,researchDmg4,4,researchDmg4,0xB00,50,0.50,1500,999999,10000.0,1.0,,1 + level * 0.50,Hero.getDmgPermEffect,0x01BB3CE4,304008,damage 4
+research_energy,damage,researchDmg5,5,researchDmg5,0xB04,75,0.75,4000,999999,100000.0,1.0,,1 + level * 0.75,Hero.getDmgPermEffect,0x01BB3D30,304025,damage 5
+research_energy,damage,researchDmg6,6,researchDmg6,0xB0C,100,1.00,30000,999999,1500000026624.0,3.0,,1 + level * 1.00,Hero.getDmgPermEffect,0x01BB3D80,304013,damage 6
+research_energy,kill_gold,researchKillGold1,1,researchKillGold1,0xB18,5,0.05,0,999999,5.0,1.0,,1 + level * 0.05,GameManager.getBaseGoldDrop,0x01B8D238,304003,gold 1
+research_energy,kill_gold,researchKillGold2,2,researchKillGold2,0xB2C,10,0.10,250,999999,75.0,1.0,,1 + level * 0.10,GameManager.getBaseGoldDrop,0x01B8D28C,303989,gold 2
+research_energy,kill_gold,researchKillGold3,3,researchKillGold3,0xB38,25,0.25,750,999999,1000.0,1.0,,1 + level * 0.25,GameManager.getBaseGoldDrop,0x01B8D2DC,304024,gold 3
+research_energy,kill_gold,researchKillGold4,4,researchKillGold4,0xB40,50,0.50,1500,999999,10000.0,1.0,,1 + level * 0.50,GameManager.getBaseGoldDrop,0x01B8D32C,304004,gold 4
+research_energy,kill_gold,researchKillGold5,5,researchKillGold5,0xB48,75,0.75,4000,999999,100000.0,1.0,,1 + level * 0.75,GameManager.getBaseGoldDrop,0x01B8D378,304015,gold 5
+research_energy,kill_gold,researchKillGold6,6,researchKillGold6,0xB50,100,1.00,30000,999999,1500000026624.0,3.0,,1 + level * 1.00,GameManager.getBaseGoldDrop,0x01B8D3C8,304026,gold 6
+research_energy,prestige_power,researchPrestigePower1,1,researchPrestigePower1,0xB1C,10,0.10,0,999999,10.0,1.0,,1 + level * 0.10,GlobalMethods.getPrestigePointsPermEffect,0x01BA3DB4,303991,prestige power 1
+research_energy,prestige_power,researchPrestigePower2,2,researchPrestigePower2,0xB30,25,0.25,250,999999,150.0,1.0,,1 + level * 0.25,GlobalMethods.getPrestigePointsPermEffect,0x01BA3DC4,304018,prestige power 2
+research_energy,prestige_power,researchPrestigePower3,3,researchPrestigePower3,0xB3C,50,0.50,750,999999,2500.0,1.0,,1 + level * 0.50,GlobalMethods.getPrestigePointsPermEffect,0x01BA3DE8,304028,prestige power 3
+research_energy,prestige_power,researchPrestigePower4,4,researchPrestigePower4,0xB44,75,0.75,2500,999999,40000.0,1.0,,1 + level * 0.75,GlobalMethods.getPrestigePointsPermEffect,0x01BA3DF4,304021,prestige power 4
+research_energy,prestige_power,researchPrestigePower5,5,researchPrestigePower5,0xB4C,100,1.00,25000,999999,24999999488.0,3.0,,1 + level * 1.00,GlobalMethods.getPrestigePointsPermEffect,0x01BA3E5C,303994,prestige power 5
+prestige,damage,prestigeDmg1,1,prestigeDmg1,0xC18,5,0.05,0,999999,500.0,1.100000023841858,0,1 + level * 0.05,Hero.getDmgPermEffect,0x01BB3DC4,278867,damage 1
+prestige,damage,prestigeDmg2,2,prestigeDmg2,0xC28,10,0.10,250,999999,100000.0,1.2000000476837158,0,1 + level * 0.10,Hero.getDmgPermEffect,0x01BB3E10,278855,damage 2
+prestige,damage,prestigeDmg3,3,prestigeDmg3,0xC30,25,0.25,1000,999999,2000000000.0,1.2999999523162842,0,1 + level * 0.25,Hero.getDmgPermEffect,0x01BB3E58,278879,damage 3
+prestige,damage,prestigeDmg4,4,prestigeDmg4,0xC34,50,0.50,2500,999999,5000000000000.0,1.399999976158142,0,1 + level * 0.50,Hero.getDmgPermEffect,0x01BB3EA8,278883,damage 4
+prestige,damage,prestigeDmg5,5,prestigeDmg5,0xC38,75,0.75,5000,999999,1e17,1.5,0,1 + level * 0.75,Hero.getDmgPermEffect,0x01BB3EF4,278887,damage 5
+prestige,damage,prestigeDmg6,6,prestigeDmg6,0xC3C,100,1.00,10000,999999,1e28,3.0,0,1 + level * 1.00,Hero.getDmgPermEffect,0x01BB3F44,278842,damage 6
+prestige,damage,prestigeDmg7,7,prestigeDmg7,0xC54,125,1.25,35000,999,1e52,2.0,1,1 + level * 1.25,Hero.getDmgPermEffect,0x01BB3F88,278859,damage 7
+prestige,kill_gold,prestigeKillGold1,1,prestigeKillGold1,0xC60,5,0.05,0,999999,500.0,1.100000023841858,0,1 + level * 0.05,GameManager.getBaseGoldDrop,0x01B8D40C,278882,gold 1
+prestige,kill_gold,prestigeKillGold2,2,prestigeKillGold2,0xC70,10,0.10,250,999999,100000.0,1.2000000476837158,0,1 + level * 0.10,GameManager.getBaseGoldDrop,0x01B8D458,278885,gold 2
+prestige,kill_gold,prestigeKillGold3,3,prestigeKillGold3,0xC80,25,0.25,1000,999999,2000000000.0,1.2999999523162842,0,1 + level * 0.25,GameManager.getBaseGoldDrop,0x01B8D4A0,278852,gold 3
+prestige,kill_gold,prestigeKillGold4,4,prestigeKillGold4,0xC84,50,0.50,2500,999999,5000000000000.0,1.399999976158142,0,1 + level * 0.50,GameManager.getBaseGoldDrop,0x01B8D4F0,278851,gold 4
+prestige,kill_gold,prestigeKillGold5,5,prestigeKillGold5,0xC88,75,0.75,5000,999999,1e17,1.5,0,1 + level * 0.75,GameManager.getBaseGoldDrop,0x01B8D53C,278853,gold 5
+prestige,kill_gold,prestigeKillGold6,6,prestigeKillGold6,0xC8C,100,1.00,8000,999999,1e24,2.0,0,1 + level * 1.00,GameManager.getBaseGoldDrop,0x01B8D58C,278846,gold 6
+prestige,kill_gold,prestigeKillGold7,7,prestigeKillGold7,0xCA0,125,1.25,35000,999,1e52,2.0,1,1 + level * 1.25,GameManager.getBaseGoldDrop,0x01B8D5D0,278886,gold 7

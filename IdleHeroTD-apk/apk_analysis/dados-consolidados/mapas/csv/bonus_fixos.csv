@@ -1,0 +1,28 @@
+map_num,map_id,map_name,bonus_order,bonus_text,bonus_value,bonus_stat,ui_color,source,source_behaviour_path_id
+1,map1,Island Hideout,1,Default Stats,,Default Stats,,map_panel_text,244194
+2,map2,Snow Fort,1,-20% Enemy Movement Speed,-20%,Enemy Movement Speed,green,map_panel_text,243985
+2,map2,Snow Fort,2,-20% Attack Speed,-20%,Attack Speed,red,map_panel_text,243985
+3,map3,Barren Desert,1,+30% Range,+30%,Range,green,map_panel_text,243491
+3,map3,Barren Desert,2,+25% Rank Exp,+25%,Rank Exp,green,map_panel_text,243491
+3,map3,Barren Desert,3,+1 Training Dummy Spawns,+1,Training Dummy Spawns,green,map_panel_text,243491
+3,map3,Barren Desert,4,-35% Kill Gold,-35%,Kill Gold,red,map_panel_text,243491
+4,map4,Haunted Cemetery,1,-25% Skill Cooldown Time,-25%,Skill Cooldown Time,green,map_panel_text,242586
+4,map4,Haunted Cemetery,2,+100% Prestige Power,+100%,Prestige Power,green,map_panel_text,242586
+4,map4,Haunted Cemetery,3,+25% Battlepass Exp,+25%,Battlepass Exp,green,map_panel_text,242586
+4,map4,Haunted Cemetery,4,-35% Rank Exp,-35%,Rank Exp,red,map_panel_text,242586
+5,map5,Lava Dungeon,1,+75% Damage,+75%,Damage,green,map_panel_text,244249
+5,map5,Lava Dungeon,2,+50% Kill Gold,+50%,Kill Gold,green,map_panel_text,244249
+5,map5,Lava Dungeon,3,+15% Attack Speed,+15%,Attack Speed,green,map_panel_text,244249
+5,map5,Lava Dungeon,4,+10% Splash Damage,+10%,Splash Damage,green,map_panel_text,244249
+5,map5,Lava Dungeon,5,-50% Rank Exp,-50%,Rank Exp,red,map_panel_text,244249
+6,map6,Sunny Farm,1,+5 Energy Income,+5,Energy Income,green,map_panel_text,243227
+6,map6,Sunny Farm,2,+5% Super Energy Chance,+5%,Super Energy Chance,green,map_panel_text,243227
+6,map6,Sunny Farm,3,+10% Super Energy Amount,+10%,Super Energy Amount,green,map_panel_text,243227
+6,map6,Sunny Farm,4,-15% Spell Cooldown Time,-15%,Spell Cooldown Time,green,map_panel_text,243227
+6,map6,Sunny Farm,5,-50% Damage,-50%,Damage,red,map_panel_text,243227
+7,map7,Astral Battleground,1,+5% Skill Power,+5%,Skill Power,green,user_screenshot_astral_skill_perks_2026-06-25,
+7,map7,Astral Battleground,2,-25% Skill Cooldown,-25%,Skill Cooldown,green,user_screenshot_astral_skill_perks_2026-06-25,
+7,map7,Astral Battleground,3,-10% Spell Cooldown,-10%,Spell Cooldown,green,user_screenshot_astral_skill_perks_2026-06-25,
+7,map7,Astral Battleground,4,+5% Instant Skill Chance,+5%,Instant Skill Chance,green,user_screenshot_astral_skill_perks_2026-06-25,
+7,map7,Astral Battleground,5,+3% Instant Spell Chance,+3%,Instant Spell Chance,green,user_screenshot_astral_skill_perks_2026-06-25,
+7,map7,Astral Battleground,6,-75% Battlepass Exp,-75%,Battlepass Exp,red,user_screenshot_astral_skill_perks_2026-06-25,

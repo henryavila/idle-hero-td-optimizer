@@ -1,0 +1,3 @@
+# Optional OCR engine used by extract_upgrade_levels_from_image.py.
+# Install only if macOS Vision or Tesseract are not enough.
+easyocr>=1.7
