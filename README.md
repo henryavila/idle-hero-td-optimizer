@@ -90,7 +90,7 @@ runs/                                         saidas locais geradas pela UI
 
 ## Portabilidade
 
-O app deve ser autocontido para execucao. Ele pode ser movido para `/Volumes/External/code/idle-hero-td-optimizer` e continuar funcionando sem depender da pasta `Games`.
+O app deve ser autocontido para execucao. Ele pode ser movido para qualquer pasta e continuar funcionando sem depender da pasta `Games` nem de caminhos absolutos gravados em wrappers da `.venv`.
 
 A pasta `Games/Idle Hero TD` continua sendo a base de conhecimento da IA e o workspace de investigacao do jogo. Quando a analise do APK gerar dados novos, sincronize para dentro deste repo apenas o subconjunto consolidado que o app realmente usa em runtime.
 
@@ -118,7 +118,7 @@ IdleHeroTD-apk/apk_analysis/dados-consolidados/upgrades/upgrade_ocr_to_optimizer
 ## Testes
 
 ```bash
-source .venv/bin/activate
-python scripts/test_upgrade_cost_formulas.py
-python -m compileall -q scripts ui
+.venv/bin/python scripts/test_run_script_portability.py
+.venv/bin/python scripts/test_upgrade_cost_formulas.py
+.venv/bin/python -m compileall -q scripts ui
 ```
