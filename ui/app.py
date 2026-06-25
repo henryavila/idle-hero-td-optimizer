@@ -34,6 +34,15 @@ PRESTIGE_KEYS = [
 CORE_KEYS = [*RESEARCH_KEYS, *PRESTIGE_KEYS]
 STATUS_OPTIONS = ["available", "locked", "maxed", "ignore", "review"]
 PREVIEW_WIDTH = 420
+SCREEN_ORDER = ["Research/Energy", "Prestige/PowerUps"]
+SCREEN_TITLES = {
+    "Research/Energy": "Research / Energy",
+    "Prestige/PowerUps": "Prestige / PowerUps",
+}
+SCREEN_ACCENTS = {
+    "Research/Energy": "#39d98a",
+    "Prestige/PowerUps": "#bb86fc",
+}
 
 
 def page_setup() -> None:
@@ -397,6 +406,145 @@ def review_level_default(value: Any) -> int:
     return int(value)
 
 
+def screen_slug(screen: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", screen.lower()).strip("_")
+
+
+def screen_counts_text(rows: pd.DataFrame) -> str:
+    if rows.empty:
+        return "sem itens"
+    if not bool(rows["screen_loaded"].any()):
+        return "print nao anexado | itens ignorados"
+    counts = rows["status"].value_counts().to_dict()
+    return (
+        f"{counts.get('available', 0)} disponiveis | "
+        f"{counts.get('locked', 0)} locked | "
+        f"{counts.get('maxed', 0)} maxed | "
+        f"{counts.get('review', 0)} pendencias"
+    )
+
+
+def screen_section_header(screen: str, rows: pd.DataFrame) -> None:
+    title = SCREEN_TITLES.get(screen, screen)
+    color = SCREEN_ACCENTS.get(screen, "#4ea1ff")
+    st.markdown(
+        f"""
+        <div style="border-left: 6px solid {color}; padding: 0.35rem 0 0.35rem 0.8rem; margin: 1.2rem 0 0.7rem 0;">
+            <div style="font-size: 1.25rem; font-weight: 750;">{title}</div>
+            <div style="opacity: 0.72; font-size: 0.92rem;">{screen_counts_text(rows)}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_pending_cards(
+    merged: pd.DataFrame,
+    pending: pd.DataFrame,
+    screen: str,
+    state_version: str,
+) -> None:
+    title = SCREEN_TITLES.get(screen, screen)
+    screen_pending = pending[pending["screen"] == screen].copy()
+    screen_rows = merged[merged["screen"] == screen]
+
+    if not bool(screen_rows["screen_loaded"].any()):
+        st.caption("Print nao anexado. Os upgrades desta tela ficam como ignore.")
+        return
+    if screen_pending.empty:
+        st.success(f"{title}: sem pendencias.")
+        return
+
+    st.info(f"{title}: resolva somente estes {len(screen_pending)} item(ns).")
+    columns = st.columns(2)
+    decision_options = ["review", "available", "locked", "maxed", "ignore"]
+    slug = screen_slug(screen)
+
+    for position, (_, row) in enumerate(screen_pending.iterrows()):
+        key = str(row["upgrade_key"])
+        with columns[position % 2]:
+            with st.container(border=True):
+                st.markdown(f"**{row['label']}**")
+                st.caption(inference_label(row.get("inference")))
+                if row.get("ocr_text"):
+                    st.caption(str(row["ocr_text"])[:140])
+                decision = st.selectbox(
+                    "Status",
+                    decision_options,
+                    index=0,
+                    format_func=status_label,
+                    key=f"pending_status_{state_version}_{slug}_{key}",
+                )
+                level = row.get("level")
+                if decision == "available":
+                    level = st.number_input(
+                        "Level",
+                        min_value=0,
+                        step=1,
+                        value=review_level_default(row.get("level")),
+                        key=f"pending_level_{state_version}_{slug}_{key}",
+                    )
+                elif decision == "locked":
+                    level = 0 if pd.isna(level) else level
+                update_row(merged, key, decision, level)
+
+
+def render_inference_summary(rows: pd.DataFrame) -> None:
+    with st.expander("Resumo das inferencias", expanded=False):
+        for screen in SCREEN_ORDER:
+            subset = rows[rows["screen"] == screen]
+            if subset.empty:
+                continue
+            inferred_maxed = int(((subset["status"] == "maxed") & (~subset["detected"])).sum())
+            inferred_locked = int(((subset["status"] == "locked") & (~subset["detected"])).sum())
+            visible_locked = int(((subset["status"] == "locked") & (subset["detected"])).sum())
+            st.markdown(f"**{SCREEN_TITLES.get(screen, screen)}**")
+            st.write(
+                f"- {inferred_maxed} maxed inferidos antes de sequencias visiveis\n"
+                f"- {inferred_locked} locked inferidos alem dos tiers visiveis\n"
+                f"- {visible_locked} locked detectados por botao Wave/lock"
+            )
+
+
+def render_advanced_editor(merged: pd.DataFrame) -> None:
+    with st.expander("Ajustes avancados", expanded=False):
+        editor_columns = ["label", "level", "status", "confidence", "upgrade_key"]
+        tabs = st.tabs([SCREEN_TITLES.get(screen, screen) for screen in SCREEN_ORDER])
+        for screen, tab in zip(SCREEN_ORDER, tabs):
+            with tab:
+                subset = merged[merged["screen"] == screen]
+                if subset.empty:
+                    st.caption("Sem itens nesta tela.")
+                    continue
+                edited = st.data_editor(
+                    subset[editor_columns],
+                    use_container_width=True,
+                    hide_index=True,
+                    num_rows="fixed",
+                    column_config={
+                        "label": st.column_config.TextColumn("Upgrade", disabled=True, width="medium"),
+                        "level": st.column_config.NumberColumn("Level", min_value=0, step=1, width="small"),
+                        "status": st.column_config.SelectboxColumn("Status", options=STATUS_OPTIONS, required=True, width="small"),
+                        "confidence": st.column_config.NumberColumn("OCR", disabled=True, format="%.1f", width="small"),
+                        "upgrade_key": st.column_config.TextColumn("Key", disabled=True),
+                    },
+                    disabled=["upgrade_key", "label", "confidence"],
+                    key=f"advanced_state_editor_{screen_slug(screen)}",
+                )
+                for _, edited_row in edited.iterrows():
+                    update_row(merged, str(edited_row["upgrade_key"]), str(edited_row["status"]), edited_row["level"])
+
+
+def render_debug_rows(merged: pd.DataFrame) -> None:
+    with st.expander("Debug OCR", expanded=False):
+        detail_columns = ["label", "status", "inference", "detected", "confidence", "ocr_text", "upgrade_key"]
+        tabs = st.tabs([SCREEN_TITLES.get(screen, screen) for screen in SCREEN_ORDER])
+        for screen, tab in zip(SCREEN_ORDER, tabs):
+            with tab:
+                subset = merged[merged["screen"] == screen]
+                st.dataframe(subset[detail_columns], use_container_width=True, hide_index=True)
+
+
 def show_editor() -> pd.DataFrame | None:
     rows = st.session_state.get("state_rows")
     if rows is None:
@@ -418,73 +566,17 @@ def show_editor() -> pd.DataFrame | None:
     if pending.empty:
         st.success("Nada pendente. O estado ja esta pronto para gerar a macro.")
     else:
-        st.info(f"Resolva somente estes {len(pending)} item(ns). O restante ja foi inferido pelo app.")
-        columns = st.columns(2)
-        state_version = st.session_state.get("state_version", "v0")
-        decision_options = ["review", "available", "locked", "maxed", "ignore"]
-        for position, (_, row) in enumerate(pending.iterrows()):
-            key = str(row["upgrade_key"])
-            with columns[position % 2]:
-                with st.container(border=True):
-                    st.markdown(f"**{row['label']}**")
-                    st.caption(f"{row['screen']} - {inference_label(row.get('inference'))}")
-                    if row.get("ocr_text"):
-                        st.caption(str(row["ocr_text"])[:140])
-                    decision = st.selectbox(
-                        "Decisao",
-                        decision_options,
-                        index=0,
-                        format_func=status_label,
-                        key=f"pending_status_{state_version}_{key}",
-                    )
-                    level = row.get("level")
-                    if decision == "available":
-                        level = st.number_input(
-                            "Level",
-                            min_value=0,
-                            step=1,
-                            value=review_level_default(row.get("level")),
-                            key=f"pending_level_{state_version}_{key}",
-                        )
-                    elif decision == "locked":
-                        level = 0 if pd.isna(level) else level
-                    update_row(merged, key, decision, level)
+        st.info(f"Resolva somente os {len(pending)} item(ns) abaixo. O restante ja foi inferido pelo app.")
 
-    inferred_maxed = int(((rows["status"] == "maxed") & (~rows["detected"])).sum())
-    inferred_locked = int(((rows["status"] == "locked") & (~rows["detected"])).sum())
-    visible_locked = int(((rows["status"] == "locked") & (rows["detected"])).sum())
+    state_version = st.session_state.get("state_version", "v0")
+    for screen in SCREEN_ORDER:
+        subset = merged[merged["screen"] == screen]
+        screen_section_header(screen, subset)
+        render_pending_cards(merged, pending, screen, state_version)
 
-    with st.expander("Resumo das inferencias", expanded=False):
-        st.write(
-            f"- {inferred_maxed} maxed inferidos antes de sequencias visiveis\n"
-            f"- {inferred_locked} locked inferidos alem dos tiers visiveis\n"
-            f"- {visible_locked} locked detectados por botao Wave/lock"
-        )
-
-    with st.expander("Ajustes avancados", expanded=False):
-        editor_columns = ["label", "level", "status", "confidence", "screen", "upgrade_key"]
-        edited = st.data_editor(
-            merged[editor_columns],
-            use_container_width=True,
-            hide_index=True,
-            num_rows="fixed",
-            column_config={
-                "label": st.column_config.TextColumn("Upgrade", disabled=True, width="medium"),
-                "level": st.column_config.NumberColumn("Level", min_value=0, step=1, width="small"),
-                "status": st.column_config.SelectboxColumn("Status", options=STATUS_OPTIONS, required=True, width="small"),
-                "confidence": st.column_config.NumberColumn("OCR", disabled=True, format="%.1f", width="small"),
-                "screen": st.column_config.TextColumn("Tela", disabled=True),
-                "upgrade_key": st.column_config.TextColumn("Key", disabled=True),
-            },
-            disabled=["screen", "upgrade_key", "label", "confidence"],
-            key="advanced_state_editor",
-        )
-        for _, edited_row in edited.iterrows():
-            update_row(merged, str(edited_row["upgrade_key"]), str(edited_row["status"]), edited_row["level"])
-
-    with st.expander("Debug OCR", expanded=False):
-        detail_columns = ["label", "status", "inference", "detected", "confidence", "ocr_text", "upgrade_key"]
-        st.dataframe(merged[detail_columns], use_container_width=True, hide_index=True)
+    render_inference_summary(merged)
+    render_advanced_editor(merged)
+    render_debug_rows(merged)
 
     st.session_state["state_rows"] = merged
 
