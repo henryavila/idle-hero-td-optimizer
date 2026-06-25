@@ -63,6 +63,10 @@ O output tem um objeto `levels`, por exemplo:
 
 O parser retorna apenas o que esta visivel na screenshot. Se a tela estiver rolada ou incompleta, tire mais screenshots e gere mais JSONs.
 
+Na UI, o upload preserva os bytes originais do PNG/JPG em `runs/.../uploads`; o preview reduzido na tela nao e usado pelo OCR. Se um item aparece no print mas nao aparece no JSON, trate como falha de leitura/classificacao OCR, nao como compressao do upload.
+
+O parser tambem usa o efeito total exibido (`+X%`) dividido pelo level quando o algarismo romano sai deformado pelo OCR. Isso corrige casos como `KIl GOlD I` para `Kill Gold II`, `PRESTIGE POWER L` para `Prestige Power II`, `Kill COD III` para `Kill Gold III` e `DAMACE IT` para `Damage II`.
+
 ## 2. Extrair levels de Prestige/PowerUps
 
 Use a screenshot da tela de Prestige/PowerUps:

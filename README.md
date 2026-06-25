@@ -32,6 +32,8 @@ Para melhor leitura automatica dos prints, especialmente quando a tela estiver r
 
 Sem EasyOCR, o modo `auto` pode cair para macOS Vision. Isso funciona sem dependencia pesada, mas pode deixar mais linhas em `review` para voce confirmar manualmente.
 
+O upload nao redimensiona nem recomprime a imagem antes do OCR. O arquivo anexado e salvo byte a byte em `runs/.../uploads`; o tamanho menor exibido no app e apenas o preview visual.
+
 ## Rodar
 
 ```bash

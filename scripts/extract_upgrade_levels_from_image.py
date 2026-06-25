@@ -381,12 +381,14 @@ def roman_to_int(raw: str) -> int | None:
 def classify_metric(text: str) -> str | None:
     norm = normalize_text(text)
     compact = norm.replace(" ", "")
-    if "damage" in norm:
+    if "crit" in compact or "rankexp" in compact:
+        return None
+    if any(token in compact for token in ("damage", "damace", "darnage")):
         return "damage"
     if "prest" in compact and ("power" in compact or "p0wer" in compact):
         return "prestige_power"
     if ("kill" in compact or "kil" in compact or compact.startswith("ki")) and any(
-        token in compact for token in ("gold", "g0ld", "god", "cold", "c0ld", "golp", "goup")
+        token in compact for token in ("gold", "g0ld", "god", "cod", "cold", "c0ld", "golp", "goup")
     ):
         return "kill_gold"
     return None
@@ -454,6 +456,42 @@ def tier_from_effect_increment(prefix: str, context_text: str, percent_per_level
     return None
 
 
+def tier_from_total_effect(
+    prefix: str,
+    context_text: str,
+    percent_per_level: dict[str, float],
+    level: int | None,
+) -> int | None:
+    if level is None or level <= 0:
+        return None
+
+    match = re.search(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", context_text, flags=re.IGNORECASE)
+    if not match:
+        return None
+    displayed_total = parse_display_number(match.group(1))
+    if displayed_total is None:
+        return None
+
+    candidates: list[tuple[float, int]] = []
+    for key, percent in percent_per_level.items():
+        if not key.startswith(prefix):
+            continue
+        tier_match = re.search(r"(\d+)$", key)
+        if not tier_match:
+            continue
+        expected_total = percent * level
+        if expected_total <= 0:
+            continue
+        relative_error = abs(displayed_total - expected_total) / max(abs(displayed_total), abs(expected_total), 1.0)
+        candidates.append((relative_error, int(tier_match.group(1))))
+
+    if not candidates:
+        return None
+    candidates.sort()
+    best_error, best_tier = candidates[0]
+    return best_tier if best_error <= 0.5 else None
+
+
 def key_for_detected_context(
     screen: str,
     label_text: str,
@@ -467,7 +505,10 @@ def key_for_detected_context(
     if prefix is None:
         return None
 
-    tier = tier_from_effect_increment(prefix, context_text, percent_per_level)
+    level = parse_level(context_text)
+    tier = tier_from_total_effect(prefix, context_text, percent_per_level, level)
+    if tier is None:
+        tier = tier_from_effect_increment(prefix, context_text, percent_per_level)
     if tier is None:
         tier = tier_from_label(label_text)
     if tier is None:
@@ -604,14 +645,27 @@ def nearest_following_lines(lines: list[OcrLine], index: int, max_count: int = 3
     label_words = label.words
     if not label_words:
         return [label]
-    left = min(word.left for word in label_words) - 20
-    right = max(word.left + word.width for word in label_words) + 80
+    left = min(word.left for word in label_words)
+    right = max(word.left + word.width for word in label_words)
+    min_left = left - 45
+    max_right = right + 180
     selected = [label]
-    for candidate in lines[index + 1 : index + 5]:
-        if candidate.top - label.top > 60:
-            break
-        candidate_center = candidate.left + sum(word.width for word in candidate.words) / 2
-        if left <= candidate_center <= right or abs(candidate.left - label.left) < 35:
+    for candidate in lines:
+        if candidate is label:
+            continue
+        if candidate.top < label.top - 4:
+            continue
+        if candidate.top - label.top > 78:
+            continue
+        bounds = line_bounds([candidate])
+        if bounds is None:
+            continue
+        candidate_left, _, candidate_right, _ = bounds
+        candidate_center = (candidate_left + candidate_right) / 2
+        overlaps_column = min(max_right, candidate_right) >= max(min_left, candidate_left)
+        starts_near_label = abs(candidate_left - left) < 70
+        center_near_label = min_left <= candidate_center <= max_right
+        if overlaps_column or starts_near_label or center_near_label:
             selected.append(candidate)
         if len(selected) >= max_count:
             break
@@ -910,7 +964,14 @@ def self_test() -> int:
 
     percent_per_level = {
         "researchKillGold1": 5.0,
+        "researchKillGold2": 10.0,
+        "researchKillGold3": 25.0,
         "researchKillGold5": 75.0,
+        "researchPrestigePower1": 10.0,
+        "researchPrestigePower2": 25.0,
+        "prestigeDmg2": 10.0,
+        "prestigeDmg3": 25.0,
+        "researchDmg3": 25.0,
     }
     assert key_for_detected_context(
         "research-core",
@@ -918,6 +979,36 @@ def self_test() -> int:
         "KILL Goup I (Lv: 446) +2.230% (+5%)",
         percent_per_level,
     ) == "researchKillGold1"
+    assert key_for_detected_context(
+        "research-core",
+        "KIl GOlD I (Lv: 1Z)",
+        "KIl GOlD I (Lv: 1Z) +1720% (+830%)",
+        percent_per_level,
+    ) == "researchKillGold2"
+    assert key_for_detected_context(
+        "research-core",
+        "Kill COD III (Lv 30)",
+        "Kill COD III (Lv 30) +750% (+575%)",
+        percent_per_level,
+    ) == "researchKillGold3"
+    assert key_for_detected_context(
+        "research-core",
+        "PRESTIGE POwER L (Lv: 195}",
+        "PRESTIGE POwER L (Lv: 195} +4.875% (+750%)",
+        percent_per_level,
+    ) == "researchPrestigePower2"
+    assert key_for_detected_context(
+        "research-core",
+        "SUPER CRIT DAMAGE (Lv: 2)",
+        "SUPER CRIT DAMAGE (Lv: 2) +10% (+25%)",
+        percent_per_level,
+    ) is None
+    assert key_for_detected_context(
+        "prestige-core",
+        "DAMACE IT (Lv: 499.023)",
+        "DAMACE IT (Lv: 499.023) +4,99M% (+10%)",
+        percent_per_level,
+    ) == "prestigeDmg2"
     assert key_for_detected_context(
         "research-core",
         "Ki COlD V (Lv 3)",
