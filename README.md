@@ -1,4 +1,4 @@
-# Idle Hero TD Optimizer App
+# Idle Hero TD Companion
 
 Aplicativo local para gerar comandos de macro a partir de screenshots do Idle Hero TD.
 
@@ -6,9 +6,9 @@ O app nao executa cliques no jogo. Ele apenas:
 
 1. recebe prints por drag-and-drop;
 2. roda OCR deterministico;
-3. pede confirmacao dos levels, `maxed` e `locked`;
+3. infere ou pede confirmacao dos levels, `maxed` e `locked`;
 4. roda o otimizador FARM ou Gold Prep;
-5. gera o texto no formato combinado para copiar para sua macro.
+5. entrega no topo o texto separado para copiar para sua macro.
 
 ## Instalar
 
@@ -52,25 +52,26 @@ http://localhost:8501
 
 ## Fluxo
 
-1. Arraste o print de Research.
-2. Arraste o print de Prestige.
+1. Arraste o print de Research na coluna `Energia / Research`.
+2. Arraste o print de Prestige na coluna `Prestige / PowerUps`.
 3. Informe Energy e/ou Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`. Um deles pode ficar `0`, mas nao os dois.
-4. Clique em `Ler imagens`.
-5. Se o OCR nao deixar pendencias, o app gera automaticamente os codigos de macro separados para `Energy / Research` e `Prestige / PowerUps`.
+4. Clique em `Ler imagens e gerar macro`.
+5. Se o OCR nao deixar pendencias, o app gera automaticamente os codigos no painel `Macro`, separados para `Energy / Research` e `Prestige / PowerUps`.
 6. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
    - `locked`: item visivel com botao `Wave`/lock;
    - `locked`: item ausente que esta alem do limite visivel/destravado da familia;
    - `maxed`: item ausente antes de uma sequencia visivel consistente da mesma familia;
    - `review`: buraco ambiguo no meio dos tiers visiveis, para evitar confundir OCR falho com maxed;
    - `ignore`: item de uma tela que voce nao anexou.
-7. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
+7. Use `Ampliar print` se precisar conferir a imagem original em modal. O thumbnail pequeno e apenas visual; o OCR usa o arquivo original.
+8. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
    - `available`: upgrade disponivel e com level correto;
    - `locked`: upgrade bloqueado por wave;
    - `maxed`: upgrade omitido ou no maximo;
    - `ignore`: nao entra no estado;
    - `review`: precisa ser confirmado antes de gerar.
-8. Use `Gerar macro`, `Atualizar macro` ou `Recalcular macro` quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR. Nao precisa reprocessar as imagens se os levels nao mudaram.
-9. Use o botao `Copiar` do bloco `Energy / Research` ou `Prestige / PowerUps` para levar o texto ao seu app de macro.
+9. Use `Atualizar macro` ou `Recalcular macro` quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR. Nao precisa reprocessar as imagens se os levels nao mudaram.
+10. Use o botao `Copiar Energy` ou `Copiar Prestige` para levar o texto ao seu app de macro.
 
 ## Passada residual
 
@@ -83,7 +84,18 @@ ui/app.py                                      Streamlit UI
 scripts/                                      motores validados de OCR, otimizacao e macro
 IdleHeroTD-apk/apk_analysis/dados-consolidados referencias extraidas e consolidadas do APK
 runs/                                         saidas locais geradas pela UI
+.ai/memory/                                  aprendizados consolidados para futuras sessoes
 ```
+
+## Decisoes consolidadas
+
+- A tela principal deve manter o fluxo completo na primeira dobra: recursos, uploads e saida da macro.
+- A sidebar deve ficar apenas para configuracoes tecnicas.
+- O app deve gerar macro automaticamente quando OCR e recursos estiverem validos.
+- `maxed` e `locked` devem ser inferidos pelo padrao visual/tier sempre que for seguro, pedindo revisao apenas nos casos ambiguos.
+- A imagem anexada deve ser preservada original para OCR; qualquer reducao deve ser somente preview visual.
+- O modal de `Ampliar print` renderiza a imagem em HTML/CSS para ocupar a largura do dialog sem cortar horizontalmente.
+- A saida de macro deve ficar sempre separada entre `Energy / Research` e `Prestige / PowerUps`.
 
 ## Dados incluidos
 
