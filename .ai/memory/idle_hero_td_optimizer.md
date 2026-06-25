@@ -1,4 +1,4 @@
-# Idle Hero TD Companion
+# Idle Hero TD Optimizer
 
 ## Objetivo do App
 
@@ -45,6 +45,6 @@ O caminho feliz precisa ser:
 
 ## Publicacao
 
-- Repo publico sugerido: `idle-hero-td-companion`.
+- Repo publico: `idle-hero-td-optimizer`.
 - Nao commitar `runs/`, `.venv/`, logs, screenshots locais, `.env` ou credenciais.
 - Dados consolidados do APK podem ficar versionados; dumps brutos e saidas locais devem continuar fora do repo publico.

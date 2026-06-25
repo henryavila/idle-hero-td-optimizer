@@ -1,10 +1,10 @@
 # Project Memory
 
-Projeto: Idle Hero TD Companion.
+Projeto: Idle Hero TD Optimizer.
 
 Leia primeiro:
 
-- [Idle Hero TD Companion](idle_hero_td_companion.md): decisoes de produto, UX, OCR e otimizacao.
+- [Idle Hero TD Optimizer](idle_hero_td_optimizer.md): decisoes de produto, UX, OCR e otimizacao.
 
 Regras de manutencao:
 

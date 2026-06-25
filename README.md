@@ -1,4 +1,4 @@
-# Idle Hero TD Companion
+# Idle Hero TD Optimizer
 
 Aplicativo local para gerar comandos de macro a partir de screenshots do Idle Hero TD.
 
