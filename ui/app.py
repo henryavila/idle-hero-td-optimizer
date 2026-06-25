@@ -593,32 +593,43 @@ def render_pending_cards(
 
 def render_state_summary(rows: pd.DataFrame) -> None:
     st.subheader("Resumo lido")
-    columns = st.columns(2, gap="large")
     screen_labels = {
-        "Research/Energy": "RESEARCH",
-        "Prestige/PowerUps": "PRESTIGE",
+        "Research/Energy": "ENERGIA / RESEARCH",
+        "Prestige/PowerUps": "PRESTIGE / POWERUPS",
     }
 
-    for screen, column in zip(SCREEN_ORDER, columns):
+    for screen in SCREEN_ORDER:
         subset = rows[(rows["screen"] == screen) & (rows["status"] != "ignore")].copy()
         subset = subset.sort_values(["family", "tier"])
-        with column:
-            st.markdown(f"#### {screen_labels.get(screen, screen)}")
-            if subset.empty or not bool(subset["screen_loaded"].any()):
-                st.caption("Print nao anexado.")
-                continue
+        color = SCREEN_ACCENTS.get(screen, "#4ea1ff")
+        st.markdown(
+            f"""
+            <div style="border-left: 7px solid {color}; padding: 0.25rem 0 0.25rem 0.75rem; margin: 1rem 0 0.35rem 0;">
+                <div style="font-size: 1.18rem; font-weight: 850;">{screen_labels.get(screen, screen)}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if subset.empty or not bool(subset["screen_loaded"].any()):
+            st.caption("Print nao anexado.")
+            continue
 
-            for group_id, group_label, color in SUMMARY_GROUPS:
-                group_rows = [
-                    row
-                    for _, row in subset.iterrows()
-                    if summary_group_for_key(str(row["upgrade_key"]))[0] == group_id
-                ]
-                if not group_rows:
-                    continue
+        visible_groups = []
+        for group_id, group_label, color in SUMMARY_GROUPS:
+            group_rows = [
+                row
+                for _, row in subset.iterrows()
+                if summary_group_for_key(str(row["upgrade_key"]))[0] == group_id
+            ]
+            if group_rows:
+                visible_groups.append((group_label, color, group_rows))
+
+        group_columns = st.columns(max(len(visible_groups), 1), gap="large")
+        for column, (group_label, color, group_rows) in zip(group_columns, visible_groups):
+            with column:
                 st.markdown(
                     f"""
-                    <div style="margin: 0.75rem 0 0.25rem 0; border-left: 5px solid {color}; padding-left: 0.55rem; font-weight: 750;">
+                    <div style="margin: 0.15rem 0 0.25rem 0; border-left: 5px solid {color}; padding-left: 0.55rem; font-weight: 750;">
                         {group_label}
                     </div>
                     """,
