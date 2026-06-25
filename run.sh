@@ -35,7 +35,7 @@ find_app_pids() {
     if [[ "$cmd" == *"${APP_DIR}/.venv/bin/streamlit run ${APP_SCRIPT}"* ]]; then
       echo "$pid"
     fi
-  done
+  done || true
 }
 
 stop_existing_app() {
