@@ -28,6 +28,10 @@ def assert_no_resource_errors(energy: str, prestige_points: str) -> None:
         raise AssertionError(f"resource inputs {energy!r}/{prestige_points!r} should be valid: {errors}")
 
 
+def rows_by_key(rows: pd.DataFrame) -> dict[str, pd.Series]:
+    return {str(row["upgrade_key"]): row for _, row in rows.iterrows()}
+
+
 def test_manual_locked_editor_is_available_before_ocr() -> None:
     original_session_state = app.st.session_state
     original_render_manual_locked_editor = app.render_manual_locked_editor
@@ -108,6 +112,92 @@ def test_screenshot_locked_inference_regression() -> None:
         [],
         "reported screenshot pending reviews",
     )
+
+
+def test_locked_inference_boundaries() -> None:
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {"upgrade_key": "prestigeDmg2", "level": 499028, "text": "DAMAGE II (Lv. 499.028)"},
+                {"upgrade_key": "prestigeDmg3", "level": 16356, "text": "DAMAGE III (Lv. 16.356)"},
+                {
+                    "upgrade_key": "prestigeDmg4",
+                    "level": 1028,
+                    "text": "DAMAGE IV (Lv. 1028) +51400% (+50%) WAVE 5000",
+                },
+                {"upgrade_key": "prestigeDmg5", "level": 0, "text": "DAMAGE V (Lv. 0) WAVE 5000 +0%"},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["prestigeDmg1"]["status"], "maxed", "missing before contiguous visible tiers")
+    assert_equal(
+        by_key["prestigeDmg1"]["inference"],
+        "missing=maxed:before-contiguous-visible-run",
+        "missing before visible tiers inference",
+    )
+    assert_equal(by_key["prestigeDmg4"]["status"], "available", "positive level with adjacent Wave text")
+    assert_equal(by_key["prestigeDmg5"]["status"], "locked", "visible zero-level Wave lock")
+    assert_equal(by_key["prestigeDmg5"]["inference"], "ocr", "visible zero-level Wave lock inference")
+    assert_equal(by_key["prestigeDmg6"]["status"], "locked", "missing after visible locked tier")
+    assert_equal(
+        by_key["prestigeDmg6"]["inference"],
+        "missing=locked:after-visible-lock",
+        "missing after visible locked tier inference",
+    )
+    assert_equal(by_key["prestigeDmg7"]["status"], "locked", "second missing after visible locked tier")
+
+
+def test_missing_tier_review_boundaries() -> None:
+    ocr_payload = [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchDmg2", "level": 176, "text": "DAMAGE II (Lv. 176)"},
+                {"upgrade_key": "researchDmg4", "level": 14, "text": "DAMAGE IV (Lv. 14)"},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["researchDmg1"]["status"], "review", "missing before non-contiguous visible tiers")
+    assert_equal(
+        by_key["researchDmg1"]["inference"],
+        "missing=review:non-contiguous-visible-run",
+        "missing before non-contiguous visible tiers inference",
+    )
+    assert_equal(by_key["researchDmg3"]["status"], "review", "gap between visible tiers")
+    assert_equal(by_key["researchDmg3"]["inference"], "missing=review:ambiguous", "gap inference")
+    assert_equal(by_key["researchDmg5"]["status"], "locked", "missing beyond highest visible tier")
+    assert_equal(
+        by_key["researchDmg5"]["inference"],
+        "missing=locked:beyond-visible-tiers",
+        "missing beyond highest visible tier inference",
+    )
+    assert_equal(by_key["researchDmg6"]["status"], "locked", "second missing beyond highest visible tier")
+
+
+def test_manual_locked_overrides_available_row() -> None:
+    ocr_payload = [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchKillGold1", "level": 447, "text": "KILL GOLD I (Lv. 447)"},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload, manual_locked={"researchKillGold1"})
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["researchKillGold1"]["ocr_level"], 447, "manual lock preserves original OCR level")
+    assert_equal(by_key["researchKillGold1"]["ocr_status"], "available", "manual lock preserves original OCR status")
+    assert_equal(by_key["researchKillGold1"]["status"], "locked", "manual lock overrides available status")
+    assert_equal(by_key["researchKillGold1"]["level"], 0, "manual lock emits locked level")
+    assert_equal(by_key["researchKillGold1"]["inference"], "manual=locked", "manual lock inference")
 
 
 def main() -> int:
@@ -192,6 +282,9 @@ def main() -> int:
 
     test_manual_locked_editor_is_available_before_ocr()
     test_screenshot_locked_inference_regression()
+    test_locked_inference_boundaries()
+    test_missing_tier_review_boundaries()
+    test_manual_locked_overrides_available_row()
 
     print("ui state conversion regression checks passed")
     return 0
