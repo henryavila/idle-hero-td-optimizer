@@ -1,3 +1,8 @@
 # Optional OCR engine used by extract_upgrade_levels_from_image.py.
 # Install only if macOS Vision or Tesseract are not enough.
 easyocr>=1.7
+
+# Heavier optional OCR layer. The app uses the PP-OCRv5 server detector and
+# recognizer when PaddleOCR is installed.
+paddlepaddle>=3.0
+paddleocr>=3.7

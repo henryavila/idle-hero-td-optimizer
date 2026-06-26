@@ -73,6 +73,43 @@
         "prestigeKillGold5": 0,
         "prestigeKillGold6": 0
       }
+    },
+    {
+      "name": "sample 3 research",
+      "image": "sample/3/e.png",
+      "screen": "research-core",
+      "expected": {
+        "researchDmg1": 1217,
+        "researchDmg2": 176,
+        "researchDmg3": 48,
+        "researchDmg4": 14,
+        "researchDmg5": 10,
+        "researchKillGold1": 447,
+        "researchKillGold2": 112,
+        "researchKillGold3": 30,
+        "researchKillGold4": 9,
+        "researchKillGold5": 3,
+        "researchPrestigePower1": 768,
+        "researchPrestigePower2": 195,
+        "researchPrestigePower3": 38,
+        "researchPrestigePower4": 12
+      }
+    },
+    {
+      "name": "sample 3 prestige",
+      "image": "sample/3/p.png",
+      "screen": "prestige-core",
+      "expected": {
+        "prestigeDmg2": 499028,
+        "prestigeDmg3": 16356,
+        "prestigeDmg4": 1028,
+        "prestigeDmg5": 0,
+        "prestigeKillGold2": 338755,
+        "prestigeKillGold3": 10941,
+        "prestigeKillGold4": 641,
+        "prestigeKillGold5": 0,
+        "prestigeKillGold6": 0
+      }
     }
   ]
 }

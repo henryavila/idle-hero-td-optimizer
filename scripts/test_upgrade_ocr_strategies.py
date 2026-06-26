@@ -25,6 +25,8 @@ def available_engines() -> list[str]:
         engines.append("vision")
     if ocr.shutil.which("tesseract"):
         engines.append("tesseract")
+    if ocr.paddleocr_available():
+        engines.append("paddle")
     return engines
 
 
@@ -129,12 +131,68 @@ def run_consensus(
 
 def assert_parser_regressions() -> list[str]:
     failures = []
+    percent_per_level = ocr.load_percent_per_level()
+
     text = "DAMACE LI (Lv. 499.028) 344.15T +4,99M% (+10%)"
     level = ocr.parse_level(text)
     if level != 499028:
         failures.append(f"parse_level dotted level: got {level}, expected 499028")
     if ocr.level_looks_suspicious(level, text):
         failures.append("level_looks_suspicious marked a precise dotted Lv after tier LI as suspicious")
+    if not ocr.effect_level_matches(text, "prestigeDmg2", 499028, percent_per_level):
+        failures.append("effect_level_matches did not validate rounded M suffix against visible Lv")
+    if ocr.effect_level_for_validation(text, "prestigeDmg2", percent_per_level) is not None:
+        failures.append("effect_level_for_validation inferred exact level from coarse M suffix")
+
+    plain_text = "DAMAGE IV (Lv.1028) 1.67E+17 +51400% (+50%)"
+    plain_effect_level = ocr.effect_level_for_validation(plain_text, "prestigeDmg4", percent_per_level)
+    if plain_effect_level != 1028:
+        failures.append(f"effect_level_for_validation plain percent: got {plain_effect_level}, expected 1028")
+
+    k_text = "KILL GOLD L1T (Lv. 10.941) 4.26E+15 +273,53K% (+25%)"
+    effect_level = ocr.effect_level_for_validation(k_text, "prestigeKillGold3", percent_per_level)
+    if effect_level != 10941:
+        failures.append(f"effect_level_for_validation K suffix: got {effect_level}, expected 10941")
+
+    records, warnings = ocr.merge_ensemble_records(
+        [
+            {
+                "upgrade_key": "prestigeKillGold3",
+                "level": 10941,
+                "confidence": 100.0,
+                "text": k_text,
+                "source": "level_text",
+                "key_source": "auto_label",
+                "engine": "vision",
+                "strategy": "auto-lines",
+            }
+        ],
+        ["prestigeKillGold3"],
+    )
+    merged_level = records[0]["level"] if records else None
+    if merged_level != 10941 or warnings:
+        failures.append(f"single mathematically validated K suffix candidate not accepted: level={merged_level}, warnings={warnings}")
+
+    mismatch_text = "KILL GOLD III (Lv. 10.940) 4.26E+15 +273,53K% (+25%)"
+    records, warnings = ocr.merge_ensemble_records(
+        [
+            {
+                "upgrade_key": "prestigeKillGold3",
+                "level": 10940,
+                "confidence": 100.0,
+                "text": mismatch_text,
+                "source": "level_text",
+                "key_source": "auto_label",
+                "engine": "vision",
+                "strategy": "auto-lines",
+            }
+        ],
+        ["prestigeKillGold3"],
+    )
+    merged_level = records[0]["level"] if records else None
+    if merged_level is not None or not warnings:
+        failures.append(f"mismatched K suffix candidate accepted: level={merged_level}, warnings={warnings}")
+
     return failures
 
 

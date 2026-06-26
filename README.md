@@ -16,21 +16,23 @@ O app nao executa cliques no jogo. Ele apenas:
 ./install.sh
 ```
 
-Se quiser instalar EasyOCR tambem:
+Se quiser instalar as camadas OCR opcionais, EasyOCR e PaddleOCR/PP-OCRv5:
 
 ```bash
-./install.sh --with-easyocr
+./install.sh --with-ocr
 ```
+
+O alias antigo `./install.sh --with-easyocr` continua funcionando e instala o mesmo pacote opcional.
 
 No macOS, o app tambem pode usar OCR via Vision quando `swiftc` estiver disponivel. Tesseract tambem funciona se estiver instalado no sistema.
 
-Para melhor leitura automatica dos prints, especialmente quando a tela estiver recortada ou com texto pequeno, use EasyOCR:
+Para melhor leitura automatica dos prints, especialmente quando a tela estiver recortada ou com texto pequeno, use as camadas opcionais:
 
 ```bash
-./install.sh --with-easyocr
+./install.sh --with-ocr
 ```
 
-O modo padrao `consensus` roda as engines disponiveis e combina `layout-slots` com `auto-lines`. Um level so e aceito quando camadas independentes concordam ou quando o efeito total confirma matematicamente a leitura; caso contrario, o item fica para revisao.
+O modo padrao `consensus` roda as engines disponiveis e combina `layout-slots` com `auto-lines`. Quando PaddleOCR esta instalado, ele entra como camada adicional `auto-lines` com PP-OCRv5 server, mas nao substitui as outras engines. Um level so e aceito quando camadas independentes concordam ou quando o efeito total confirma matematicamente a leitura; caso contrario, o item fica para revisao.
 
 O upload nao redimensiona nem recomprime a imagem antes do OCR. O arquivo anexado e salvo byte a byte em `runs/.../uploads`; o tamanho menor exibido no app e apenas o preview visual.
 
@@ -100,7 +102,7 @@ A pasta `Games/Idle Hero TD` continua sendo a base de conhecimento da IA e o wor
 - A sidebar deve ficar apenas para configuracoes tecnicas.
 - O app deve gerar macro automaticamente quando OCR e recursos estiverem validos.
 - A leitura principal de levels deve vir de um ensemble entre slots de layout, linhas detectadas e validacao matematica por efeito total; leitura isolada e divergente deve virar revisao, nao level aceito.
-- Se os fixtures futuros mostrarem limite do ensemble atual, avaliar PaddleOCR/PP-OCRv5 como proxima engine local candidata antes de partir para modelos visuais maiores.
+- PaddleOCR/PP-OCRv5 entra como camada opcional conservadora do ensemble, nao como engine principal isolada.
 - `maxed` e `locked` devem ser inferidos pelo padrao visual/tier sempre que for seguro, pedindo revisao apenas nos casos ambiguos.
 - A imagem anexada deve ser preservada original para OCR; qualquer reducao deve ser somente preview visual.
 - O preview deve permitir abrir o print original em nova aba, sem redimensionar o arquivo usado pelo OCR.

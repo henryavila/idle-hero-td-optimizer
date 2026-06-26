@@ -316,6 +316,8 @@ def run_ocr(
         "--output",
         str(output_path),
     ]
+    if engine == "paddle":
+        cmd.extend(["--strategy", "auto-lines"])
     result = run_command(cmd)
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "OCR failed")
@@ -1134,7 +1136,7 @@ def main() -> None:
     with st.sidebar:
         st.header("Configuracao tecnica")
         python_bin = render_python_folder_selector()
-        engine = st.selectbox("OCR engine", ["consensus", "auto", "vision", "easyocr", "tesseract"], index=0)
+        engine = st.selectbox("OCR engine", ["consensus", "auto", "vision", "easyocr", "paddle", "tesseract"], index=0)
         st.caption("Ajuste aqui apenas se precisar trocar engine ou a pasta do Python.")
 
     control_slot = st.empty()

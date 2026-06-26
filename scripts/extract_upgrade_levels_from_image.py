@@ -11,6 +11,7 @@ import argparse
 import csv
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -33,6 +34,22 @@ FORMULA_FACTORS_CSV = (
 )
 VISION_OCR_SOURCE = SCRIPT_DIR / "macos_vision_ocr.swift"
 VISION_OCR_BINARY = Path("/tmp/idle_hero_macos_vision_ocr")
+PADDLE_DETECTION_MODEL = "PP-OCRv5_server_det"
+PADDLE_RECOGNITION_MODEL = "PP-OCRv5_server_rec"
+PADDLE_OCR_READER: Any | None = None
+PADDLE_TEXT_TRANSLATION = str.maketrans(
+    {
+        "（": "(",
+        "）": ")",
+        "，": ",",
+        "．": ".",
+        "％": "%",
+        "＋": "+",
+        "－": "-",
+        "：": ":",
+        "×": "x",
+    }
+)
 
 RESEARCH_CORE_KEYS = [
     "researchDmg1",
@@ -157,6 +174,8 @@ def run_ocr(
             engine = "tesseract"
         elif shutil.which("swiftc") and VISION_OCR_SOURCE.exists():
             engine = "vision"
+        elif paddleocr_available():
+            engine = "paddle"
         else:
             raise SystemExit(
                 "no OCR engine found. Install Tesseract with 'brew install tesseract' "
@@ -169,6 +188,8 @@ def run_ocr(
         return run_easyocr(image_path), "easyocr"
     if engine == "vision":
         return run_vision_ocr(image_path), "vision"
+    if engine == "paddle":
+        return run_paddle_ocr(image_path), "paddle"
     raise SystemExit(f"unknown OCR engine: {engine}")
 
 
@@ -180,12 +201,22 @@ def available_ocr_engines(tesseract_bin: str) -> list[str]:
         engines.append("vision")
     if shutil.which(tesseract_bin):
         engines.append("tesseract")
+    if paddleocr_available():
+        engines.append("paddle")
     return engines
 
 
 def easyocr_available() -> bool:
     try:
         import easyocr  # noqa: F401
+    except Exception:
+        return False
+    return True
+
+
+def paddleocr_available() -> bool:
+    try:
+        import paddleocr  # noqa: F401
     except Exception:
         return False
     return True
@@ -215,6 +246,67 @@ def run_easyocr(image_path: Path) -> str:
         clean_text = str(text).replace("\t", " ").replace("\n", " ").strip()
         lines.append(
             f"5\t1\t1\t1\t{index}\t1\t{left}\t{top}\t{box_width}\t{box_height}\t{float(conf) * 100:.1f}\t{clean_text}"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def clean_paddle_text(text: object) -> str:
+    return str(text).translate(PADDLE_TEXT_TRANSLATION).replace("\t", " ").replace("\n", " ").strip()
+
+
+def paddle_bounds(raw_box: Any) -> tuple[int, int, int, int]:
+    values = raw_box.tolist() if hasattr(raw_box, "tolist") else raw_box
+    if len(values) == 4 and all(not isinstance(value, (list, tuple)) for value in values):
+        left, top, right, bottom = [int(round(float(value))) for value in values]
+        return left, top, right, bottom
+
+    xs = [int(round(float(point[0]))) for point in values]
+    ys = [int(round(float(point[1]))) for point in values]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def paddle_reader() -> Any:
+    global PADDLE_OCR_READER
+    if PADDLE_OCR_READER is None:
+        os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
+        try:
+            from paddleocr import PaddleOCR
+        except Exception as exc:
+            raise SystemExit(f"paddleocr is not installed: {exc}") from exc
+        PADDLE_OCR_READER = PaddleOCR(
+            text_detection_model_name=PADDLE_DETECTION_MODEL,
+            text_recognition_model_name=PADDLE_RECOGNITION_MODEL,
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False,
+        )
+    return PADDLE_OCR_READER
+
+
+def run_paddle_ocr(image_path: Path) -> str:
+    reader = paddle_reader()
+    results = reader.predict(str(image_path))
+    width, height = image_size(image_path)
+    lines = [
+        "level\tpage_num\tblock_num\tpar_num\tline_num\tword_num\tleft\ttop\twidth\theight\tconf\ttext",
+        f"1\t1\t0\t0\t0\t0\t0\t0\t{width}\t{height}\t-1\t",
+    ]
+    if not results:
+        return "\n".join(lines) + "\n"
+
+    result = results[0]
+    texts = result.get("rec_texts", [])
+    scores = result.get("rec_scores", [])
+    boxes = result.get("rec_boxes", result.get("rec_polys", []))
+    for index, (text, score, box) in enumerate(zip(texts, scores, boxes), start=1):
+        clean_text = clean_paddle_text(text)
+        if not clean_text:
+            continue
+        left, top, right, bottom = paddle_bounds(box)
+        box_width = max(1, right - left)
+        box_height = max(1, bottom - top)
+        lines.append(
+            f"5\t1\t1\t1\t{index}\t1\t{left}\t{top}\t{box_width}\t{box_height}\t{float(score) * 100:.1f}\t{clean_text}"
         )
     return "\n".join(lines) + "\n"
 
@@ -588,6 +680,9 @@ def confidence(words: list[OcrWord]) -> float | None:
     return sum(word.conf for word in words) / len(words)
 
 
+EFFECT_TOTAL_RE = re.compile(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", flags=re.IGNORECASE)
+
+
 LAYOUT_SLOTS: dict[str, list[LayoutSlot]] = {
     "research-core": [
         LayoutSlot("researchDmg", [0.02, 0.115, 0.49, 0.190], 1),
@@ -685,12 +780,42 @@ def extract_layout_slots(
 
 
 def effect_level_for_validation(text: str, upgrade_key: str, percent_per_level: dict[str, float]) -> int | None:
-    match = re.search(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", text, flags=re.IGNORECASE)
+    percent = percent_per_level.get(upgrade_key)
+    if not percent:
+        return None
+    match = EFFECT_TOTAL_RE.search(text)
     if not match:
         return None
-    if re.search(r"[KMBT]", match.group(1), flags=re.IGNORECASE):
+    value = parse_display_number(match.group(1))
+    precision = display_number_precision(match.group(1))
+    if value is None or precision is None:
         return None
-    return level_from_effect_text(text, upgrade_key, percent_per_level)
+
+    # Only infer a level from total effect when display rounding cannot span
+    # multiple adjacent levels. Coarser values can still validate a visible Lv.
+    if precision / 2 > percent / 2:
+        return None
+    return int(round(value / percent))
+
+
+def effect_level_matches(
+    text: str,
+    upgrade_key: str,
+    level: int | None,
+    percent_per_level: dict[str, float],
+) -> bool:
+    percent = percent_per_level.get(upgrade_key)
+    if not percent or level is None:
+        return False
+    match = EFFECT_TOTAL_RE.search(text)
+    if not match:
+        return False
+    value = parse_display_number(match.group(1))
+    precision = display_number_precision(match.group(1))
+    if value is None or precision is None:
+        return False
+    expected = level * percent
+    return abs(value - expected) <= (precision / 2) + 1e-9
 
 
 def merge_layout_slot_records(
@@ -738,8 +863,7 @@ def merge_layout_slot_records(
         else:
             validated = []
             for record in candidates:
-                effect_level = effect_level_for_validation(str(record.get("text", "")), key, percent_per_level)
-                if effect_level is not None and effect_level == int(record["level"]):
+                if effect_level_matches(str(record.get("text", "")), key, int(record["level"]), percent_per_level):
                     validated.append(record)
             if len(validated) == 1:
                 chosen = validated[0]
@@ -791,7 +915,7 @@ def ensemble_candidates_for_record(
     if raw_level is not None:
         direct = dict(record)
         direct["level"] = raw_level
-        direct["math_validated"] = effect_level == raw_level
+        direct["math_validated"] = effect_level_matches(text, key, raw_level, percent_per_level)
         candidates.append(direct)
 
     key_source = str(record.get("key_source") or "")
@@ -1078,11 +1202,43 @@ def parse_display_number(raw: str) -> float | None:
         return None
 
 
+def display_number_precision(raw: str) -> float | None:
+    value = raw.strip().upper().replace(" ", "")
+    if not value:
+        return None
+
+    suffix = 1.0
+    if value.endswith("K"):
+        suffix = 1_000.0
+        value = value[:-1]
+    elif value.endswith("M"):
+        suffix = 1_000_000.0
+        value = value[:-1]
+    elif value.endswith("B"):
+        suffix = 1_000_000_000.0
+        value = value[:-1]
+    elif value.endswith("T"):
+        suffix = 1_000_000_000_000.0
+        value = value[:-1]
+
+    if "," in value and "." in value:
+        decimals = len(value.rsplit(",", 1)[1])
+    elif "," in value:
+        decimals = len(value.rsplit(",", 1)[1])
+    elif "." in value:
+        right = value.rsplit(".", 1)[1]
+        decimals = 0 if len(right) == 3 and suffix == 1.0 else len(right)
+    else:
+        decimals = 0
+
+    return suffix / (10**decimals)
+
+
 def level_from_effect_text(text: str, upgrade_key: str, percent_per_level: dict[str, float]) -> int | None:
     percent = percent_per_level.get(upgrade_key)
     if not percent:
         return None
-    match = re.search(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", text, flags=re.IGNORECASE)
+    match = EFFECT_TOTAL_RE.search(text)
     if not match:
         return None
     value = parse_display_number(match.group(1))
@@ -1310,7 +1466,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--visible-keys", help="Comma-separated upgrade keys visible in row-major order.")
     parser.add_argument("--print-config-template", action="store_true", help="Print an ROI config template and exit.")
     parser.add_argument("--tesseract-bin", default="tesseract")
-    parser.add_argument("--engine", choices=["auto", "consensus", "easyocr", "tesseract", "vision"], default="consensus")
+    parser.add_argument("--engine", choices=["auto", "consensus", "easyocr", "paddle", "tesseract", "vision"], default="consensus")
     parser.add_argument("--strategy", choices=["layout-slots", "auto-lines"], default="layout-slots")
     parser.add_argument("--lang", default="eng")
     parser.add_argument("--psm", type=int, default=11, help="Tesseract page segmentation mode.")
@@ -1425,7 +1581,7 @@ def main() -> int:
         engines = available_ocr_engines(args.tesseract_bin)
         if not engines:
             raise SystemExit(
-                "no OCR engine found. Install EasyOCR, Tesseract, or run on macOS with swiftc/Vision available."
+                "no OCR engine found. Install EasyOCR, PaddleOCR, Tesseract, or run on macOS with swiftc/Vision available."
             )
         requested = [key.strip() for key in args.visible_keys.split(",") if key.strip()] if args.visible_keys else None
         ensemble_records: list[dict[str, Any]] = []
@@ -1437,7 +1593,8 @@ def main() -> int:
             lines = group_lines(words)
             layout_records, _layout_warnings = extract_layout_slots(words, page_size, args.screen, requested)
             auto_records, _auto_warnings = extract_auto_detect(lines, args.screen, requested)
-            ensemble_records.extend(annotate_records(layout_records, engine, "layout-slots"))
+            if engine != "paddle":
+                ensemble_records.extend(annotate_records(layout_records, engine, "layout-slots"))
             ensemble_records.extend(annotate_records(auto_records, engine, "auto-lines"))
         records, consensus_warnings = merge_ensemble_records(ensemble_records, requested)
         warnings.extend(consensus_warnings)
