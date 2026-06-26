@@ -6,7 +6,7 @@ O app nao executa cliques no jogo. Ele apenas:
 
 1. recebe prints por drag-and-drop;
 2. roda OCR por ensemble com consenso entre engines e estrategias;
-3. infere ou pede confirmacao dos levels e `maxed`, usando bloqueios manuais persistidos para `locked`;
+3. infere ou pede confirmacao dos levels, `maxed` e `locked`, com bloqueios manuais persistidos para ajustes;
 4. roda o otimizador FARM ou Gold Prep;
 5. entrega no topo o texto separado para copiar para sua macro.
 
@@ -63,16 +63,17 @@ Na sidebar, `Selecionar pasta do Python` permite escolher a pasta onde esta o Py
 3. Informe Energy e/ou Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`. Um deles pode ficar `0`, mas nao os dois.
 4. Clique em `Ler imagens e gerar macro`.
 5. Se o OCR por consenso nao deixar pendencias, o app gera automaticamente os codigos no painel `Macro`, separados para `Energy / Research` e `Prestige / PowerUps`.
-6. Use `Bloqueios manuais` para marcar upgrades travados por Wave. A lista fica salva em `user_state/locked_upgrades.json` e e reaplicada nos proximos OCRs.
+6. Use `Bloqueios manuais` para ajustar upgrades travados por Wave quando precisar. A lista fica salva em `user_state/locked_upgrades.json` e e reaplicada nos proximos OCRs.
 7. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
+   - `locked`: item visivel com `Lv. 0` e botao `Wave`/lock;
+   - `locked`: item ausente alem do limite visivel/destravado da familia;
    - `maxed`: item ausente antes de uma sequencia visivel consistente da mesma familia;
    - `review`: buraco ambiguo no meio dos tiers visiveis, para evitar confundir OCR falho com maxed;
-   - `review`: item ausente alem dos tiers visiveis, para voce decidir se esta travado;
    - `ignore`: item de uma tela que voce nao anexou.
 8. Use `Abrir print em nova aba` se precisar conferir a imagem original. O thumbnail pequeno e apenas visual; o OCR usa o arquivo original.
 9. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
    - `available`: upgrade disponivel e com level correto;
-   - `locked`: upgrade marcado em `Bloqueios manuais`;
+   - `locked`: upgrade inferido por Wave/limite visivel ou marcado em `Bloqueios manuais`;
    - `maxed`: upgrade omitido ou no maximo;
    - `ignore`: nao entra no estado;
    - `review`: precisa ser confirmado antes de gerar.
@@ -105,7 +106,7 @@ A pasta `Games/Idle Hero TD` continua sendo a base de conhecimento da IA e o wor
 - O app deve gerar macro automaticamente quando OCR e recursos estiverem validos.
 - A leitura principal de levels deve vir de um ensemble entre slots de layout, linhas detectadas e validacao matematica por efeito total; leitura isolada e divergente deve virar revisao, nao level aceito.
 - PaddleOCR/PP-OCRv5 entra como camada opcional conservadora do ensemble, nao como engine principal isolada.
-- `maxed` pode ser inferido pelo padrao visual/tier quando for seguro; `locked` deve vir dos bloqueios manuais persistidos, nao de inferencia OCR.
+- `maxed` e `locked` podem ser inferidos pelo padrao visual/tier quando for seguro; bloqueios manuais persistidos servem para corrigir ou forcar excecoes.
 - O app deve ser iniciado por `./run.sh` ou `run.command`, sem abrir portas alternativas manualmente; o launcher reinicia a instancia atual na mesma porta.
 - A imagem anexada deve ser preservada original para OCR; qualquer reducao deve ser somente preview visual.
 - O preview deve permitir abrir o print original em nova aba, sem redimensionar o arquivo usado pelo OCR.

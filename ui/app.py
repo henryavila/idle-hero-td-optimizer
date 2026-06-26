@@ -377,7 +377,7 @@ def detected_status(
     if level is None:
         return "review"
     if level == 0 and looks_locked_text(text):
-        return "review"
+        return "locked"
     if max_level is not None and level >= max_level:
         return "maxed"
     return "available"
@@ -386,6 +386,7 @@ def detected_status(
 def infer_missing_status(
     tier: int,
     family_detected_tiers: list[int],
+    family_locked_tiers: list[int],
 ) -> tuple[str, str]:
     if not family_detected_tiers:
         return "review", "missing=review:no-family-anchor"
@@ -394,8 +395,10 @@ def infer_missing_status(
     lowest_detected = detected[0]
     highest_detected = detected[-1]
 
+    if any(locked_tier <= tier for locked_tier in family_locked_tiers):
+        return "locked", "missing=locked:after-visible-lock"
     if tier > highest_detected:
-        return "review", "missing=review:beyond-visible-tiers"
+        return "locked", "missing=locked:beyond-visible-tiers"
     if tier < lowest_detected:
         contiguous_anchor = detected == list(range(lowest_detected, highest_detected + 1))
         if contiguous_anchor:
@@ -461,10 +464,13 @@ def build_state_rows(
             }
         )
     family_detected: dict[str, list[int]] = {}
+    family_locked: dict[str, list[int]] = {}
     for row in raw_rows:
         if not row["screen_loaded"] or not row["detected"]:
             continue
         family_detected.setdefault(row["family"], []).append(row["tier"])
+        if row["status"] == "locked":
+            family_locked.setdefault(row["family"], []).append(row["tier"])
 
     rows: list[dict[str, Any]] = []
     for row in raw_rows:
@@ -478,6 +484,7 @@ def build_state_rows(
             status, inference = infer_missing_status(
                 tier=row["tier"],
                 family_detected_tiers=family_detected.get(row["family"], []),
+                family_locked_tiers=family_locked.get(row["family"], []),
             )
             row["status"] = status
             row["ocr_status"] = status
@@ -1003,11 +1010,18 @@ def render_inference_summary(rows: pd.DataFrame) -> None:
             if subset.empty:
                 continue
             inferred_maxed = int(((subset["status"] == "maxed") & (~subset["detected"])).sum())
+            inferred_locked = int(
+                (
+                    (subset["status"] == "locked")
+                    & (~subset.get("manual_locked", pd.Series(dtype=bool)).fillna(False))
+                ).sum()
+            )
             manual_locked = int(subset.get("manual_locked", pd.Series(dtype=bool)).fillna(False).sum())
             review_missing = int(((subset["status"] == "review") & (~subset["detected"])).sum())
             st.markdown(f"**{SCREEN_TITLES.get(screen, screen)}**")
             st.write(
                 f"- {inferred_maxed} maxed inferidos antes de sequencias visiveis\n"
+                f"- {inferred_locked} locked inferidos por Wave/limite visivel\n"
                 f"- {manual_locked} locked manuais salvos\n"
                 f"- {review_missing} ausencias para revisar"
             )

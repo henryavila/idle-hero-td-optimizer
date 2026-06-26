@@ -53,6 +53,63 @@ def test_manual_locked_editor_is_available_before_ocr() -> None:
     assert_equal(captured.get("show_state"), False, "pre-OCR manual locked editor state columns")
 
 
+def test_screenshot_locked_inference_regression() -> None:
+    ocr_payload = [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchDmg1", "level": 1217, "text": "DAMAGE I (Lv. 1217)"},
+                {"upgrade_key": "researchDmg2", "level": 176, "text": "DAMAGE II (Lv. 176)"},
+                {"upgrade_key": "researchDmg3", "level": 48, "text": "DAMAGE III (Lv. 48)"},
+                {"upgrade_key": "researchDmg4", "level": 14, "text": "DAMAGE IV (Lv. 14)"},
+                {"upgrade_key": "researchDmg5", "level": 10, "text": "DAMAGE V (Lv. 10)"},
+                {"upgrade_key": "researchKillGold1", "level": 447, "text": "KILL GOLD I (Lv. 447)"},
+                {"upgrade_key": "researchKillGold2", "level": 112, "text": "KILL GOLD II (Lv. 112)"},
+                {"upgrade_key": "researchKillGold3", "level": 30, "text": "KILL GOLD III (Lv. 30)"},
+                {"upgrade_key": "researchKillGold4", "level": 9, "text": "KILL GOLD IV (Lv. 9)"},
+                {"upgrade_key": "researchKillGold5", "level": 3, "text": "KILL GOLD V (Lv. 3)"},
+                {"upgrade_key": "researchPrestigePower1", "level": 768, "text": "PRESTIGE POWER I (Lv. 768)"},
+                {"upgrade_key": "researchPrestigePower2", "level": 195, "text": "PRESTIGE POWER II (Lv. 195)"},
+                {"upgrade_key": "researchPrestigePower3", "level": 38, "text": "PRESTIGE POWER III (Lv. 38)"},
+                {"upgrade_key": "researchPrestigePower4", "level": 12, "text": "PRESTIGE POWER IV (Lv. 12)"},
+            ],
+        },
+        {
+            "screen": "prestige-core",
+            "records": [
+                {"upgrade_key": "prestigeDmg2", "level": 499028, "text": "DAMAGE II (Lv. 499.028)"},
+                {"upgrade_key": "prestigeDmg3", "level": 16356, "text": "DAMAGE III (Lv. 16.356)"},
+                {"upgrade_key": "prestigeDmg4", "level": 1037, "text": "DAMAGE IV (Lv. 1037)"},
+                {"upgrade_key": "prestigeDmg5", "level": 0, "text": "DAMAGE V (Lv. 0) WAVE 5000 +0%"},
+                {"upgrade_key": "prestigeKillGold2", "level": 338755, "text": "KILL GOLD II (Lv. 338.755)"},
+                {"upgrade_key": "prestigeKillGold3", "level": 10941, "text": "KILL GOLD III (Lv. 10.941)"},
+                {"upgrade_key": "prestigeKillGold4", "level": 641, "text": "KILL GOLD IV (Lv. 641)"},
+                {"upgrade_key": "prestigeKillGold5", "level": 0, "text": "KILL GOLD V (Lv. 0) WAVE 5000 +0%"},
+                {"upgrade_key": "prestigeKillGold6", "level": 0, "text": "KILL GOLD VI (Lv. O) WAVE 8000 +0%"},
+            ],
+        },
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    locked_keys = set(rows.loc[rows["status"] == "locked", "upgrade_key"].astype(str))
+    expected_locked = {
+        "researchDmg6",
+        "researchKillGold6",
+        "researchPrestigePower5",
+        "prestigeDmg5",
+        "prestigeDmg6",
+        "prestigeDmg7",
+        "prestigeKillGold5",
+        "prestigeKillGold6",
+        "prestigeKillGold7",
+    }
+    assert_equal(locked_keys, expected_locked, "reported screenshot locked keys")
+    assert_equal(
+        rows.loc[rows["status"] == "review", "upgrade_key"].astype(str).tolist(),
+        [],
+        "reported screenshot pending reviews",
+    )
+
+
 def main() -> int:
     assert_equal(app.coerce_int(499028.0), 499028, "integer-valued editor float")
     assert_equal(app.coerce_int(1028.0), 1028, "small integer-valued editor float")
@@ -114,13 +171,15 @@ def main() -> int:
     rows = app.build_state_rows(ocr_payload)
     status_by_key = dict(zip(rows["upgrade_key"], rows["status"]))
     assert_equal(status_by_key["prestigeDmg4"], "available", "positive-level prestigeDmg4 contaminated by adjacent wave")
-    assert_equal(status_by_key["prestigeDmg5"], "review", "zero-level wave should not become inferred locked")
+    assert_equal(status_by_key["prestigeDmg5"], "locked", "zero-level wave should become locked")
 
     rows = app.build_state_rows(ocr_payload, manual_locked={"prestigeDmg5"})
     row_by_key = {str(row["upgrade_key"]): row for _, row in rows.iterrows()}
     assert_equal(row_by_key["prestigeDmg5"]["status"], "locked", "manual locked status")
     assert_equal(row_by_key["prestigeDmg5"]["level"], 0, "manual locked level")
     assert_equal(row_by_key["prestigeDmg5"]["inference"], "manual=locked", "manual locked inference")
+    assert_equal(row_by_key["prestigeDmg1"]["status"], "maxed", "missing before visible run remains maxed")
+    assert_equal(row_by_key["prestigeDmg6"]["status"], "locked", "missing beyond visible lock")
 
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "locked_upgrades.json"
@@ -132,6 +191,7 @@ def main() -> int:
         )
 
     test_manual_locked_editor_is_available_before_ocr()
+    test_screenshot_locked_inference_regression()
 
     print("ui state conversion regression checks passed")
     return 0
