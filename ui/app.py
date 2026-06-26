@@ -7,7 +7,6 @@ import base64
 from decimal import Decimal
 import hashlib
 import html as html_lib
-import io
 import json
 import os
 import re
@@ -20,7 +19,6 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
-from PIL import Image
 
 
 APP_ROOT = Path(__file__).resolve().parents[1]
@@ -937,67 +935,39 @@ def show_validation_errors(errors: list[str]) -> None:
         st.write("\n".join(f"- {error}" for error in errors))
 
 
-def image_size(image_bytes: bytes) -> tuple[int, int]:
-    try:
-        with Image.open(io.BytesIO(image_bytes)) as image:
-            return image.size
-    except Exception:
-        return 1000, 700
-
-
-@st.dialog("Print ampliado", width="large")
-def show_image_spotlight(image_bytes: bytes, caption: str, mime_type: str) -> None:
-    width, height = image_size(image_bytes)
-    scaled_height = int(900 * height / max(width, 1))
-    frame_height = min(820, max(420, scaled_height + 44))
-    encoded_image = base64.b64encode(image_bytes).decode("ascii")
-    safe_caption = html_lib.escape(caption)
-    safe_mime_type = html_lib.escape(mime_type or "image/png")
-
-    components.html(
-        f"""
-        <style>
-        body {{
-            margin: 0;
-            background: transparent;
-            color: rgba(250, 250, 250, 0.86);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }}
-        .caption {{
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin: 0 0 0.6rem 0;
-            opacity: 0.78;
-        }}
-        .image-frame {{
-            width: 100%;
-            overflow: auto;
-        }}
-        .image-frame img {{
-            display: block;
-            width: 100%;
-            max-width: none;
-            height: auto;
-            border-radius: 8px;
-        }}
-        </style>
-        <div class="caption">{safe_caption}</div>
-        <div class="image-frame">
-            <img src="data:{safe_mime_type};base64,{encoded_image}" alt="{safe_caption}">
-        </div>
-        """,
-        height=frame_height,
-        scrolling=True,
-    )
-
-
-def show_upload_preview(upload: Any, caption: str, button_key: str) -> None:
+def show_upload_preview(upload: Any, caption: str) -> None:
     if upload is None:
         st.caption("Nenhum print anexado.")
         return
     st.image(upload, caption=caption, width=THUMBNAIL_WIDTH)
-    if st.button("Ampliar print", key=f"spotlight_{button_key}", use_container_width=True):
-        show_image_spotlight(bytes(upload.getbuffer()), caption, getattr(upload, "type", "image/png"))
+    image_bytes = bytes(upload.getbuffer())
+    mime_type = html_lib.escape(getattr(upload, "type", "image/png") or "image/png")
+    safe_caption = html_lib.escape(caption)
+    encoded_image = base64.b64encode(image_bytes).decode("ascii")
+    components.html(
+        f"""
+        <a
+            href="data:{mime_type};base64,{encoded_image}"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="
+                display: inline-block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+                border: 1px solid rgba(250, 250, 250, 0.25);
+                border-radius: 0.45rem;
+                background: #2563eb;
+                color: white;
+                font: 700 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                padding: 0.42rem 0.72rem;
+                text-decoration: none;
+            "
+            title="{safe_caption}"
+        >Abrir print em nova aba</a>
+        """,
+        height=42,
+    )
 
 
 def show_upload_block(
@@ -1023,7 +993,7 @@ def show_upload_block(
             key=uploader_key,
             label_visibility="collapsed",
         )
-        show_upload_preview(upload, preview_caption, uploader_key)
+        show_upload_preview(upload, preview_caption)
         return upload
 
 
@@ -1164,7 +1134,7 @@ def main() -> None:
     with st.sidebar:
         st.header("Configuracao tecnica")
         python_bin = render_python_folder_selector()
-        engine = st.selectbox("OCR engine", ["auto", "vision", "easyocr", "tesseract"], index=0)
+        engine = st.selectbox("OCR engine", ["consensus", "auto", "vision", "easyocr", "tesseract"], index=0)
         st.caption("Ajuste aqui apenas se precisar trocar engine ou a pasta do Python.")
 
     control_slot = st.empty()

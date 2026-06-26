@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Extract Idle Hero TD upgrade levels from screenshots without LLMs.
 
-The script is deterministic: it uses Tesseract OCR TSV output, then parses
-levels with fixed regexes and optional fixed regions of interest.
+The default mode runs the available local OCR engines and merges layout slots,
+auto-detected lines, and exact effect validation into conservative consensus.
 """
 
 from __future__ import annotations
@@ -95,9 +95,14 @@ ROMAN_VALUES = {
     "VII": 7,
 }
 LEVEL_PATTERNS = [
+    re.compile(r"\b[1il|]{0,2}lv\.?\s*[.:a#-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)\b", re.IGNORECASE),
     re.compile(r"\b(?:lv|lvl|level|l)\.?\s*[.:a#-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)\b", re.IGNORECASE),
     re.compile(r"\b([0-9][0-9,\.]*)\s*/\s*(?:999999|999|[0-9]{2,})\b", re.IGNORECASE),
     re.compile(r"\b(?:current|curr)\s*[:#-]?\s*([0-9][0-9,\.]*)\b", re.IGNORECASE),
+]
+STRICT_LEVEL_PATTERNS = [
+    re.compile(r"\b[1il|]{0,2}lv\.?\s*[.:a#-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)\s*[\)\]\}]", re.IGNORECASE),
+    re.compile(r"\b(?:lv|lvl|level)\.?\s*[.:a#-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)\s*[\)\]\}]", re.IGNORECASE),
 ]
 
 
@@ -131,6 +136,13 @@ class OcrLine:
     left: int
 
 
+@dataclass(frozen=True)
+class LayoutSlot:
+    family_prefix: str
+    rect: list[float]
+    fallback_tier: int | None = None
+
+
 def run_ocr(
     image_path: Path,
     engine: str,
@@ -158,6 +170,17 @@ def run_ocr(
     if engine == "vision":
         return run_vision_ocr(image_path), "vision"
     raise SystemExit(f"unknown OCR engine: {engine}")
+
+
+def available_ocr_engines(tesseract_bin: str) -> list[str]:
+    engines: list[str] = []
+    if easyocr_available():
+        engines.append("easyocr")
+    if shutil.which("swiftc") and VISION_OCR_SOURCE.exists():
+        engines.append("vision")
+    if shutil.which(tesseract_bin):
+        engines.append("tesseract")
+    return engines
 
 
 def easyocr_available() -> bool:
@@ -336,6 +359,14 @@ def parse_level(text: str) -> int | None:
     return None
 
 
+def parse_strict_level(text: str) -> int | None:
+    for pattern in STRICT_LEVEL_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            return parse_level_int(match.group(1))
+    return None
+
+
 def parse_level_int(raw: str) -> int | None:
     normalized = raw.upper().strip()
     compact = re.sub(r"[^A-Z0-9]", "", normalized)
@@ -349,6 +380,7 @@ def parse_level_int(raw: str) -> int | None:
         .replace("I", "1")
         .replace("L", "1")
         .replace("|", "1")
+        .replace("T", "1")
         .replace("W", "1")
         .replace("Z", "2")
         .replace("S", "5")
@@ -371,6 +403,7 @@ def roman_to_int(raw: str) -> int | None:
         .replace("L", "I")
         .replace("|", "I")
         .replace("T", "I")
+        .replace("W", "I")
         .replace("!", "I")
     )
     if normalized in ROMAN_VALUES:
@@ -395,7 +428,11 @@ def classify_metric(text: str) -> str | None:
 
 
 def tier_from_label(text: str) -> int | None:
-    before_level = re.split(r"\b(?:lv|lvl|level)\b", text, flags=re.IGNORECASE)[0]
+    before_level = re.split(
+        r"\b(?:lvl|level)\b|\b[1il|]{0,2}lv\b|\b[1il|]{0,2}lv(?=[\s\.:a#\-\{\(]*[A-Za-z0-9])",
+        text,
+        flags=re.IGNORECASE,
+    )[0]
     cleaned = normalize_text(before_level).upper()
     for noise in [
         "DAMAGE",
@@ -549,6 +586,337 @@ def confidence(words: list[OcrWord]) -> float | None:
     if not words:
         return None
     return sum(word.conf for word in words) / len(words)
+
+
+LAYOUT_SLOTS: dict[str, list[LayoutSlot]] = {
+    "research-core": [
+        LayoutSlot("researchDmg", [0.02, 0.115, 0.49, 0.190], 1),
+        LayoutSlot("researchDmg", [0.02, 0.195, 0.49, 0.270], 2),
+        LayoutSlot("researchDmg", [0.02, 0.275, 0.49, 0.350], 3),
+        LayoutSlot("researchDmg", [0.50, 0.275, 0.98, 0.350], 4),
+        LayoutSlot("researchDmg", [0.02, 0.355, 0.49, 0.430], 5),
+        LayoutSlot("researchKillGold", [0.02, 0.575, 0.49, 0.650], 1),
+        LayoutSlot("researchPrestigePower", [0.50, 0.575, 0.98, 0.650], 1),
+        LayoutSlot("researchKillGold", [0.50, 0.655, 0.98, 0.730], 2),
+        LayoutSlot("researchPrestigePower", [0.02, 0.735, 0.49, 0.810], 2),
+        LayoutSlot("researchKillGold", [0.50, 0.735, 0.98, 0.810], 3),
+        LayoutSlot("researchPrestigePower", [0.02, 0.820, 0.49, 0.895], 3),
+        LayoutSlot("researchKillGold", [0.50, 0.820, 0.98, 0.895], 4),
+        LayoutSlot("researchPrestigePower", [0.02, 0.895, 0.49, 0.985], 4),
+        LayoutSlot("researchKillGold", [0.50, 0.895, 0.98, 0.985], 5),
+    ],
+    "prestige-core": [
+        LayoutSlot("prestigeDmg", [0.06, 0.240, 0.51, 0.345], 2),
+        LayoutSlot("prestigeDmg", [0.52, 0.240, 0.98, 0.345], 3),
+        LayoutSlot("prestigeDmg", [0.06, 0.350, 0.51, 0.445], 4),
+        LayoutSlot("prestigeDmg", [0.52, 0.350, 0.98, 0.445], 5),
+        LayoutSlot("prestigeKillGold", [0.52, 0.620, 0.98, 0.725], 2),
+        LayoutSlot("prestigeKillGold", [0.06, 0.730, 0.51, 0.830], 3),
+        LayoutSlot("prestigeKillGold", [0.52, 0.730, 0.98, 0.830], 4),
+        LayoutSlot("prestigeKillGold", [0.06, 0.835, 0.51, 0.935], 5),
+        LayoutSlot("prestigeKillGold", [0.52, 0.835, 0.98, 0.935], 6),
+    ],
+}
+
+
+def slot_key_info(slot: LayoutSlot, text: str) -> tuple[str | None, str | None]:
+    tier = tier_from_label(text)
+    if tier is not None:
+        return f"{slot.family_prefix}{tier}", "label"
+    if slot.fallback_tier is not None:
+        return f"{slot.family_prefix}{slot.fallback_tier}", "slot_fallback"
+    return None, None
+
+
+def slot_key(slot: LayoutSlot, text: str) -> str | None:
+    key, _source = slot_key_info(slot, text)
+    return key
+
+
+def extract_layout_slots(
+    words: list[OcrWord],
+    page_size: tuple[int, int],
+    screen: str,
+    requested_keys: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], list[str]]:
+    records: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    requested = set(requested_keys or [])
+    seen: set[str] = set()
+
+    try:
+        slots = LAYOUT_SLOTS[screen]
+    except KeyError as exc:
+        raise SystemExit(f"layout slots are not configured for screen {screen!r}") from exc
+
+    for slot in slots:
+        selected = words_in_rect(words, slot.rect, page_size)
+        if not selected:
+            continue
+        text = text_from_words(selected)
+        key, key_source = slot_key_info(slot, text)
+        if key is None:
+            warnings.append(f"slot key not found for {slot.family_prefix} in rect {slot.rect}")
+            continue
+        if requested and key not in requested:
+            continue
+
+        level = parse_strict_level(text)
+        if level is None:
+            warnings.append(f"strict level not found for {key}")
+        seen.add(key)
+        records.append(
+            {
+                "upgrade_key": key,
+                "level": level,
+                "confidence": confidence(selected),
+                "text": text,
+                "rect": slot.rect,
+                "source": "layout_level_text",
+                "key_source": key_source,
+            }
+        )
+
+    for key in requested - seen:
+        records.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+        warnings.append(f"layout slot not found for {key}")
+
+    return records, warnings
+
+
+def effect_level_for_validation(text: str, upgrade_key: str, percent_per_level: dict[str, float]) -> int | None:
+    match = re.search(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", text, flags=re.IGNORECASE)
+    if not match:
+        return None
+    if re.search(r"[KMBT]", match.group(1), flags=re.IGNORECASE):
+        return None
+    return level_from_effect_text(text, upgrade_key, percent_per_level)
+
+
+def merge_layout_slot_records(
+    record_sets: list[list[dict[str, Any]]],
+    requested_keys: list[str] | None,
+) -> tuple[list[dict[str, Any]], list[str]]:
+    percent_per_level = load_percent_per_level()
+    warnings: list[str] = []
+    if requested_keys is None:
+        key_order = sorted(
+            {
+                str(record.get("upgrade_key"))
+                for records in record_sets
+                for record in records
+                if record.get("upgrade_key") and record.get("level") is not None
+            }
+        )
+    else:
+        key_order = requested_keys
+    by_key: dict[str, list[dict[str, Any]]] = {key: [] for key in key_order}
+
+    for records in record_sets:
+        for record in records:
+            key = str(record.get("upgrade_key"))
+            if key in by_key:
+                by_key[key].append(record)
+
+    merged: list[dict[str, Any]] = []
+    for key in key_order:
+        candidates = [record for record in by_key.get(key, []) if record.get("level") is not None]
+        if not candidates:
+            merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+            warnings.append(f"consensus level not found for {key}")
+            continue
+
+        counts: dict[int, int] = {}
+        for record in candidates:
+            counts[int(record["level"])] = counts.get(int(record["level"]), 0) + 1
+        majority_level, majority_count = max(counts.items(), key=lambda item: item[1])
+        if majority_count > 1 or len(candidates) == 1:
+            chosen = max(
+                (record for record in candidates if int(record["level"]) == majority_level),
+                key=lambda record: record.get("confidence") or 0,
+            )
+        else:
+            validated = []
+            for record in candidates:
+                effect_level = effect_level_for_validation(str(record.get("text", "")), key, percent_per_level)
+                if effect_level is not None and effect_level == int(record["level"]):
+                    validated.append(record)
+            if len(validated) == 1:
+                chosen = validated[0]
+            else:
+                levels = ", ".join(
+                    f"{record.get('engine', '?')}={record.get('level')}" for record in candidates
+                )
+                merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+                warnings.append(f"unresolved consensus for {key}: {levels}")
+                continue
+
+        merged_record = dict(chosen)
+        merged_record["source"] = f"consensus:{chosen.get('source')}"
+        merged.append(merged_record)
+
+    return merged, warnings
+
+
+def annotate_records(records: list[dict[str, Any]], engine: str, strategy: str) -> list[dict[str, Any]]:
+    annotated = []
+    for record in records:
+        item = dict(record)
+        item["engine"] = engine
+        item["strategy"] = strategy
+        annotated.append(item)
+    return annotated
+
+
+def record_level(record: dict[str, Any]) -> int | None:
+    raw_level = record.get("level")
+    if raw_level is None:
+        return None
+    try:
+        return int(raw_level)
+    except (TypeError, ValueError):
+        return None
+
+
+def ensemble_candidates_for_record(
+    record: dict[str, Any],
+    key: str,
+    percent_per_level: dict[str, float],
+) -> list[dict[str, Any]]:
+    candidates: list[dict[str, Any]] = []
+    text = str(record.get("text", ""))
+    raw_level = record_level(record)
+    effect_level = effect_level_for_validation(text, key, percent_per_level)
+
+    if raw_level is not None:
+        direct = dict(record)
+        direct["level"] = raw_level
+        direct["math_validated"] = effect_level == raw_level
+        candidates.append(direct)
+
+    key_source = str(record.get("key_source") or "")
+    can_trust_effect_key = key_source != "slot_fallback"
+    raw_is_suspicious = level_looks_suspicious(raw_level, text)
+    should_add_effect = (
+        effect_level is not None
+        and can_trust_effect_key
+        and (raw_level is None or (effect_level != raw_level and raw_is_suspicious))
+    )
+    if should_add_effect:
+        effect_record = dict(record)
+        effect_record["level"] = effect_level
+        effect_record["source"] = f"{record.get('source') or 'ocr'}:effect_validation"
+        effect_record["math_validated"] = True
+        candidates.append(effect_record)
+
+    return candidates
+
+
+def format_candidate_sources(records: list[dict[str, Any]]) -> str:
+    parts = []
+    for record in records:
+        engine = record.get("engine", "?")
+        strategy = record.get("strategy", "?")
+        source = record.get("source", "?")
+        parts.append(f"{engine}/{strategy}/{source}={record.get('level')}")
+    return ", ".join(parts)
+
+
+def merge_ensemble_records(
+    records: list[dict[str, Any]],
+    requested_keys: list[str] | None,
+) -> tuple[list[dict[str, Any]], list[str]]:
+    percent_per_level = load_percent_per_level()
+    warnings: list[str] = []
+    if requested_keys is None:
+        key_order = sorted(
+            {
+                str(record.get("upgrade_key"))
+                for record in records
+                if record.get("upgrade_key") and (record.get("level") is not None or record.get("text"))
+            }
+        )
+    else:
+        key_order = requested_keys
+
+    records_by_key: dict[str, list[dict[str, Any]]] = {key: [] for key in key_order}
+    for record in records:
+        key = str(record.get("upgrade_key"))
+        if key in records_by_key:
+            records_by_key[key].append(record)
+
+    merged: list[dict[str, Any]] = []
+    for key in key_order:
+        candidates: list[dict[str, Any]] = []
+        for record in records_by_key.get(key, []):
+            candidates.extend(ensemble_candidates_for_record(record, key, percent_per_level))
+
+        if not candidates:
+            merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+            warnings.append(f"consensus level not found for {key}")
+            continue
+
+        groups: dict[int, list[dict[str, Any]]] = {}
+        for candidate in candidates:
+            level = record_level(candidate)
+            if level is not None:
+                groups.setdefault(level, []).append(candidate)
+
+        accepted: list[tuple[tuple[int, int, int, int, int, int, int], int, list[dict[str, Any]]]] = []
+        for level, group_records in groups.items():
+            engines = {str(record.get("engine")) for record in group_records if record.get("engine")}
+            strategies = {str(record.get("strategy")) for record in group_records if record.get("strategy")}
+            math_count = sum(1 for record in group_records if record.get("math_validated"))
+            engine_agreement = len(engines) >= 2
+            strategy_agreement = len(strategies) >= 2
+            math_validated = math_count > 0
+            if not engine_agreement and not strategy_agreement and not math_validated:
+                continue
+            rank = (
+                1 if engine_agreement and math_validated else 0,
+                1 if engine_agreement else 0,
+                1 if math_validated else 0,
+                1 if strategy_agreement else 0,
+                len(engines),
+                len(strategies),
+                math_count,
+            )
+            accepted.append((rank, level, group_records))
+
+        if not accepted:
+            merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+            warnings.append(f"untrusted consensus for {key}: {format_candidate_sources(candidates)}")
+            continue
+
+        accepted.sort(key=lambda item: item[0], reverse=True)
+        top_rank = accepted[0][0]
+        top = [item for item in accepted if item[0] == top_rank]
+        if len(top) != 1:
+            merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
+            conflicting = "; ".join(
+                f"{level}: {format_candidate_sources(group_records)}" for _rank, level, group_records in top
+            )
+            warnings.append(f"conflicting consensus for {key}: {conflicting}")
+            continue
+
+        _rank, level, group_records = top[0]
+        chosen = max(group_records, key=lambda record: record.get("confidence") or 0)
+        merged_record = dict(chosen)
+        merged_record["level"] = level
+        merged_record["source"] = f"consensus:{chosen.get('source')}"
+        merged_record["evidence"] = [
+            {
+                "engine": record.get("engine"),
+                "strategy": record.get("strategy"),
+                "source": record.get("source"),
+                "level": record.get("level"),
+                "math_validated": bool(record.get("math_validated")),
+            }
+            for record in group_records
+        ]
+        merged.append(merged_record)
+
+    return merged, warnings
 
 
 def extract_with_rois(
@@ -726,7 +1094,11 @@ def level_from_effect_text(text: str, upgrade_key: str, percent_per_level: dict[
 def level_looks_suspicious(level: int | None, raw_text: str) -> bool:
     if level is None:
         return True
-    match = re.search(r"\b(?:lv|lvl|level|l)\.?\s*[.:a#-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)", raw_text, re.IGNORECASE)
+    match = re.search(
+        r"\b(?:lv|lvl|level)\.?\s*[.:a#,-]?\s*([0-9A-Za-z][0-9A-Za-z,\.]*)",
+        raw_text,
+        re.IGNORECASE,
+    )
     if not match:
         return True
     raw = match.group(1)
@@ -756,7 +1128,7 @@ def extract_auto_detect(
 
         level = parse_level(context_text)
         source = "level_text"
-        effect_level = level_from_effect_text(context_text, key, percent_per_level)
+        effect_level = effect_level_for_validation(context_text, key, percent_per_level)
         if effect_level is not None and level_looks_suspicious(level, context_text):
             level = effect_level
             source = "effect_text"
@@ -768,6 +1140,7 @@ def extract_auto_detect(
             "text": context_text,
             "rect": list(bounds) if bounds else None,
             "source": source,
+            "key_source": "auto_label",
         }
 
         previous = detected.get(key)
@@ -937,7 +1310,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--visible-keys", help="Comma-separated upgrade keys visible in row-major order.")
     parser.add_argument("--print-config-template", action="store_true", help="Print an ROI config template and exit.")
     parser.add_argument("--tesseract-bin", default="tesseract")
-    parser.add_argument("--engine", choices=["auto", "easyocr", "tesseract", "vision"], default="auto")
+    parser.add_argument("--engine", choices=["auto", "consensus", "easyocr", "tesseract", "vision"], default="consensus")
+    parser.add_argument("--strategy", choices=["layout-slots", "auto-lines"], default="layout-slots")
     parser.add_argument("--lang", default="eng")
     parser.add_argument("--psm", type=int, default=11, help="Tesseract page segmentation mode.")
     parser.add_argument("--min-conf", type=float, default=0.0)
@@ -961,6 +1335,12 @@ def self_test() -> int:
     records, warnings = extract_with_rois(words, page_size, rois)
     assert records[0]["level"] == 123, records
     assert not warnings, warnings
+    assert parse_strict_level("DAMAGE LL (Lv499.023) 1.80E+20") == 499023
+    assert parse_strict_level("Kzll COlD Il LLv: 338.355)") == 338355
+    assert parse_strict_level("KILL GOLDTV (Lv. 9) 1,86M") == 9
+    assert parse_strict_level("Kill GODIV (Lv 91 1,86M +450%)") is None
+    assert not level_looks_suspicious(499028, "DAMACE LI (Lv. 499.028) 344.15T +4,99M% (+10%)")
+    assert tier_from_label("1.80E+20 DAMAGE LL (Lv499.023)") == 2
 
     percent_per_level = {
         "researchKillGold1": 5.0,
@@ -1036,37 +1416,67 @@ def main() -> int:
     if not image_path.exists():
         raise SystemExit(f"image not found: {image_path}")
 
-    tsv_text, engine_used = run_ocr(image_path, args.engine, args.tesseract_bin, args.lang, args.psm)
-    if args.dump_tsv:
-        Path(args.dump_tsv).write_text(tsv_text, encoding="utf-8")
-
-    words, page_size = parse_tsv(tsv_text, min_conf=args.min_conf)
-    lines = group_lines(words)
-    if args.dump_ocr_text:
-        Path(args.dump_ocr_text).write_text("\n".join(line.text for line in lines) + "\n", encoding="utf-8")
-
     mode = "auto-lines"
     config = load_config(Path(args.config)) if args.config else {}
-    if config.get("engine"):
-        engine = config["engine"]
-        if "min_conf" in engine and float(engine["min_conf"]) != args.min_conf:
-            words, page_size = parse_tsv(tsv_text, min_conf=float(engine["min_conf"]))
-            lines = group_lines(words)
+    if args.engine == "consensus" and (config.get("rois") or args.grid or args.strategy != "layout-slots"):
+        raise SystemExit("--engine consensus requires --strategy layout-slots without --config/--grid")
 
-    if config.get("rois"):
-        records, warnings = extract_with_rois(words, page_size, config["rois"])
-        mode = "config-rois"
-    elif args.grid:
-        if not args.cols or not args.rows:
-            raise SystemExit("--grid requires --cols and --rows")
-        rois = build_grid_rois(args.grid, args.cols, args.rows, visible_keys(args))
-        records, warnings = extract_with_rois(words, page_size, rois)
-        mode = "grid-rois"
-    else:
+    if args.engine == "consensus":
+        engines = available_ocr_engines(args.tesseract_bin)
+        if not engines:
+            raise SystemExit(
+                "no OCR engine found. Install EasyOCR, Tesseract, or run on macOS with swiftc/Vision available."
+            )
         requested = [key.strip() for key in args.visible_keys.split(",") if key.strip()] if args.visible_keys else None
-        if args.screen == "all-core" and requested is None:
-            raise SystemExit("--screen all-core requires --visible-keys, --grid, or --config")
-        records, warnings = extract_auto_detect(lines, args.screen, requested)
+        ensemble_records: list[dict[str, Any]] = []
+        warnings: list[str] = []
+        page_size = (0, 0)
+        for engine in engines:
+            tsv_text, _engine_used = run_ocr(image_path, engine, args.tesseract_bin, args.lang, args.psm)
+            words, page_size = parse_tsv(tsv_text, min_conf=args.min_conf)
+            lines = group_lines(words)
+            layout_records, _layout_warnings = extract_layout_slots(words, page_size, args.screen, requested)
+            auto_records, _auto_warnings = extract_auto_detect(lines, args.screen, requested)
+            ensemble_records.extend(annotate_records(layout_records, engine, "layout-slots"))
+            ensemble_records.extend(annotate_records(auto_records, engine, "auto-lines"))
+        records, consensus_warnings = merge_ensemble_records(ensemble_records, requested)
+        warnings.extend(consensus_warnings)
+        mode = "ensemble-consensus"
+        engine_used = "+".join(engines)
+    else:
+        tsv_text, engine_used = run_ocr(image_path, args.engine, args.tesseract_bin, args.lang, args.psm)
+        if args.dump_tsv:
+            Path(args.dump_tsv).write_text(tsv_text, encoding="utf-8")
+
+        words, page_size = parse_tsv(tsv_text, min_conf=args.min_conf)
+        lines = group_lines(words)
+        if args.dump_ocr_text:
+            Path(args.dump_ocr_text).write_text("\n".join(line.text for line in lines) + "\n", encoding="utf-8")
+
+        if config.get("engine"):
+            engine = config["engine"]
+            if "min_conf" in engine and float(engine["min_conf"]) != args.min_conf:
+                words, page_size = parse_tsv(tsv_text, min_conf=float(engine["min_conf"]))
+                lines = group_lines(words)
+
+        if config.get("rois"):
+            records, warnings = extract_with_rois(words, page_size, config["rois"])
+            mode = "config-rois"
+        elif args.grid:
+            if not args.cols or not args.rows:
+                raise SystemExit("--grid requires --cols and --rows")
+            rois = build_grid_rois(args.grid, args.cols, args.rows, visible_keys(args))
+            records, warnings = extract_with_rois(words, page_size, rois)
+            mode = "grid-rois"
+        elif args.strategy == "layout-slots":
+            requested = [key.strip() for key in args.visible_keys.split(",") if key.strip()] if args.visible_keys else None
+            records, warnings = extract_layout_slots(words, page_size, args.screen, requested)
+            mode = "layout-slots"
+        else:
+            requested = [key.strip() for key in args.visible_keys.split(",") if key.strip()] if args.visible_keys else None
+            if args.screen == "all-core" and requested is None:
+                raise SystemExit("--screen all-core requires --visible-keys, --grid, or --config")
+            records, warnings = extract_auto_detect(lines, args.screen, requested)
 
     result = result_document(image_path, mode, engine_used, page_size, records, warnings)
     if args.format == "json":
