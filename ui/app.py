@@ -443,10 +443,23 @@ def build_state_rows(ocr_results: list[dict[str, Any]]) -> pd.DataFrame:
 def coerce_int(value: Any) -> int | None:
     if value is None or pd.isna(value):
         return None
+    if isinstance(value, (int, float, Decimal)) and not isinstance(value, bool):
+        numeric = Decimal(str(value))
+        if numeric == numeric.to_integral_value():
+            return int(numeric)
+        return None
+
     text = str(value).strip()
     if not text:
         return None
-    return int(float(text.replace(".", "").replace(",", ".")))
+    compact = text.replace("_", "").replace(" ", "")
+    if re.fullmatch(r"[+-]?\d+", compact):
+        return int(compact)
+    if re.fullmatch(r"[+-]?\d+[.,]0+", compact):
+        return int(Decimal(compact.replace(",", ".")))
+    if re.fullmatch(r"[+-]?\d+(?:[.,]\d{3})+", compact):
+        return int(compact.replace(".", "").replace(",", ""))
+    return None
 
 
 def validate_resource_inputs(energy: str, prestige_points: str) -> list[str]:
