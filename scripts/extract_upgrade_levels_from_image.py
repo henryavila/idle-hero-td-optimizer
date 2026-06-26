@@ -635,11 +635,17 @@ def key_for_detected_context(
         return None
 
     level = parse_level(context_text)
-    tier = tier_from_total_effect(prefix, context_text, percent_per_level, level)
-    if tier is None:
-        tier = tier_from_effect_increment(prefix, context_text, percent_per_level)
-    if tier is None:
-        tier = tier_from_label(label_text)
+    label_tier = tier_from_label(label_text)
+    increment_tier = tier_from_effect_increment(prefix, context_text, percent_per_level)
+    total_tier = tier_from_total_effect(prefix, context_text, percent_per_level, level)
+    if increment_tier is not None and increment_tier == label_tier:
+        tier = increment_tier
+    elif total_tier is not None:
+        tier = total_tier
+    elif increment_tier is not None:
+        tier = increment_tier
+    else:
+        tier = label_tier
     if tier is None:
         return None
     return f"{prefix}{tier}"
@@ -1259,7 +1265,7 @@ def level_looks_suspicious(level: int | None, raw_text: str) -> bool:
         return True
     raw = match.group(1)
     compact = re.sub(r"[^A-Za-z0-9]", "", raw.upper())
-    if compact in {"1Z", "IZ", "LZ"}:
+    if compact in {"1Z", "11Z", "IZ", "LZ"}:
         return False
     return bool(re.search(r"[A-Za-z]", raw)) or len(re.sub(r"\D", "", raw)) < len(raw.replace(",", "").replace(".", ""))
 

@@ -154,6 +154,21 @@ def assert_parser_regressions() -> list[str]:
     if effect_level != 10941:
         failures.append(f"effect_level_for_validation K suffix: got {effect_level}, expected 10941")
 
+    misread_kill_gold_ii = "Kil GolDIL (Lv: 11Z) 8.475 +17120% (+10%)"
+    misread_level = ocr.parse_level(misread_kill_gold_ii)
+    if misread_level != 112:
+        failures.append(f"misread Kill Gold II level: got {misread_level}, expected 112")
+    if ocr.level_looks_suspicious(misread_level, misread_kill_gold_ii):
+        failures.append("misread Kill Gold II level 11Z was marked suspicious")
+    detected_key = ocr.key_for_detected_context(
+        "research-core",
+        "Kil GolDIL (Lv: 11Z)",
+        misread_kill_gold_ii,
+        percent_per_level,
+    )
+    if detected_key != "researchKillGold2":
+        failures.append(f"misread Kill Gold II key: got {detected_key}, expected researchKillGold2")
+
     records, warnings = ocr.merge_ensemble_records(
         [
             {
