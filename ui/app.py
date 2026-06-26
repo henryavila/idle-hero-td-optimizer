@@ -26,6 +26,8 @@ SCRIPTS_DIR = APP_ROOT / "scripts"
 DATA_DIR = APP_ROOT / "IdleHeroTD-apk" / "apk_analysis" / "dados-consolidados"
 COSTS_CSV = DATA_DIR / "formulas" / "csv" / "core_upgrade_cost_formula_classes.csv"
 RUNS_DIR = APP_ROOT / "runs"
+USER_STATE_DIR = APP_ROOT / "user_state"
+LOCKED_UPGRADES_PATH = USER_STATE_DIR / "locked_upgrades.json"
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -208,7 +210,7 @@ def render_python_folder_selector() -> str:
     selected_folder = str(st.session_state["python_folder"])
     select_col, reset_col = st.columns([2, 1])
     with select_col:
-        if st.button("Selecionar pasta do Python", use_container_width=True):
+        if st.button("Selecionar pasta do Python", width="stretch"):
             try:
                 chosen_folder = choose_folder_dialog(selected_folder)
                 if chosen_folder:
@@ -217,7 +219,7 @@ def render_python_folder_selector() -> str:
             except Exception as exc:
                 st.warning(str(exc))
     with reset_col:
-        if st.button("Atual", use_container_width=True):
+        if st.button("Atual", width="stretch"):
             selected_folder = default_python_folder()
             st.session_state["python_folder"] = selected_folder
 
@@ -240,6 +242,34 @@ def load_max_levels() -> dict[str, int]:
         for _, row in frame.iterrows()
         if str(row.get("upgrade_key", "")) in CORE_KEYS
     }
+
+
+def normalize_manual_locked(keys: Any) -> list[str]:
+    if isinstance(keys, dict):
+        keys = keys.get("locked_upgrades", [])
+    if not isinstance(keys, (list, set, tuple)):
+        return []
+    return sorted({str(key) for key in keys if str(key) in CORE_KEYS})
+
+
+def load_manual_locked(path: Path = LOCKED_UPGRADES_PATH) -> set[str]:
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    return set(normalize_manual_locked(payload))
+
+
+def save_manual_locked(keys: set[str], path: Path = LOCKED_UPGRADES_PATH) -> None:
+    locked = normalize_manual_locked(keys)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "locked_upgrades": locked,
+        "updated_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def label_for_key(key: str) -> str:
@@ -344,9 +374,9 @@ def detected_status(
     max_level: int | None,
     text: str,
 ) -> str:
-    if looks_locked_text(text):
-        return "locked"
     if level is None:
+        return "review"
+    if level == 0 and looks_locked_text(text):
         return "review"
     if max_level is not None and level >= max_level:
         return "maxed"
@@ -356,7 +386,6 @@ def detected_status(
 def infer_missing_status(
     tier: int,
     family_detected_tiers: list[int],
-    family_locked_tiers: list[int],
 ) -> tuple[str, str]:
     if not family_detected_tiers:
         return "review", "missing=review:no-family-anchor"
@@ -365,10 +394,8 @@ def infer_missing_status(
     lowest_detected = detected[0]
     highest_detected = detected[-1]
 
-    if any(locked_tier <= tier for locked_tier in family_locked_tiers):
-        return "locked", "missing=locked:after-visible-lock"
     if tier > highest_detected:
-        return "locked", "missing=locked:beyond-visible-tiers"
+        return "review", "missing=review:beyond-visible-tiers"
     if tier < lowest_detected:
         contiguous_anchor = detected == list(range(lowest_detected, highest_detected + 1))
         if contiguous_anchor:
@@ -377,7 +404,26 @@ def infer_missing_status(
     return "review", "missing=review:ambiguous"
 
 
-def build_state_rows(ocr_results: list[dict[str, Any]]) -> pd.DataFrame:
+def apply_manual_locked(rows: pd.DataFrame, manual_locked: set[str]) -> pd.DataFrame:
+    if rows.empty:
+        return rows
+    result = rows.copy()
+    if "ocr_level" not in result.columns:
+        result["ocr_level"] = result["level"]
+    if "ocr_status" not in result.columns:
+        result["ocr_status"] = result["status"]
+    result["manual_locked"] = result["upgrade_key"].astype(str).isin(manual_locked)
+    locked_mask = result["manual_locked"]
+    result.loc[locked_mask, "status"] = "locked"
+    result.loc[locked_mask, "level"] = 0
+    result.loc[locked_mask, "inference"] = "manual=locked"
+    return result
+
+
+def build_state_rows(
+    ocr_results: list[dict[str, Any]],
+    manual_locked: set[str] | None = None,
+) -> pd.DataFrame:
     max_levels = load_max_levels()
     records = records_by_key(ocr_results)
     loaded_screens = {str(result.get("screen")) for result in ocr_results if result.get("screen")}
@@ -403,22 +449,22 @@ def build_state_rows(ocr_results: list[dict[str, Any]]) -> pd.DataFrame:
                 "label": label_for_key(key),
                 "level": level,
                 "status": status,
+                "ocr_level": level,
+                "ocr_status": status,
                 "max_level": max_level,
                 "detected": detected,
                 "screen_loaded": screen_loaded,
                 "inference": "ocr" if detected else None,
+                "manual_locked": False,
                 "confidence": record.get("confidence"),
                 "ocr_text": text,
             }
         )
     family_detected: dict[str, list[int]] = {}
-    family_locked: dict[str, list[int]] = {}
     for row in raw_rows:
         if not row["screen_loaded"] or not row["detected"]:
             continue
         family_detected.setdefault(row["family"], []).append(row["tier"])
-        if row["status"] == "locked":
-            family_locked.setdefault(row["family"], []).append(row["tier"])
 
     rows: list[dict[str, Any]] = []
     for row in raw_rows:
@@ -432,12 +478,12 @@ def build_state_rows(ocr_results: list[dict[str, Any]]) -> pd.DataFrame:
             status, inference = infer_missing_status(
                 tier=row["tier"],
                 family_detected_tiers=family_detected.get(row["family"], []),
-                family_locked_tiers=family_locked.get(row["family"], []),
             )
             row["status"] = status
+            row["ocr_status"] = status
             row["inference"] = inference
         rows.append(row)
-    return pd.DataFrame(rows)
+    return apply_manual_locked(pd.DataFrame(rows), manual_locked or set())
 
 
 def coerce_int(value: Any) -> int | None:
@@ -537,6 +583,20 @@ def build_optimizer_state(
     return state, errors
 
 
+def rows_state_fingerprint(rows: pd.DataFrame) -> str:
+    payload = []
+    for _, row in rows.sort_values("upgrade_key").iterrows():
+        payload.append(
+            {
+                "upgrade_key": str(row["upgrade_key"]),
+                "status": str(row["status"]),
+                "level": coerce_int(row.get("level")),
+            }
+        )
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -634,6 +694,7 @@ def generate_macro_result(
         "objective": objective,
         "energy": energy,
         "prestige_points": prestige_points,
+        "rows": rows_state_fingerprint(rows),
     }
     return result, macro_text, []
 
@@ -663,10 +724,12 @@ def inference_label(inference: Any) -> str:
     labels = {
         "missing=review:no-family-anchor": "sem referencia suficiente nesta familia",
         "missing=review:non-contiguous-visible-run": "buraco em sequencia visivel; pode ser OCR falho",
+        "missing=review:beyond-visible-tiers": "ausente alem dos tiers visiveis",
         "missing=review:ambiguous": "ausencia ambigua",
         "missing=maxed:before-contiguous-visible-run": "maxed inferido antes da sequencia visivel",
         "missing=locked:after-visible-lock": "locked inferido depois de tier travado",
         "missing=locked:beyond-visible-tiers": "locked inferido alem do limite visivel",
+        "manual=locked": "bloqueio manual salvo",
         "ocr": "lido pelo OCR",
         "not-loaded": "tela nao anexada",
     }
@@ -727,6 +790,97 @@ def screen_counts_text(rows: pd.DataFrame) -> str:
         f"{counts.get('maxed', 0)} maxed | "
         f"{counts.get('review', 0)} pendencias"
     )
+
+
+def manual_locked_conflicts(rows: pd.DataFrame, manual_locked: set[str]) -> list[str]:
+    conflicts = []
+    for _, row in rows.iterrows():
+        key = str(row["upgrade_key"])
+        if key not in manual_locked:
+            continue
+        ocr_level = coerce_int(row.get("ocr_level"))
+        if ocr_level is not None and ocr_level > 0:
+            conflicts.append(f"{label_for_key(key)}: OCR leu Lv {level_display(ocr_level)}")
+    return conflicts
+
+
+def manual_locked_editor_frame(
+    rows: pd.DataFrame,
+    manual_locked: set[str],
+    *,
+    show_state: bool = True,
+) -> pd.DataFrame:
+    ordered = rows.sort_values(["family", "tier"]).copy()
+    data = {
+        "locked": [str(key) in manual_locked for key in ordered["upgrade_key"]],
+        "label": [upgrade_display_name(str(key)) for key in ordered["upgrade_key"]],
+    }
+    if show_state:
+        data["status"] = [status_label(str(status)) for status in ordered["status"]]
+        data["level"] = [level_display(value) or "" for value in ordered["level"]]
+    data["upgrade_key"] = [str(key) for key in ordered["upgrade_key"]]
+    return pd.DataFrame(data)
+
+
+def render_manual_locked_editor(merged: pd.DataFrame, *, show_state: bool = True) -> pd.DataFrame:
+    manual_locked = load_manual_locked()
+    if merged.empty:
+        return merged
+
+    edited_locked = set(manual_locked)
+    state_version = st.session_state.get("state_version", "v0")
+    with st.expander(f"Bloqueios manuais ({len(manual_locked)})", expanded=bool(manual_locked)):
+        tabs = st.tabs([SCREEN_TITLES.get(screen, screen) for screen in SCREEN_ORDER])
+        for screen, tab in zip(SCREEN_ORDER, tabs):
+            with tab:
+                subset = merged[merged["screen"] == screen]
+                if subset.empty:
+                    st.caption("Sem itens nesta tela.")
+                    continue
+                frame = manual_locked_editor_frame(subset, edited_locked, show_state=show_state)
+                disabled_columns = ["label", "upgrade_key"]
+                column_config = {
+                    "locked": st.column_config.CheckboxColumn("Locked", width="small"),
+                    "label": st.column_config.TextColumn("Upgrade", width="medium"),
+                    "upgrade_key": st.column_config.TextColumn("Key", width="medium"),
+                }
+                if show_state:
+                    disabled_columns.extend(["status", "level"])
+                    column_config.update(
+                        {
+                            "status": st.column_config.TextColumn("Status", width="small"),
+                            "level": st.column_config.TextColumn("Level", width="small"),
+                        }
+                    )
+                edited = st.data_editor(
+                    frame,
+                    width="stretch",
+                    hide_index=True,
+                    num_rows="fixed",
+                    disabled=disabled_columns,
+                    column_config=column_config,
+                    key=f"manual_locked_editor_{state_version}_{screen_slug(screen)}",
+                )
+                screen_keys = set(frame["upgrade_key"])
+                edited_locked.difference_update(screen_keys)
+                edited_locked.update(
+                    str(row["upgrade_key"])
+                    for _, row in edited.iterrows()
+                    if bool(row.get("locked"))
+                )
+
+        edited_locked = set(normalize_manual_locked(edited_locked))
+        if edited_locked != manual_locked:
+            save_manual_locked(edited_locked)
+            st.session_state["last_macro_text"] = None
+            st.session_state["last_result"] = None
+
+        conflicts = manual_locked_conflicts(merged, edited_locked)
+        if conflicts:
+            st.warning("Bloqueio manual conflita com OCR: " + "; ".join(conflicts[:6]))
+        st.caption(f"Arquivo: {LOCKED_UPGRADES_PATH.relative_to(APP_ROOT)}")
+
+    return apply_manual_locked(merged, edited_locked)
 
 
 def screen_section_header(screen: str, rows: pd.DataFrame) -> None:
@@ -849,13 +1003,13 @@ def render_inference_summary(rows: pd.DataFrame) -> None:
             if subset.empty:
                 continue
             inferred_maxed = int(((subset["status"] == "maxed") & (~subset["detected"])).sum())
-            inferred_locked = int(((subset["status"] == "locked") & (~subset["detected"])).sum())
-            visible_locked = int(((subset["status"] == "locked") & (subset["detected"])).sum())
+            manual_locked = int(subset.get("manual_locked", pd.Series(dtype=bool)).fillna(False).sum())
+            review_missing = int(((subset["status"] == "review") & (~subset["detected"])).sum())
             st.markdown(f"**{SCREEN_TITLES.get(screen, screen)}**")
             st.write(
                 f"- {inferred_maxed} maxed inferidos antes de sequencias visiveis\n"
-                f"- {inferred_locked} locked inferidos alem dos tiers visiveis\n"
-                f"- {visible_locked} locked detectados por botao Wave/lock"
+                f"- {manual_locked} locked manuais salvos\n"
+                f"- {review_missing} ausencias para revisar"
             )
 
 
@@ -871,7 +1025,7 @@ def render_advanced_editor(merged: pd.DataFrame) -> None:
                     continue
                 edited = st.data_editor(
                     subset[editor_columns],
-                    use_container_width=True,
+                    width="stretch",
                     hide_index=True,
                     num_rows="fixed",
                     column_config={
@@ -895,15 +1049,18 @@ def render_debug_rows(merged: pd.DataFrame) -> None:
         for screen, tab in zip(SCREEN_ORDER, tabs):
             with tab:
                 subset = merged[merged["screen"] == screen]
-                st.dataframe(subset[detail_columns], use_container_width=True, hide_index=True)
+                st.dataframe(subset[detail_columns], width="stretch", hide_index=True)
 
 
 def show_editor() -> pd.DataFrame | None:
     rows = st.session_state.get("state_rows")
     if rows is None:
+        pre_ocr_rows = build_state_rows([], manual_locked=load_manual_locked())
+        render_manual_locked_editor(pre_ocr_rows, show_state=False)
         return None
 
     merged = rows.copy()
+    merged = render_manual_locked_editor(merged)
     pending = merged[merged["status"] == "review"].copy()
 
     if not pending.empty:
@@ -922,6 +1079,7 @@ def show_editor() -> pd.DataFrame | None:
         render_state_summary(merged)
     render_inference_summary(merged)
     render_advanced_editor(merged)
+    merged = apply_manual_locked(merged, load_manual_locked())
     render_debug_rows(merged)
 
     st.session_state["state_rows"] = merged
@@ -937,37 +1095,83 @@ def show_validation_errors(errors: list[str]) -> None:
         st.write("\n".join(f"- {error}" for error in errors))
 
 
+def build_open_image_html(image_bytes: bytes, mime_type: str, caption: str) -> str:
+    safe_mime_type = html_lib.escape(mime_type or "image/png", quote=True)
+    safe_caption = html_lib.escape(caption)
+    encoded_image = base64.b64encode(image_bytes).decode("ascii")
+    data_url = f"data:{safe_mime_type};base64,{encoded_image}"
+    preview_page = f"""<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{safe_caption}</title>
+<style>
+html, body {{
+    margin: 0;
+    min-height: 100%;
+    background: #111827;
+}}
+body {{
+    display: grid;
+    place-items: start center;
+    padding: 16px;
+}}
+img {{
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}}
+</style>
+</head>
+<body>
+<img src="{data_url}" alt="{safe_caption}">
+</body>
+</html>"""
+    return f"""
+    <button
+        id="open-image-preview"
+        type="button"
+        style="
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid rgba(250, 250, 250, 0.25);
+            border-radius: 0.45rem;
+            background: #2563eb;
+            color: white;
+            font: 700 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 0.42rem 0.72rem;
+            cursor: pointer;
+        "
+        title="{safe_caption}"
+    >Abrir print em nova aba</button>
+    <script>
+    const button = document.getElementById("open-image-preview");
+    const previewHtml = {json.dumps(preview_page)};
+
+    button.addEventListener("click", () => {{
+        const blob = new Blob([previewHtml], {{ type: "text/html" }});
+        const openUrl = URL.createObjectURL(blob);
+        const opened = window.open(openUrl, "_blank", "noopener,noreferrer");
+        if (!opened) {{
+            window.location.href = openUrl;
+        }}
+        window.setTimeout(() => URL.revokeObjectURL(openUrl), 60000);
+    }});
+    </script>
+    """
+
+
 def show_upload_preview(upload: Any, caption: str) -> None:
     if upload is None:
         st.caption("Nenhum print anexado.")
         return
     st.image(upload, caption=caption, width=THUMBNAIL_WIDTH)
     image_bytes = bytes(upload.getbuffer())
-    mime_type = html_lib.escape(getattr(upload, "type", "image/png") or "image/png")
-    safe_caption = html_lib.escape(caption)
-    encoded_image = base64.b64encode(image_bytes).decode("ascii")
+    mime_type = str(getattr(upload, "type", "image/png") or "image/png")
     components.html(
-        f"""
-        <a
-            href="data:{mime_type};base64,{encoded_image}"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="
-                display: inline-block;
-                width: 100%;
-                box-sizing: border-box;
-                text-align: center;
-                border: 1px solid rgba(250, 250, 250, 0.25);
-                border-radius: 0.45rem;
-                background: #2563eb;
-                color: white;
-                font: 700 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                padding: 0.42rem 0.72rem;
-                text-decoration: none;
-            "
-            title="{safe_caption}"
-        >Abrir print em nova aba</a>
-        """,
+        build_open_image_html(image_bytes, mime_type, caption),
         height=42,
     )
 
@@ -1076,7 +1280,7 @@ def render_macro_output_panel(
             purchases = result.get("purchases", [])
             if purchases:
                 st.markdown("**Compras recomendadas**")
-                st.dataframe(pd.DataFrame(purchases), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(purchases), width="stretch", hide_index=True)
             st.caption(f"Artefatos salvos em: {run_dir}")
 
 
@@ -1186,7 +1390,7 @@ def main() -> None:
                 process_button_label,
                 type="primary",
                 disabled=process_button_disabled,
-                use_container_width=True,
+                width="stretch",
                 key="process_images_button",
             )
             macro_action_slot = st.empty()
@@ -1205,7 +1409,7 @@ def main() -> None:
             "Processando imagens...",
             type="primary",
             disabled=True,
-            use_container_width=True,
+            width="stretch",
             key="process_images_busy_button",
         )
         ocr_results: list[dict[str, Any]] = []
@@ -1241,7 +1445,10 @@ def main() -> None:
                 else:
                     st.write("Montando estado dos upgrades...")
                     st.session_state["ocr_results"] = ocr_results
-                    st.session_state["state_rows"] = build_state_rows(ocr_results)
+                    st.session_state["state_rows"] = build_state_rows(
+                        ocr_results,
+                        manual_locked=load_manual_locked(),
+                    )
                     st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
                     st.session_state["last_macro_text"] = None
                     st.session_state["last_result"] = None
@@ -1272,6 +1479,7 @@ def main() -> None:
             "objective": objective,
             "energy": energy,
             "prestige_points": prestige_points,
+            "rows": rows_state_fingerprint(edited_rows),
         }
         resource_errors = validate_resource_inputs(energy, prestige_points)
         panel_resource_errors = resource_errors
@@ -1318,7 +1526,7 @@ def main() -> None:
                 macro_button_label,
                 disabled=has_pending or bool(resource_errors),
                 type="secondary",
-                use_container_width=True,
+                width="stretch",
                 key="generate_macro_button",
             )
         if run_macro:
@@ -1327,7 +1535,7 @@ def main() -> None:
                     "Gerando macro...",
                     disabled=True,
                     type="secondary",
-                    use_container_width=True,
+                    width="stretch",
                     key="generate_macro_busy_button",
                 )
             with macro_status_slot.status("Gerando macro...", expanded=True) as status:

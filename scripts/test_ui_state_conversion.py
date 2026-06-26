@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 from pathlib import Path
 
 import pandas as pd
@@ -25,6 +26,31 @@ def assert_no_resource_errors(energy: str, prestige_points: str) -> None:
     errors = app.validate_resource_inputs(energy, prestige_points)
     if errors:
         raise AssertionError(f"resource inputs {energy!r}/{prestige_points!r} should be valid: {errors}")
+
+
+def test_manual_locked_editor_is_available_before_ocr() -> None:
+    original_session_state = app.st.session_state
+    original_render_manual_locked_editor = app.render_manual_locked_editor
+    captured: dict[str, object] = {}
+
+    def fake_render_manual_locked_editor(rows: pd.DataFrame, **kwargs: object) -> pd.DataFrame:
+        captured["called"] = True
+        captured["row_count"] = len(rows)
+        captured["show_state"] = kwargs.get("show_state")
+        return rows
+
+    app.st.session_state = {}
+    app.render_manual_locked_editor = fake_render_manual_locked_editor
+    try:
+        result = app.show_editor()
+    finally:
+        app.st.session_state = original_session_state
+        app.render_manual_locked_editor = original_render_manual_locked_editor
+
+    assert_equal(result, None, "pre-OCR editor must not expose rows for macro generation")
+    assert_equal(captured.get("called"), True, "manual locked editor before OCR")
+    assert_equal(captured.get("row_count"), len(app.CORE_KEYS), "pre-OCR manual locked row count")
+    assert_equal(captured.get("show_state"), False, "pre-OCR manual locked editor state columns")
 
 
 def main() -> int:
@@ -65,6 +91,47 @@ def main() -> int:
     assert_equal(state["levels"]["prestigeDmg4"], 1028, "state prestigeDmg4 level")
     assert_equal(state["levels"]["prestigeDmg5"], 0, "state locked level")
     assert_equal(state["locked_upgrades"], ["prestigeDmg5"], "state locked upgrades")
+
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {
+                    "upgrade_key": "prestigeDmg4",
+                    "level": 1028,
+                    "confidence": 100.0,
+                    "text": "DAMACEIV(Lv.1028) 1.675+17 +51400% (+50%) WAVE 5000",
+                },
+                {
+                    "upgrade_key": "prestigeDmg5",
+                    "level": 0,
+                    "confidence": 100.0,
+                    "text": "DAMAGE V (Lv. O) WAVE 5000 +0%",
+                },
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    status_by_key = dict(zip(rows["upgrade_key"], rows["status"]))
+    assert_equal(status_by_key["prestigeDmg4"], "available", "positive-level prestigeDmg4 contaminated by adjacent wave")
+    assert_equal(status_by_key["prestigeDmg5"], "review", "zero-level wave should not become inferred locked")
+
+    rows = app.build_state_rows(ocr_payload, manual_locked={"prestigeDmg5"})
+    row_by_key = {str(row["upgrade_key"]): row for _, row in rows.iterrows()}
+    assert_equal(row_by_key["prestigeDmg5"]["status"], "locked", "manual locked status")
+    assert_equal(row_by_key["prestigeDmg5"]["level"], 0, "manual locked level")
+    assert_equal(row_by_key["prestigeDmg5"]["inference"], "manual=locked", "manual locked inference")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "locked_upgrades.json"
+        app.save_manual_locked({"prestigeDmg5", "unknownKey", "prestigeDmg4"}, path)
+        assert_equal(
+            app.load_manual_locked(path),
+            {"prestigeDmg4", "prestigeDmg5"},
+            "persisted manual locked keys",
+        )
+
+    test_manual_locked_editor_is_available_before_ocr()
 
     print("ui state conversion regression checks passed")
     return 0
