@@ -102,6 +102,11 @@ METRIC_TO_KEY_PREFIX = {
         "kill_gold": "prestigeKillGold",
     },
 }
+KEY_PREFIX_TO_METRIC = {
+    prefix: metric
+    for _screen_metrics in METRIC_TO_KEY_PREFIX.values()
+    for metric, prefix in _screen_metrics.items()
+}
 ROMAN_VALUES = {
     "I": 1,
     "II": 2,
@@ -512,8 +517,16 @@ def classify_metric(text: str) -> str | None:
         return "damage"
     if "prest" in compact and ("power" in compact or "p0wer" in compact):
         return "prestige_power"
-    if ("kill" in compact or "kil" in compact or compact.startswith("ki")) and any(
-        token in compact for token in ("gold", "g0ld", "god", "cod", "cold", "c0ld", "golp", "goup")
+    has_gold = any(token in compact for token in ("gold", "g0ld", "god", "cod", "cold", "c0ld", "golp", "goup"))
+    if has_gold and (
+        "kill" in compact
+        or "kil" in compact
+        or compact.startswith("ki")
+        # OCR frequently garbles the KILL label (I->E gives "KELL", I->T gives
+        # "KTLL"). Accept any k-prefixed word alongside a gold token and let the
+        # downstream effect-math validation reject wrong levels; the special
+        # "ULTRA GOLD AMOUNT/CHANCE" rows have no k-word, so they stay excluded.
+        or any(re.match(r"^k[a-z]{2,}$", token) for token in norm.split())
     ):
         return "kill_gold"
     return None
@@ -594,7 +607,7 @@ def tier_from_total_effect(
     if level is None or level <= 0:
         return None
 
-    match = re.search(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", context_text, flags=re.IGNORECASE)
+    match = re.search(r"\+\s*([0-9O][0-9O.,]*\s*[KMBT]?)\s*%", context_text, flags=re.IGNORECASE)
     if not match:
         return None
     displayed_total = parse_display_number(match.group(1))
@@ -686,7 +699,7 @@ def confidence(words: list[OcrWord]) -> float | None:
     return sum(word.conf for word in words) / len(words)
 
 
-EFFECT_TOTAL_RE = re.compile(r"\+\s*([0-9][0-9.,]*\s*[KMBT]?)\s*%", flags=re.IGNORECASE)
+EFFECT_TOTAL_RE = re.compile(r"\+\s*([0-9O][0-9O.,]*\s*[KMBT]?)\s*%", flags=re.IGNORECASE)
 
 
 LAYOUT_SLOTS: dict[str, list[LayoutSlot]] = {
@@ -724,7 +737,18 @@ def slot_key_info(slot: LayoutSlot, text: str) -> tuple[str | None, str | None]:
     tier = tier_from_label(text)
     if tier is not None:
         return f"{slot.family_prefix}{tier}", "label"
-    if slot.fallback_tier is not None:
+    if slot.fallback_tier is None:
+        return None, None
+    # The tier could not be read from the text, so the slot's positional
+    # fallback_tier is the only tier signal. That guess is only safe when the
+    # row's metric family still matches the slot: when the screenshot layout
+    # shifts, an unrelated row lands inside the slot (e.g. an "ULTRA CRIT
+    # CHANCE" special read by a prestigeDmg slot), and trusting the positional
+    # tier there emits a garbage level. Reject those; keep the fallback only for
+    # rows that are at least the right family (a correct row with a garbled
+    # Roman numeral).
+    expected_metric = KEY_PREFIX_TO_METRIC.get(slot.family_prefix)
+    if expected_metric is not None and classify_metric(text) == expected_metric:
         return f"{slot.family_prefix}{slot.fallback_tier}", "slot_fallback"
     return None, None
 
@@ -975,6 +999,17 @@ def merge_ensemble_records(
         if key in records_by_key:
             records_by_key[key].append(record)
 
+    # Families the OCR saw at least one tier of. A requested tier with no
+    # candidate is "genuinely absent from the screenshot" (not an OCR miss)
+    # when a sibling tier of the same family was detected -- e.g. prestige
+    # tiers I/VII when the visible rows are II-VI. Those resolve to None
+    # silently; only a family nothing detected still warns about.
+    detected_families: set[str] = set()
+    for record in records:
+        family_match = re.match(r"^(.*?)(\d+)$", str(record.get("upgrade_key") or ""))
+        if family_match and (record.get("level") is not None or record.get("text")):
+            detected_families.add(family_match.group(1))
+
     merged: list[dict[str, Any]] = []
     for key in key_order:
         candidates: list[dict[str, Any]] = []
@@ -983,7 +1018,9 @@ def merge_ensemble_records(
 
         if not candidates:
             merged.append({"upgrade_key": key, "level": None, "confidence": None, "text": "", "rect": None, "source": None})
-            warnings.append(f"consensus level not found for {key}")
+            family_match = re.match(r"^(.*?)(\d+)$", key)
+            if not (family_match and family_match.group(1) in detected_families):
+                warnings.append(f"consensus level not found for {key}")
             continue
 
         groups: dict[int, list[dict[str, Any]]] = {}
@@ -1178,6 +1215,10 @@ def nearest_following_lines(lines: list[OcrLine], index: int, max_count: int = 3
 
 def parse_display_number(raw: str) -> float | None:
     value = raw.strip().upper().replace(" ", "")
+    # OCR frequently confuses 0 with the letter O inside numbers (e.g. "6,20M%"
+    # read as "6,2OM%"). Treat O as 0 so effect values parse correctly; real
+    # numeric text never contains the letter O. Mirrors parse_level_int.
+    value = value.replace("O", "0")
     if not value:
         return None
     suffix = 1.0
