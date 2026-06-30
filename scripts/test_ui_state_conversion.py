@@ -181,6 +181,108 @@ def test_missing_tier_review_boundaries() -> None:
     assert_equal(by_key["researchDmg6"]["status"], "locked", "second missing beyond highest visible tier")
 
 
+def test_empty_consensus_placeholder_uses_missing_inference() -> None:
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {"upgrade_key": "prestigeDmg1", "level": None, "confidence": None, "text": "", "rect": None, "source": None},
+                {"upgrade_key": "prestigeDmg2", "level": 619726, "text": "DAMAGE II (Lv. 619,726)"},
+                {"upgrade_key": "prestigeDmg3", "level": 28429, "text": "DAMAGE III (Lv. 28,429)"},
+                {"upgrade_key": "prestigeDmg4", "level": 1975, "text": "DAMAGE IV (Lv. 1,975)"},
+                {"upgrade_key": "prestigeDmg5", "level": 0, "text": "DAMAGE V (Lv. 0) +0% (+14,400%)"},
+                {"upgrade_key": "prestigeKillGold2", "level": 342153, "text": "KILL GOLD II (Lv. 342,153)"},
+                {"upgrade_key": "prestigeKillGold3", "level": 11141, "text": "KILL GOLD III (Lv. 11,141)"},
+                {"upgrade_key": "prestigeKillGold4", "level": 701, "text": "KILL GOLD IV (Lv. 701)"},
+                {"upgrade_key": "prestigeKillGold5", "level": 0, "text": "KILL GOLD V (Lv. 0) +0% (+14,400%)"},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["prestigeDmg1"]["detected"], False, "empty OCR placeholder is not a detected row")
+    assert_equal(by_key["prestigeDmg1"]["status"], "maxed", "empty placeholder before visible run")
+    assert_equal(
+        by_key["prestigeDmg1"]["inference"],
+        "missing=maxed:before-contiguous-visible-run",
+        "empty placeholder before visible run inference",
+    )
+    assert_equal(by_key["prestigeDmg2"]["status"], "available", "visible anchor remains available")
+
+
+def test_empty_consensus_placeholder_without_anchor_stays_review() -> None:
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {"upgrade_key": "prestigeDmg1", "level": None, "confidence": None, "text": "", "rect": None, "source": None},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["prestigeDmg1"]["detected"], False, "empty OCR placeholder without anchor is missing")
+    assert_equal(by_key["prestigeDmg1"]["status"], "review", "missing placeholder without family anchor")
+    assert_equal(
+        by_key["prestigeDmg1"]["inference"],
+        "missing=review:no-family-anchor",
+        "missing placeholder without family anchor inference",
+    )
+
+
+def test_visible_ocr_record_without_level_stays_review() -> None:
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {
+                    "upgrade_key": "prestigeDmg1",
+                    "level": None,
+                    "confidence": 88.0,
+                    "text": "DAMAGE I (Lv. ?) +0%",
+                    "rect": [10, 20, 300, 50],
+                    "source": "level_text",
+                },
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload)
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["prestigeDmg1"]["detected"], True, "real OCR text without level remains detected")
+    assert_equal(by_key["prestigeDmg1"]["status"], "review", "visible OCR text without level")
+    assert_equal(by_key["prestigeDmg1"]["inference"], "ocr", "visible OCR text without level inference")
+
+
+def test_manual_locked_does_not_override_maxed_row() -> None:
+    ocr_payload = [
+        {
+            "screen": "prestige-core",
+            "records": [
+                {"upgrade_key": "prestigeDmg2", "level": 619726, "text": "DAMAGE II (Lv. 619,726)"},
+                {"upgrade_key": "prestigeDmg3", "level": 28429, "text": "DAMAGE III (Lv. 28,429)"},
+                {"upgrade_key": "prestigeDmg4", "level": 1975, "text": "DAMAGE IV (Lv. 1,975)"},
+                {"upgrade_key": "prestigeDmg5", "level": 0, "text": "DAMAGE V (Lv. 0) +0% (+14,400%)"},
+                {"upgrade_key": "prestigeKillGold2", "level": 342153, "text": "KILL GOLD II (Lv. 342,153)"},
+                {"upgrade_key": "prestigeKillGold3", "level": 11141, "text": "KILL GOLD III (Lv. 11,141)"},
+                {"upgrade_key": "prestigeKillGold4", "level": 701, "text": "KILL GOLD IV (Lv. 701)"},
+                {"upgrade_key": "prestigeKillGold5", "level": 0, "text": "KILL GOLD V (Lv. 0) +0% (+14,400%)"},
+            ],
+        }
+    ]
+    rows = app.build_state_rows(ocr_payload, manual_locked={"prestigeDmg1"})
+    by_key = rows_by_key(rows)
+
+    assert_equal(by_key["prestigeDmg1"]["status"], "maxed", "manual lock does not override maxed status")
+    assert_equal(bool(by_key["prestigeDmg1"]["manual_locked"]), False, "manual lock is not applied to maxed row")
+    state, errors = app.build_optimizer_state(rows, objective="FARM", energy="20,258k", prestige_points="20.258k")
+    assert_equal(errors, [], "optimizer state errors for stale manual lock on maxed row")
+    assert_equal(state["levels"]["prestigeDmg1"], app.load_max_levels()["prestigeDmg1"], "maxed level survives stale lock")
+    assert_equal("prestigeDmg1" in state["locked_upgrades"], False, "maxed row is not emitted as locked")
+
+
 def test_manual_locked_overrides_available_row() -> None:
     ocr_payload = [
         {
@@ -284,6 +386,10 @@ def main() -> int:
     test_screenshot_locked_inference_regression()
     test_locked_inference_boundaries()
     test_missing_tier_review_boundaries()
+    test_empty_consensus_placeholder_uses_missing_inference()
+    test_empty_consensus_placeholder_without_anchor_stays_review()
+    test_visible_ocr_record_without_level_stays_review()
+    test_manual_locked_does_not_override_maxed_row()
     test_manual_locked_overrides_available_row()
 
     print("ui state conversion regression checks passed")

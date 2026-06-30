@@ -364,6 +364,14 @@ def records_by_key(results: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     return records
 
 
+def has_detected_ocr_content(record: dict[str, Any]) -> bool:
+    if record.get("level") is not None:
+        return True
+    if str(record.get("text") or "").strip():
+        return True
+    return any(record.get(key) is not None for key in ("confidence", "rect", "source"))
+
+
 def looks_locked_text(text: str) -> bool:
     normalized = text.lower()
     return "wave" in normalized or "locked" in normalized or "unlock" in normalized
@@ -415,8 +423,9 @@ def apply_manual_locked(rows: pd.DataFrame, manual_locked: set[str]) -> pd.DataF
         result["ocr_level"] = result["level"]
     if "ocr_status" not in result.columns:
         result["ocr_status"] = result["status"]
-    result["manual_locked"] = result["upgrade_key"].astype(str).isin(manual_locked)
-    locked_mask = result["manual_locked"]
+    requested_locked = result["upgrade_key"].astype(str).isin(manual_locked)
+    locked_mask = requested_locked & (result["status"].astype(str) != "maxed")
+    result["manual_locked"] = locked_mask
     result.loc[locked_mask, "status"] = "locked"
     result.loc[locked_mask, "level"] = 0
     result.loc[locked_mask, "inference"] = "manual=locked"
@@ -432,11 +441,11 @@ def build_state_rows(
     loaded_screens = {str(result.get("screen")) for result in ocr_results if result.get("screen")}
     raw_rows: list[dict[str, Any]] = []
     for key in CORE_KEYS:
-        detected = key in records
+        record = records.get(key, {})
+        detected = bool(record) and has_detected_ocr_content(record)
         screen_id = screen_id_for_key(key)
         screen_loaded = screen_id in loaded_screens
         family, tier = family_and_tier(key)
-        record = records.get(key, {})
         raw_level = record.get("level")
         level = int(raw_level) if raw_level is not None else None
         max_level = max_levels.get(key)
