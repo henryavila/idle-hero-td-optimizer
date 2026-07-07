@@ -7,7 +7,7 @@ O app nao executa cliques no jogo. Ele apenas:
 1. recebe prints por drag-and-drop;
 2. roda OCR por ensemble com consenso entre engines e estrategias;
 3. infere ou pede confirmacao dos levels, `maxed` e `locked`, com bloqueios manuais persistidos para ajustes;
-4. roda o otimizador FARM ou Gold Prep;
+4. roda o otimizador para os alvos selecionados: `DMG`, `Gold` e/ou `Prestige`;
 5. entrega no topo o texto separado para copiar para sua macro.
 
 ## Instalar
@@ -61,24 +61,25 @@ Na sidebar, `Selecionar pasta do Python` permite escolher a pasta onde esta o Py
 1. Arraste o print de Research na coluna `Energia / Research`.
 2. Arraste o print de Prestige na coluna `Prestige / PowerUps`.
 3. Informe Energy e/ou Prestige Points usando a escala do jogo, por exemplo `2,59M` e `1,21e20`. Um deles pode ficar `0`, mas nao os dois.
-4. Clique em `Ler imagens e gerar macro`.
-5. Se o OCR por consenso nao deixar pendencias, o app gera automaticamente os codigos no painel `Macro`, separados para `Energy / Research` e `Prestige / PowerUps`.
-6. Use `Bloqueios manuais` para ajustar upgrades travados por Wave quando precisar. A lista fica salva em `user_state/locked_upgrades.json` e e reaplicada nos proximos OCRs.
-7. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
+4. Selecione 1 a 3 alvos em `Otimizar upgrades`: `DMG`, `Gold` e/ou `Prestige`.
+5. Clique em `Ler imagens e gerar macro`.
+6. Se o OCR por consenso nao deixar pendencias, o app gera automaticamente os codigos no painel `Macro`, separados para `Energy / Research` e `Prestige / PowerUps`.
+7. Use `Bloqueios manuais` para ajustar upgrades travados por Wave quando precisar. A lista fica salva em `user_state/locked_upgrades.json` e e reaplicada nos proximos OCRs.
+8. Se houver pendencias, resolva apenas os itens exibidos nos blocos separados de `Research / Energy` e `Prestige / PowerUps`. O app infere por familia/tier:
    - `locked`: item visivel com `Lv. 0` e botao `Wave`/lock;
    - `locked`: item ausente alem do limite visivel/destravado da familia;
    - `maxed`: item ausente antes de uma sequencia visivel consistente da mesma familia;
    - `review`: buraco ambiguo no meio dos tiers visiveis, para evitar confundir OCR falho com maxed;
    - `ignore`: item de uma tela que voce nao anexou.
-8. Use `Abrir print em nova aba` se precisar conferir a imagem original. O thumbnail pequeno e apenas visual; o OCR usa o arquivo original.
-9. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
+9. Use `Abrir print em nova aba` se precisar conferir a imagem original. O thumbnail pequeno e apenas visual; o OCR usa o arquivo original.
+10. Use `Ajustes avancados` apenas para override/debug; a tabela completa tambem fica separada por `Research` e `Prestige`:
    - `available`: upgrade disponivel e com level correto;
    - `locked`: upgrade inferido por Wave/limite visivel ou marcado em `Bloqueios manuais`;
    - `maxed`: upgrade omitido ou no maximo;
    - `ignore`: nao entra no estado;
    - `review`: precisa ser confirmado antes de gerar.
-10. Use `Atualizar macro` ou `Recalcular macro` quando voce alterar recursos, objetivo ou algum ajuste manual depois do OCR. Nao precisa reprocessar as imagens se os levels nao mudaram.
-11. Use o botao `Copiar Energy` ou `Copiar Prestige` para levar o texto ao seu app de macro.
+11. Use `Atualizar macro` ou `Recalcular macro` quando voce alterar recursos, alvos ou algum ajuste manual depois do OCR. Nao precisa reprocessar as imagens se os levels nao mudaram.
+12. Use o botao `Copiar Energy` ou `Copiar Prestige` para levar o texto ao seu app de macro.
 
 ## Passada residual
 
@@ -128,6 +129,7 @@ IdleHeroTD-apk/apk_analysis/dados-consolidados/upgrades/upgrade_ocr_to_optimizer
 ```bash
 .venv/bin/python scripts/test_run_script_portability.py
 .venv/bin/python scripts/test_upgrade_cost_formulas.py
+.venv/bin/python scripts/test_optimizer_target_metrics.py
 .venv/bin/python scripts/test_upgrade_ocr_strategies.py
 .venv/bin/python -m compileall -q scripts ui
 ```

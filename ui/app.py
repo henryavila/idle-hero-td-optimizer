@@ -69,6 +69,13 @@ SUMMARY_GROUPS = [
     ("kill_gold", "Kill Gold", "#f2d33d"),
     ("prestige_power", "Prestige Power", "#bb4dff"),
 ]
+TARGET_METRIC_OPTIONS = ["damage", "kill_gold", "prestige_power"]
+TARGET_METRIC_LABELS = {
+    "damage": "DMG",
+    "kill_gold": "Gold",
+    "prestige_power": "Prestige",
+}
+DEFAULT_TARGET_METRICS = ["damage", "prestige_power"]
 PYTHON_CANDIDATES = (
     ".venv/bin/python",
     ".venv/bin/python3",
@@ -549,16 +556,55 @@ def validate_resource_inputs(energy: str, prestige_points: str) -> list[str]:
     return errors
 
 
+def normalize_target_metrics(target_metrics: Any) -> list[str]:
+    if isinstance(target_metrics, str):
+        raw_values = [target_metrics]
+    elif isinstance(target_metrics, (list, set, tuple)):
+        raw_values = list(target_metrics)
+    else:
+        raw_values = []
+    selected = set()
+    for value in raw_values:
+        metric = str(value)
+        if metric in TARGET_METRIC_OPTIONS:
+            selected.add(metric)
+    return [metric for metric in TARGET_METRIC_OPTIONS if metric in selected]
+
+
+def validate_target_metrics(target_metrics: Any) -> list[str]:
+    selected = normalize_target_metrics(target_metrics)
+    if not selected:
+        return ["Selecione pelo menos um upgrade alvo: DMG, Gold ou Prestige."]
+    return []
+
+
+def objective_for_target_metrics(target_metrics: Any) -> str:
+    selected = normalize_target_metrics(target_metrics)
+    selected_set = set(selected)
+    if selected_set == {"damage", "prestige_power"}:
+        return "FARM"
+    if selected_set == {"kill_gold"}:
+        return "GOLD_PREP"
+    if not selected:
+        return "CUSTOM"
+    labels = [TARGET_METRIC_LABELS[metric].upper() for metric in TARGET_METRIC_OPTIONS if metric in selected_set]
+    return "OPT_" + "_".join(labels)
+
+
 def build_optimizer_state(
     rows: pd.DataFrame,
     objective: str,
     energy: str,
     prestige_points: str,
+    target_metrics: list[str] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     levels: dict[str, int] = {}
     locked: list[str] = []
     errors: list[str] = []
     max_levels = load_max_levels()
+    selected_targets = normalize_target_metrics(target_metrics)
+    if target_metrics is not None:
+        errors.extend(validate_target_metrics(selected_targets))
 
     for _, row in rows.iterrows():
         key = str(row["upgrade_key"])
@@ -596,6 +642,8 @@ def build_optimizer_state(
         "locked_upgrades": sorted(set(locked)),
         "warnings": [],
     }
+    if target_metrics is not None:
+        state["target_metrics"] = selected_targets
     return state, errors
 
 
@@ -624,10 +672,9 @@ def run_optimizer(
     result_path: Path,
     objective: str,
 ) -> dict[str, Any]:
-    script = "optimize_gold_push_prep.py" if objective == "GOLD_PREP" else "optimize_farm_upgrades.py"
     cmd = [
         python_bin,
-        str(SCRIPTS_DIR / script),
+        str(SCRIPTS_DIR / "optimize_farm_upgrades.py"),
         "--state",
         str(state_path),
         "--output",
@@ -679,20 +726,22 @@ def split_macro_sections(macro_text: str) -> dict[str, str]:
 def generate_macro_result(
     rows: pd.DataFrame,
     objective: str,
+    target_metrics: list[str],
     energy: str,
     prestige_points: str,
     python_bin: str,
     run_dir: Path,
 ) -> tuple[dict[str, Any] | None, str | None, list[str]]:
-    resource_errors = validate_resource_inputs(energy, prestige_points)
-    if resource_errors:
-        return None, None, resource_errors
+    input_errors = validate_target_metrics(target_metrics) + validate_resource_inputs(energy, prestige_points)
+    if input_errors:
+        return None, None, input_errors
 
     state, errors = build_optimizer_state(
         rows=rows,
         objective=objective,
         energy=energy,
         prestige_points=prestige_points,
+        target_metrics=target_metrics,
     )
     if errors:
         return None, None, errors
@@ -705,9 +754,11 @@ def generate_macro_result(
     macro_text = run_macro_formatter(python_bin, result_path, macro_path)
     st.session_state["last_result"] = result
     st.session_state["last_objective"] = objective
+    st.session_state["last_target_metrics"] = state.get("target_metrics", [])
     st.session_state["last_locked"] = state.get("locked_upgrades", [])
     st.session_state["last_generation_inputs"] = {
         "objective": objective,
+        "target_metrics": state.get("target_metrics", []),
         "energy": energy,
         "prestige_points": prestige_points,
         "rows": rows_state_fingerprint(rows),
@@ -1247,7 +1298,7 @@ def render_macro_output_panel(
     elif not macro_text:
         st.info("A macro aparece aqui assim que as imagens forem lidas.")
     elif macro_stale:
-        st.warning("Recursos ou objetivo mudaram. Recalcule para atualizar esta macro.")
+        st.warning("Recursos ou alvos mudaram. Recalcule para atualizar esta macro.")
 
     sections = split_macro_sections(macro_text or "")
     research_text = sections.get("Research/Energy", "")
@@ -1392,12 +1443,19 @@ def main() -> None:
     with control_slot.container():
         control_col_a, control_col_b, control_col_c, control_col_d = st.columns([1.2, 1, 1, 1.35], gap="medium")
         with control_col_a:
-            objective = st.radio("Objetivo", ["FARM", "GOLD_PREP"], horizontal=True)
+            target_metrics = st.multiselect(
+                "Otimizar upgrades",
+                TARGET_METRIC_OPTIONS,
+                default=DEFAULT_TARGET_METRICS,
+                format_func=lambda metric: TARGET_METRIC_LABELS.get(metric, metric),
+                placeholder="Escolha 1 a 3 alvos",
+            )
+            objective = objective_for_target_metrics(target_metrics)
         with control_col_b:
             energy = st.text_input("Energy", "0")
         with control_col_c:
             prestige_points = st.text_input("Prestige Points", "0")
-        resource_errors_for_button = validate_resource_inputs(energy, prestige_points)
+        resource_errors_for_button = validate_target_metrics(target_metrics) + validate_resource_inputs(energy, prestige_points)
         with control_col_d:
             st.caption("Escala do jogo: 2,59M, 1,21e20, 850K. Um recurso pode ficar 0.")
             process_button_slot = st.empty()
@@ -1476,6 +1534,7 @@ def main() -> None:
                     st.session_state["last_macro_text"] = None
                     st.session_state["last_result"] = None
                     st.session_state["last_objective"] = None
+                    st.session_state["last_target_metrics"] = []
                     st.session_state["last_locked"] = []
                     st.session_state["last_generation_inputs"] = None
                     st.session_state["auto_generate_macro"] = True
@@ -1500,11 +1559,12 @@ def main() -> None:
         should_auto_generate = bool(st.session_state.pop("auto_generate_macro", False))
         current_generation_inputs = {
             "objective": objective,
+            "target_metrics": normalize_target_metrics(target_metrics),
             "energy": energy,
             "prestige_points": prestige_points,
             "rows": rows_state_fingerprint(edited_rows),
         }
-        resource_errors = validate_resource_inputs(energy, prestige_points)
+        resource_errors = validate_target_metrics(target_metrics) + validate_resource_inputs(energy, prestige_points)
         panel_resource_errors = resource_errors
         macro_stale = (
             bool(st.session_state.get("last_macro_text"))
@@ -1519,6 +1579,7 @@ def main() -> None:
                     result, macro_text, errors = generate_macro_result(
                         rows=edited_rows,
                         objective=objective,
+                        target_metrics=normalize_target_metrics(target_metrics),
                         energy=energy,
                         prestige_points=prestige_points,
                         python_bin=python_bin,
@@ -1538,7 +1599,7 @@ def main() -> None:
                 st.info("A macro nao foi gerada automaticamente porque ainda existem pendencias de OCR.")
         elif should_auto_generate and resource_errors:
             with macro_status_slot.container():
-                st.info("A macro nao foi gerada automaticamente porque os recursos ainda nao foram informados.")
+                st.info("A macro nao foi gerada automaticamente porque os recursos ou alvos ainda precisam de ajuste.")
 
         if st.session_state.get("last_macro_text"):
             macro_button_label = "Recalcular macro" if macro_stale else "Atualizar macro"
@@ -1568,6 +1629,7 @@ def main() -> None:
                     result, macro_text, errors = generate_macro_result(
                         rows=edited_rows,
                         objective=objective,
+                        target_metrics=normalize_target_metrics(target_metrics),
                         energy=energy,
                         prestige_points=prestige_points,
                         python_bin=python_bin,
@@ -1612,8 +1674,10 @@ def main() -> None:
             else:
                 try:
                     residual_objective = st.session_state.get("last_objective", "FARM")
+                    residual_target_metrics = st.session_state.get("last_target_metrics", DEFAULT_TARGET_METRICS)
                     residual_state = {
                         "objective": residual_objective,
+                        "target_metrics": residual_target_metrics,
                         "resources": {
                             "energy": residual_energy,
                             "prestige_points": residual_prestige,

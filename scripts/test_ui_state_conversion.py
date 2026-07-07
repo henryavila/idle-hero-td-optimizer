@@ -302,6 +302,44 @@ def test_manual_locked_overrides_available_row() -> None:
     assert_equal(by_key["researchKillGold1"]["inference"], "manual=locked", "manual lock inference")
 
 
+def test_optimizer_target_selection_state() -> None:
+    assert_equal(
+        app.objective_for_target_metrics(["damage", "prestige_power"]),
+        "FARM",
+        "farm target preset objective",
+    )
+    assert_equal(app.objective_for_target_metrics(["kill_gold"]), "GOLD_PREP", "gold target preset objective")
+    assert_equal(
+        app.objective_for_target_metrics(["prestige_power"]),
+        "OPT_PRESTIGE",
+        "prestige-only objective",
+    )
+    assert_equal(
+        app.objective_for_target_metrics(["damage", "kill_gold", "prestige_power"]),
+        "OPT_DMG_GOLD_PRESTIGE",
+        "all-target objective",
+    )
+    assert_equal(app.validate_target_metrics([]), ["Selecione pelo menos um upgrade alvo: DMG, Gold ou Prestige."], "empty targets")
+
+    rows = pd.DataFrame(
+        [
+            {"upgrade_key": "researchDmg1", "status": "available", "level": 10},
+            {"upgrade_key": "researchKillGold1", "status": "available", "level": 20},
+            {"upgrade_key": "researchPrestigePower1", "status": "available", "level": 30},
+        ]
+    )
+    state, errors = app.build_optimizer_state(
+        rows=rows,
+        objective="OPT_GOLD_PRESTIGE",
+        target_metrics=["kill_gold", "prestige_power"],
+        energy="1M",
+        prestige_points="0",
+    )
+    assert_equal(errors, [], "target optimizer state errors")
+    assert_equal(state["target_metrics"], ["kill_gold", "prestige_power"], "state target metrics")
+    assert_equal(state["objective"], "OPT_GOLD_PRESTIGE", "state target objective")
+
+
 def main() -> int:
     assert_equal(app.coerce_int(499028.0), 499028, "integer-valued editor float")
     assert_equal(app.coerce_int(1028.0), 1028, "small integer-valued editor float")
@@ -391,6 +429,7 @@ def main() -> int:
     test_visible_ocr_record_without_level_stays_review()
     test_manual_locked_does_not_override_maxed_row()
     test_manual_locked_overrides_available_row()
+    test_optimizer_target_selection_state()
 
     print("ui state conversion regression checks passed")
     return 0

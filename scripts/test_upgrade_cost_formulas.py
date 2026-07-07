@@ -7,6 +7,7 @@ import importlib.util
 import sys
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -41,6 +42,33 @@ def assert_equal(actual, expected, label: str) -> None:
 def main() -> int:
     module = load_optimizer_module()
     upgrades = module.load_upgrades()
+    args = SimpleNamespace(include_gold=False, damage_weight=None, prestige_weight=None, gold_weight=None)
+
+    custom_warnings: list[str] = []
+    custom_weights = module.build_weights(
+        {"objective": "OPT_GOLD_PRESTIGE", "target_metrics": ["gold", "prestige"]},
+        args,
+        custom_warnings,
+    )
+    assert_equal(custom_warnings, [], "custom target warnings")
+    assert_equal(custom_weights["damage"], 0.0, "custom target damage weight")
+    assert_equal(custom_weights["kill_gold"], 1.0, "custom target gold weight")
+    assert_equal(custom_weights["prestige_power"], 1.0, "custom target prestige weight")
+
+    template_style_weights = module.build_weights(
+        {
+            "objective": "OPT_GOLD",
+            "target_metrics": ["gold"],
+            "farm": {"weights": {"kill_gold": 0.0}},
+        },
+        args,
+    )
+    assert_equal(template_style_weights["kill_gold"], 1.0, "explicit target ignores legacy farm weight")
+
+    legacy_gold_weights = module.build_weights({"objective": "GOLD_PREP"}, args)
+    assert_equal(legacy_gold_weights["damage"], 0.0, "legacy gold prep damage weight")
+    assert_equal(legacy_gold_weights["kill_gold"], 1.0, "legacy gold prep gold weight")
+    assert_equal(legacy_gold_weights["prestige_power"], 0.0, "legacy gold prep prestige weight")
 
     # Fixtures from the 2026-06-25 screenshots. These catch the exact bug where
     # Research cost was treated as constant / wrong-axis exponential.

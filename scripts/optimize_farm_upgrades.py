@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Optimize Idle Hero TD permanent upgrades for a FARM objective.
+"""Optimize Idle Hero TD permanent upgrades for selected target metrics.
 
 The script uses the consolidated APK-derived CSVs, not rounded UI numbers.
 For FARM, Kill Gold is excluded by default because it only matters when extra
@@ -38,8 +38,24 @@ COSTS_CSV = CSV_DIR / "core_upgrade_cost_formula_classes.csv"
 
 METRIC_LABELS = {
     "damage": "Damage",
-    "prestige_power": "Prestige Power",
     "kill_gold": "Kill Gold",
+    "prestige_power": "Prestige Power",
+}
+METRIC_TARGET_ALIASES = {
+    "dmg": "damage",
+    "damage": "damage",
+    "gold": "kill_gold",
+    "kill_gold": "kill_gold",
+    "killgold": "kill_gold",
+    "prestige": "prestige_power",
+    "prestige_power": "prestige_power",
+    "prestigepower": "prestige_power",
+}
+DEFAULT_TARGETS_BY_OBJECTIVE = {
+    "FARM": ["damage", "prestige_power"],
+    "GOLD_PREP": ["kill_gold"],
+    "PUSH_GOLD": ["kill_gold"],
+    "KILL_GOLD": ["kill_gold"],
 }
 RESOURCE_ALIASES = {
     "energy": "energy",
@@ -51,8 +67,8 @@ RESOURCE_ALIASES = {
 }
 DEFAULT_FARM_WEIGHTS = {
     "damage": 1.0,
-    "prestige_power": 1.0,
     "kill_gold": 0.0,
+    "prestige_power": 1.0,
 }
 SCALE_SUFFIXES = {
     "k": Decimal("1e3"),
@@ -434,6 +450,7 @@ def optimize(
     diagnostics: dict[str, Any] = {
         "iterations": 0,
         "hit_step_limit": False,
+        "target_metrics": sorted(metric for metric, weight in weights.items() if weight > 0),
         "excluded_metrics": sorted(metric for metric, weight in weights.items() if weight <= 0),
         "locked_upgrades": sorted(locked_upgrades),
     }
@@ -571,21 +588,67 @@ def format_decimal(value: Decimal) -> str:
     return text
 
 
-def build_weights(state: dict[str, Any], args: argparse.Namespace) -> dict[str, float]:
+def normalize_target_metric(value: Any) -> str | None:
+    key = str(value).strip().lower().replace("-", "_").replace(" ", "_")
+    return METRIC_TARGET_ALIASES.get(key)
+
+
+def parse_target_metrics(raw_value: Any) -> tuple[list[str], list[str]]:
+    warnings: list[str] = []
+    selected: list[str] = []
+    for raw_metric in _string_list(raw_value):
+        metric = normalize_target_metric(raw_metric)
+        if metric is None:
+            warnings.append(f"ignored unknown target metric: {raw_metric}")
+            continue
+        if metric not in selected:
+            selected.append(metric)
+    ordered = [metric for metric in METRIC_LABELS if metric in selected]
+    return ordered, warnings
+
+
+def target_metrics_from_state(state: dict[str, Any], objective: str) -> tuple[list[str], list[str], bool]:
+    for key in ("target_metrics", "targets", "upgrade_targets"):
+        if key in state:
+            metrics, warnings = parse_target_metrics(state.get(key))
+            return metrics, warnings, True
+    return list(DEFAULT_TARGETS_BY_OBJECTIVE.get(objective, [])), [], False
+
+
+def build_weights(
+    state: dict[str, Any],
+    args: argparse.Namespace,
+    warnings: list[str] | None = None,
+) -> dict[str, float]:
+    objective = str(state.get("objective", "FARM")).upper()
+    target_metrics, target_warnings, explicit_targets = target_metrics_from_state(state, objective)
+    if warnings is not None:
+        warnings.extend(target_warnings)
+
     farm = state.get("farm", {})
-    weights = dict(DEFAULT_FARM_WEIGHTS)
-    weights.update({key: float(value) for key, value in farm.get("weights", {}).items()})
+    if explicit_targets or objective != "FARM":
+        weights = {metric: 0.0 for metric in METRIC_LABELS}
+        for metric in target_metrics:
+            weights[metric] = 1.0
+        raw_weight_overrides = state.get("target_weights", state.get("weights", {}))
+        for raw_metric, raw_weight in raw_weight_overrides.items():
+            metric = normalize_target_metric(raw_metric)
+            if metric in target_metrics:
+                weights[metric] = float(raw_weight)
+    else:
+        weights = dict(DEFAULT_FARM_WEIGHTS)
+        weights.update({key: float(value) for key, value in farm.get("weights", {}).items()})
 
-    if farm.get("damage_effective") is False:
-        weights["damage"] = 0.0
-    if farm.get("prestige_power_effective") is False:
-        weights["prestige_power"] = 0.0
+        if farm.get("damage_effective") is False:
+            weights["damage"] = 0.0
+        if farm.get("prestige_power_effective") is False:
+            weights["prestige_power"] = 0.0
 
-    include_gold = bool(args.include_gold or farm.get("include_gold"))
-    if include_gold and weights.get("kill_gold", 0.0) == 0.0:
-        weights["kill_gold"] = 1.0
-    elif not include_gold and "kill_gold" not in farm.get("weights", {}):
-        weights["kill_gold"] = 0.0
+        include_gold = bool(args.include_gold or farm.get("include_gold"))
+        if include_gold and weights.get("kill_gold", 0.0) == 0.0:
+            weights["kill_gold"] = 1.0
+        elif not include_gold and "kill_gold" not in farm.get("weights", {}):
+            weights["kill_gold"] = 0.0
 
     if args.damage_weight is not None:
         weights["damage"] = args.damage_weight
@@ -595,6 +658,10 @@ def build_weights(state: dict[str, Any], args: argparse.Namespace) -> dict[str, 
         weights["kill_gold"] = args.gold_weight
 
     return {key: float(weights.get(key, 0.0)) for key in METRIC_LABELS}
+
+
+def active_target_metrics(weights: dict[str, float]) -> list[str]:
+    return [metric for metric in METRIC_LABELS if weights.get(metric, 0.0) > 0]
 
 
 def load_state(path: str | None) -> dict[str, Any]:
@@ -663,6 +730,7 @@ def parse_locked_upgrades(state: dict[str, Any], upgrades: dict[str, Upgrade]) -
 def template(upgrades: dict[str, Upgrade]) -> dict[str, Any]:
     return {
         "objective": "FARM",
+        "target_metrics": ["damage", "prestige_power"],
         "resources": {
             "energy": "0",
             "prestige_points": "0",
@@ -695,6 +763,8 @@ def result_document(
     diagnostics: dict[str, Any],
 ) -> dict[str, Any]:
     objective = str(state.get("objective", "FARM")).upper()
+    target_metrics = active_target_metrics(weights)
+    target_labels = ", ".join(METRIC_LABELS[metric] for metric in target_metrics)
     factors = {}
     for metric in METRIC_LABELS:
         factors[metric] = {
@@ -715,13 +785,14 @@ def result_document(
 
     return {
         "objective": objective,
+        "target_metrics": target_metrics,
         "method": "marginal_log_roi_greedy_with_research_and_powerups_batching",
         "assumptions": [
             "Uses APK-derived factor and cost CSVs, not rounded UI values.",
             "Energy and Prestige Points are separate budgets.",
-            "For FARM, Kill Gold has weight 0 by default because it only matters if extra gold buys useful hero levels during the run.",
+            f"Selected optimization targets: {target_labels}.",
             "Upgrades listed in locked_upgrades/unavailable_upgrades are excluded from candidate purchases.",
-            "Score maximized is weighted log multiplier: damage + prestige_power, unless weights are overridden.",
+            "Score maximized is the weighted log multiplier across the selected target metrics.",
         ],
         "warnings": warnings,
         "diagnostics": diagnostics,
@@ -757,7 +828,7 @@ def write_result(path: str | None, result: dict[str, Any]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Optimize Idle Hero TD permanent upgrades for FARM from a JSON state."
+        description="Optimize Idle Hero TD permanent upgrades from a JSON state."
     )
     parser.add_argument("--state", help="Input JSON state file. Use '-' to read stdin.")
     parser.add_argument("--output", help="Optional JSON output path.")
@@ -780,14 +851,21 @@ def main() -> int:
 
     state = load_state(args.state)
     objective = str(state.get("objective", "FARM")).upper()
-    if objective != "FARM":
-        raise SystemExit(f"unsupported objective {objective!r}; this script currently optimizes FARM")
+    has_explicit_targets = any(key in state for key in ("target_metrics", "targets", "upgrade_targets"))
+    if objective not in DEFAULT_TARGETS_BY_OBJECTIVE and not has_explicit_targets:
+        supported = ", ".join(sorted(DEFAULT_TARGETS_BY_OBJECTIVE))
+        raise SystemExit(
+            f"unsupported objective {objective!r}; supported: {supported}; "
+            "or provide target_metrics"
+        )
 
     resources = parse_resources(state)
     levels, warnings = parse_levels(state, upgrades)
     locked_upgrades, locked_warnings = parse_locked_upgrades(state, upgrades)
     warnings.extend(locked_warnings)
-    weights = build_weights(state, args)
+    weights = build_weights(state, args, warnings)
+    if not active_target_metrics(weights):
+        raise SystemExit("select at least one target metric: damage, kill_gold, prestige_power")
     final_levels, remaining, purchases, diagnostics = optimize(
         upgrades=upgrades,
         levels=levels,
