@@ -6,3 +6,4 @@
 - Resource inputs use game-number parsing. Keep both decimal suffix formats valid: `20,258k` and `20.258k` should parse to the same value.
 - Objective selection is now metric-based: `DMG` maps to `damage`, `Gold` maps to `kill_gold`, and `Prestige` maps to `prestige_power`. `FARM` is the compatibility preset for `damage + prestige_power`; `GOLD_PREP` is the compatibility preset for `kill_gold`.
 - When `target_metrics` is explicit, legacy `farm.weights` must not override selected targets. Use `target_weights` for intentional per-target strength overrides.
+- Persist the UI's last optimizer target selection in `user_state/target_metrics.json` after a successful macro generation, and use it as the next Streamlit multiselect default. Keep that file local runtime state, not source.
