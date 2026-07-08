@@ -28,6 +28,7 @@ COSTS_CSV = DATA_DIR / "formulas" / "csv" / "core_upgrade_cost_formula_classes.c
 RUNS_DIR = APP_ROOT / "runs"
 USER_STATE_DIR = APP_ROOT / "user_state"
 LOCKED_UPGRADES_PATH = USER_STATE_DIR / "locked_upgrades.json"
+TARGET_METRICS_PATH = USER_STATE_DIR / "target_metrics.json"
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -578,6 +579,31 @@ def validate_target_metrics(target_metrics: Any) -> list[str]:
     return []
 
 
+def load_saved_target_metrics(path: Path = TARGET_METRICS_PATH) -> list[str]:
+    if not path.exists():
+        return list(DEFAULT_TARGET_METRICS)
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return list(DEFAULT_TARGET_METRICS)
+
+    raw_metrics = payload.get("target_metrics", payload) if isinstance(payload, dict) else payload
+    selected = normalize_target_metrics(raw_metrics)
+    return selected or list(DEFAULT_TARGET_METRICS)
+
+
+def save_target_metrics(target_metrics: Any, path: Path = TARGET_METRICS_PATH) -> None:
+    selected = normalize_target_metrics(target_metrics)
+    if not selected:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "target_metrics": selected,
+        "updated_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def objective_for_target_metrics(target_metrics: Any) -> str:
     selected = normalize_target_metrics(target_metrics)
     selected_set = set(selected)
@@ -752,6 +778,7 @@ def generate_macro_result(
     write_json(state_path, state)
     result = run_optimizer(python_bin, state_path, result_path, objective)
     macro_text = run_macro_formatter(python_bin, result_path, macro_path)
+    save_target_metrics(state.get("target_metrics", []))
     st.session_state["last_result"] = result
     st.session_state["last_objective"] = objective
     st.session_state["last_target_metrics"] = state.get("target_metrics", [])
@@ -1446,7 +1473,7 @@ def main() -> None:
             target_metrics = st.multiselect(
                 "Otimizar upgrades",
                 TARGET_METRIC_OPTIONS,
-                default=DEFAULT_TARGET_METRICS,
+                default=load_saved_target_metrics(),
                 format_func=lambda metric: TARGET_METRIC_LABELS.get(metric, metric),
                 placeholder="Escolha 1 a 3 alvos",
             )

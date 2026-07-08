@@ -339,6 +339,26 @@ def test_optimizer_target_selection_state() -> None:
     assert_equal(state["target_metrics"], ["kill_gold", "prestige_power"], "state target metrics")
     assert_equal(state["objective"], "OPT_GOLD_PRESTIGE", "state target objective")
 
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "target_metrics.json"
+        assert_equal(
+            app.load_saved_target_metrics(path),
+            app.DEFAULT_TARGET_METRICS,
+            "missing target metric state falls back to defaults",
+        )
+        app.save_target_metrics(["prestige_power", "unknown", "damage"], path)
+        assert_equal(
+            app.load_saved_target_metrics(path),
+            ["damage", "prestige_power"],
+            "persisted target metrics are normalized",
+        )
+        path.write_text('{"target_metrics": []}\n', encoding="utf-8")
+        assert_equal(
+            app.load_saved_target_metrics(path),
+            app.DEFAULT_TARGET_METRICS,
+            "empty target metric state falls back to defaults",
+        )
+
 
 def main() -> int:
     assert_equal(app.coerce_int(499028.0), 499028, "integer-valued editor float")
