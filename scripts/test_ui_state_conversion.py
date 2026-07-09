@@ -32,29 +32,230 @@ def rows_by_key(rows: pd.DataFrame) -> dict[str, pd.Series]:
     return {str(row["upgrade_key"]): row for _, row in rows.iterrows()}
 
 
-def test_manual_locked_editor_is_available_before_ocr() -> None:
+class NullContext:
+    def __enter__(self) -> "NullContext":
+        return self
+
+    def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> bool:
+        return False
+
+
+class FakeColumnConfig:
+    def CheckboxColumn(self, *args: object, **kwargs: object) -> tuple[str, tuple[object, ...], dict[str, object]]:
+        return ("CheckboxColumn", args, kwargs)
+
+    def NumberColumn(self, *args: object, **kwargs: object) -> tuple[str, tuple[object, ...], dict[str, object]]:
+        return ("NumberColumn", args, kwargs)
+
+    def SelectboxColumn(self, *args: object, **kwargs: object) -> tuple[str, tuple[object, ...], dict[str, object]]:
+        return ("SelectboxColumn", args, kwargs)
+
+    def TextColumn(self, *args: object, **kwargs: object) -> tuple[str, tuple[object, ...], dict[str, object]]:
+        return ("TextColumn", args, kwargs)
+
+
+def minimal_research_ocr_payload() -> list[dict[str, object]]:
+    return [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchDmg1", "level": 1217, "text": "DAMAGE I (Lv. 1217)"},
+                {"upgrade_key": "researchKillGold1", "level": 447, "text": "KILL GOLD I (Lv. 447)"},
+                {"upgrade_key": "researchPrestigePower1", "level": 768, "text": "PRESTIGE POWER I (Lv. 768)"},
+            ],
+        }
+    ]
+
+
+def test_advanced_editor_is_visible_before_ocr() -> None:
     original_session_state = app.st.session_state
-    original_render_manual_locked_editor = app.render_manual_locked_editor
+    original_render_advanced_editor = app.render_advanced_editor
+    original_load_saved_advanced_overrides = app.load_saved_advanced_overrides
     captured: dict[str, object] = {}
 
-    def fake_render_manual_locked_editor(rows: pd.DataFrame, **kwargs: object) -> pd.DataFrame:
+    def fake_render_advanced_editor(merged: pd.DataFrame, base_rows: pd.DataFrame) -> None:
         captured["called"] = True
-        captured["row_count"] = len(rows)
-        captured["show_state"] = kwargs.get("show_state")
-        return rows
+        captured["row_count"] = len(merged)
+        captured["base_row_count"] = len(base_rows)
+        captured["researchDmg1_status"] = rows_by_key(merged)["researchDmg1"]["status"]
+        captured["base_researchDmg1_status"] = rows_by_key(base_rows)["researchDmg1"]["status"]
 
     app.st.session_state = {}
-    app.render_manual_locked_editor = fake_render_manual_locked_editor
+    app.render_advanced_editor = fake_render_advanced_editor
+    app.load_saved_advanced_overrides = lambda: {"researchDmg1": {"status": "maxed", "level": 1217}}
     try:
         result = app.show_editor()
     finally:
         app.st.session_state = original_session_state
-        app.render_manual_locked_editor = original_render_manual_locked_editor
+        app.render_advanced_editor = original_render_advanced_editor
+        app.load_saved_advanced_overrides = original_load_saved_advanced_overrides
 
     assert_equal(result, None, "pre-OCR editor must not expose rows for macro generation")
-    assert_equal(captured.get("called"), True, "manual locked editor before OCR")
-    assert_equal(captured.get("row_count"), len(app.CORE_KEYS), "pre-OCR manual locked row count")
-    assert_equal(captured.get("show_state"), False, "pre-OCR manual locked editor state columns")
+    assert_equal(captured.get("called"), True, "advanced editor before OCR")
+    assert_equal(captured.get("row_count"), len(app.CORE_KEYS), "pre-OCR advanced editor row count")
+    assert_equal(captured.get("base_row_count"), len(app.CORE_KEYS), "pre-OCR advanced editor base row count")
+    assert_equal(captured.get("researchDmg1_status"), "maxed", "pre-OCR saved advanced override is visible")
+    assert_equal(captured.get("base_researchDmg1_status"), "ignore", "pre-OCR base remains unprocessed")
+
+
+def test_show_editor_after_ocr_rebuilds_base_and_applies_saved_overrides() -> None:
+    original_session_state = app.st.session_state
+    original_expander = app.st.expander
+    original_render_state_summary = app.render_state_summary
+    original_render_inference_summary = app.render_inference_summary
+    original_render_advanced_editor = app.render_advanced_editor
+    original_render_debug_rows = app.render_debug_rows
+    original_load_saved_advanced_overrides = app.load_saved_advanced_overrides
+    captured: dict[str, object] = {}
+
+    def fake_render_advanced_editor(merged: pd.DataFrame, base_rows: pd.DataFrame) -> None:
+        merged_by_key = rows_by_key(merged)
+        base_by_key = rows_by_key(base_rows)
+        captured["called"] = True
+        captured["merged_researchDmg1_status"] = merged_by_key["researchDmg1"]["status"]
+        captured["base_researchDmg1_status"] = base_by_key["researchDmg1"]["status"]
+        captured["base_researchDmg1_level"] = base_by_key["researchDmg1"]["level"]
+
+    app.st.session_state = {
+        "state_rows": app.build_state_rows([]),
+        "ocr_results": minimal_research_ocr_payload(),
+    }
+    app.st.expander = lambda *args, **kwargs: NullContext()
+    app.render_state_summary = lambda rows: None
+    app.render_inference_summary = lambda rows: None
+    app.render_advanced_editor = fake_render_advanced_editor
+    app.render_debug_rows = lambda rows: None
+    app.load_saved_advanced_overrides = lambda: {"researchDmg1": {"status": "maxed", "level": None}}
+    try:
+        result = app.show_editor()
+    finally:
+        app.st.session_state = original_session_state
+        app.st.expander = original_expander
+        app.render_state_summary = original_render_state_summary
+        app.render_inference_summary = original_render_inference_summary
+        app.render_advanced_editor = original_render_advanced_editor
+        app.render_debug_rows = original_render_debug_rows
+        app.load_saved_advanced_overrides = original_load_saved_advanced_overrides
+
+    if result is None:
+        raise AssertionError("post-OCR editor should return rows for macro generation")
+    result_by_key = rows_by_key(result)
+    assert_equal(captured.get("called"), True, "advanced editor after OCR")
+    assert_equal(captured.get("base_researchDmg1_status"), "available", "post-OCR base status comes from OCR")
+    assert_equal(captured.get("base_researchDmg1_level"), 1217, "post-OCR base level comes from OCR")
+    assert_equal(captured.get("merged_researchDmg1_status"), "maxed", "post-OCR saved override is visible")
+    assert_equal(result_by_key["researchDmg1"]["status"], "maxed", "post-OCR result keeps saved override")
+    assert_equal(result_by_key["researchDmg2"]["status"], "locked", "post-OCR inferred rows remain present")
+    assert_equal(len(result), len(app.CORE_KEYS), "post-OCR editor returns complete optimizer row set")
+
+
+def test_render_advanced_editor_saves_user_edits_and_invalidates_macro() -> None:
+    original_session_state = app.st.session_state
+    original_expander = app.st.expander
+    original_tabs = app.st.tabs
+    original_data_editor = app.st.data_editor
+    original_column_config = app.st.column_config
+    original_caption = app.st.caption
+    original_load_saved_advanced_overrides = app.load_saved_advanced_overrides
+    original_save_advanced_overrides = app.save_advanced_overrides
+    saved: dict[str, object] = {}
+
+    def fake_data_editor(frame: pd.DataFrame, **kwargs: object) -> pd.DataFrame:
+        edited = frame.copy()
+        if "researchDmg1" in set(edited["upgrade_key"].astype(str)):
+            edited.loc[edited["upgrade_key"] == "researchDmg1", "status"] = "maxed"
+            edited.loc[edited["upgrade_key"] == "researchDmg1", "level"] = None
+        if "prestigeDmg5" in set(edited["upgrade_key"].astype(str)):
+            edited.loc[edited["upgrade_key"] == "prestigeDmg5", "status"] = "locked"
+            edited.loc[edited["upgrade_key"] == "prestigeDmg5", "level"] = None
+        return edited
+
+    base_rows = app.build_state_rows([])
+    merged = base_rows.copy()
+    fake_state = {"state_version": "test", "last_macro_text": "old macro", "last_result": {"ok": True}}
+    app.st.session_state = fake_state
+    app.st.expander = lambda *args, **kwargs: NullContext()
+    app.st.tabs = lambda labels: [NullContext() for _ in labels]
+    app.st.data_editor = fake_data_editor
+    app.st.column_config = FakeColumnConfig()
+    app.st.caption = lambda *args, **kwargs: None
+    app.load_saved_advanced_overrides = lambda: {}
+    app.save_advanced_overrides = lambda overrides: saved.update({"overrides": overrides})
+    try:
+        app.render_advanced_editor(merged, base_rows)
+    finally:
+        app.st.session_state = original_session_state
+        app.st.expander = original_expander
+        app.st.tabs = original_tabs
+        app.st.data_editor = original_data_editor
+        app.st.column_config = original_column_config
+        app.st.caption = original_caption
+        app.load_saved_advanced_overrides = original_load_saved_advanced_overrides
+        app.save_advanced_overrides = original_save_advanced_overrides
+
+    assert_equal(
+        saved.get("overrides"),
+        {
+            "researchDmg1": {"status": "maxed", "level": None},
+            "prestigeDmg5": {"status": "locked", "level": 0},
+        },
+        "advanced editor saves edited overrides from both tabs",
+    )
+    assert_equal(fake_state.get("last_macro_text"), None, "advanced edit invalidates macro text")
+    assert_equal(fake_state.get("last_result"), None, "advanced edit invalidates optimizer result")
+    edited_by_key = rows_by_key(merged)
+    assert_equal(edited_by_key["researchDmg1"]["status"], "maxed", "advanced editor mutates merged status")
+    assert_equal(edited_by_key["prestigeDmg5"]["status"], "locked", "advanced editor mutates prestige status")
+
+
+def test_render_advanced_editor_can_clear_saved_override() -> None:
+    original_session_state = app.st.session_state
+    original_expander = app.st.expander
+    original_tabs = app.st.tabs
+    original_data_editor = app.st.data_editor
+    original_column_config = app.st.column_config
+    original_caption = app.st.caption
+    original_load_saved_advanced_overrides = app.load_saved_advanced_overrides
+    original_save_advanced_overrides = app.save_advanced_overrides
+    saved: dict[str, object] = {}
+
+    base_rows = app.build_state_rows(minimal_research_ocr_payload())
+    merged = app.apply_advanced_overrides(
+        base_rows,
+        {"researchDmg1": {"status": "maxed", "level": None}},
+    )
+
+    def fake_data_editor(frame: pd.DataFrame, **kwargs: object) -> pd.DataFrame:
+        edited = frame.copy()
+        if "researchDmg1" in set(edited["upgrade_key"].astype(str)):
+            edited.loc[edited["upgrade_key"] == "researchDmg1", "status"] = "available"
+            edited.loc[edited["upgrade_key"] == "researchDmg1", "level"] = 1217
+        return edited
+
+    fake_state = {"state_version": "test", "last_macro_text": "old macro", "last_result": {"ok": True}}
+    app.st.session_state = fake_state
+    app.st.expander = lambda *args, **kwargs: NullContext()
+    app.st.tabs = lambda labels: [NullContext() for _ in labels]
+    app.st.data_editor = fake_data_editor
+    app.st.column_config = FakeColumnConfig()
+    app.st.caption = lambda *args, **kwargs: None
+    app.load_saved_advanced_overrides = lambda: {"researchDmg1": {"status": "maxed", "level": None}}
+    app.save_advanced_overrides = lambda overrides: saved.update({"overrides": overrides})
+    try:
+        app.render_advanced_editor(merged, base_rows)
+    finally:
+        app.st.session_state = original_session_state
+        app.st.expander = original_expander
+        app.st.tabs = original_tabs
+        app.st.data_editor = original_data_editor
+        app.st.column_config = original_column_config
+        app.st.caption = original_caption
+        app.load_saved_advanced_overrides = original_load_saved_advanced_overrides
+        app.save_advanced_overrides = original_save_advanced_overrides
+
+    assert_equal(saved.get("overrides"), {}, "advanced editor saves empty overrides when user returns to base")
+    assert_equal(fake_state.get("last_macro_text"), None, "clearing override invalidates macro text")
+    assert_equal(fake_state.get("last_result"), None, "clearing override invalidates optimizer result")
 
 
 def test_screenshot_locked_inference_regression() -> None:
@@ -360,6 +561,139 @@ def test_optimizer_target_selection_state() -> None:
         )
 
 
+def test_advanced_overrides_persist_and_reapply_maxed_status() -> None:
+    ocr_payload = [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchDmg1", "level": 1217, "text": "DAMAGE I (Lv. 1217)"},
+            ],
+        }
+    ]
+    base_rows = app.build_state_rows(ocr_payload)
+    edited_rows = base_rows.copy()
+    edited_rows.loc[edited_rows["upgrade_key"] == "researchDmg1", "status"] = "maxed"
+
+    overrides = app.collect_advanced_overrides(base_rows, edited_rows)
+    assert_equal(
+        overrides,
+        {"researchDmg1": {"status": "maxed", "level": 1217}},
+        "advanced maxed override payload",
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "advanced_overrides.json"
+        app.save_advanced_overrides(overrides, path)
+        loaded = app.load_advanced_overrides(path)
+
+    reloaded_rows = app.apply_advanced_overrides(app.build_state_rows(ocr_payload), loaded)
+    reloaded_by_key = rows_by_key(reloaded_rows)
+    assert_equal(reloaded_by_key["researchDmg1"]["status"], "maxed", "persisted advanced maxed status")
+    assert_equal(bool(reloaded_by_key["researchDmg1"]["advanced_override"]), True, "advanced override marker")
+
+    maxed_row = reloaded_rows[reloaded_rows["upgrade_key"] == "researchDmg1"]
+    state, errors = app.build_optimizer_state(
+        maxed_row,
+        objective="FARM",
+        energy="1M",
+        prestige_points="0",
+    )
+    assert_equal(errors, [], "optimizer state errors with persisted advanced maxed override")
+    assert_equal(
+        state["levels"]["researchDmg1"],
+        app.load_max_levels()["researchDmg1"],
+        "persisted advanced maxed emits max level",
+    )
+
+
+def test_advanced_overrides_drive_optimizer_state_for_all_statuses() -> None:
+    ocr_payload = [
+        {
+            "screen": "research-core",
+            "records": [
+                {"upgrade_key": "researchDmg1", "level": 1217, "text": "DAMAGE I (Lv. 1217)"},
+                {"upgrade_key": "researchDmg2", "level": 176, "text": "DAMAGE II (Lv. 176)"},
+                {"upgrade_key": "researchDmg3", "level": 48, "text": "DAMAGE III (Lv. 48)"},
+                {"upgrade_key": "researchDmg4", "level": 14, "text": "DAMAGE IV (Lv. 14)"},
+            ],
+        }
+    ]
+    rows = app.apply_advanced_overrides(
+        app.build_state_rows(ocr_payload),
+        {
+            "researchDmg1": {"status": "maxed", "level": None},
+            "researchDmg2": {"status": "locked", "level": None},
+            "researchDmg3": {"status": "ignore", "level": 48},
+            "researchDmg4": {"status": "available", "level": "14"},
+        },
+    )
+    selected_rows = rows[rows["upgrade_key"].isin(["researchDmg1", "researchDmg2", "researchDmg3", "researchDmg4"])]
+    state, errors = app.build_optimizer_state(
+        selected_rows,
+        objective="FARM",
+        energy="1M",
+        prestige_points="0",
+    )
+
+    assert_equal(errors, [], "optimizer state errors with mixed advanced overrides")
+    assert_equal(state["levels"]["researchDmg1"], app.load_max_levels()["researchDmg1"], "advanced maxed emits max level")
+    assert_equal(state["levels"]["researchDmg2"], 0, "advanced locked emits zero level")
+    assert_equal(state["locked_upgrades"], ["researchDmg2"], "advanced locked is emitted as locked")
+    assert_equal("researchDmg3" in state["levels"], False, "advanced ignore is omitted from optimizer levels")
+    assert_equal(state["levels"]["researchDmg4"], 14, "advanced available emits edited level")
+
+
+def test_advanced_override_normalization_rejects_unknown_keys_and_statuses() -> None:
+    payload = {
+        "overrides": {
+            "researchDmg1": {"status": "maxed", "level": None},
+            "researchDmg2": {"status": "locked", "level": None},
+            "researchDmg3": {"status": "available", "level": "1.217"},
+            "unknownKey": {"status": "maxed", "level": None},
+            "researchDmg4": {"status": "unknown", "level": 14},
+        }
+    }
+    assert_equal(
+        app.normalize_advanced_overrides(payload),
+        {
+            "researchDmg1": {"status": "maxed", "level": None},
+            "researchDmg2": {"status": "locked", "level": 0},
+            "researchDmg3": {"status": "available", "level": 1217},
+        },
+        "advanced override normalization",
+    )
+
+
+def test_advanced_overrides_ignore_unchanged_rows() -> None:
+    rows = pd.DataFrame(
+        [
+            {"upgrade_key": "prestigeDmg1", "status": "available", "level": 10},
+            {"upgrade_key": "prestigeDmg2", "status": "locked", "level": 0},
+        ]
+    )
+    assert_equal(app.collect_advanced_overrides(rows, rows.copy()), {}, "unchanged advanced rows are not persisted")
+
+
+def test_advanced_overrides_fall_back_to_legacy_manual_locks_until_saved() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        advanced_path = Path(tmp) / "advanced_overrides.json"
+        legacy_path = Path(tmp) / "locked_upgrades.json"
+        app.save_manual_locked({"prestigeDmg5", "unknownKey"}, legacy_path)
+
+        assert_equal(
+            app.load_saved_advanced_overrides(advanced_path, legacy_path),
+            {"prestigeDmg5": {"status": "locked", "level": 0}},
+            "legacy manual locks become advanced overrides when advanced file is missing",
+        )
+
+        app.save_advanced_overrides({}, advanced_path)
+        assert_equal(
+            app.load_saved_advanced_overrides(advanced_path, legacy_path),
+            {},
+            "saved advanced file takes precedence over legacy manual locks",
+        )
+
+
 def main() -> int:
     assert_equal(app.coerce_int(499028.0), 499028, "integer-valued editor float")
     assert_equal(app.coerce_int(1028.0), 1028, "small integer-valued editor float")
@@ -440,7 +774,7 @@ def main() -> int:
             "persisted manual locked keys",
         )
 
-    test_manual_locked_editor_is_available_before_ocr()
+    test_advanced_editor_is_visible_before_ocr()
     test_screenshot_locked_inference_regression()
     test_locked_inference_boundaries()
     test_missing_tier_review_boundaries()
@@ -450,6 +784,14 @@ def main() -> int:
     test_manual_locked_does_not_override_maxed_row()
     test_manual_locked_overrides_available_row()
     test_optimizer_target_selection_state()
+    test_advanced_overrides_persist_and_reapply_maxed_status()
+    test_advanced_overrides_drive_optimizer_state_for_all_statuses()
+    test_advanced_override_normalization_rejects_unknown_keys_and_statuses()
+    test_advanced_overrides_ignore_unchanged_rows()
+    test_advanced_overrides_fall_back_to_legacy_manual_locks_until_saved()
+    test_show_editor_after_ocr_rebuilds_base_and_applies_saved_overrides()
+    test_render_advanced_editor_saves_user_edits_and_invalidates_macro()
+    test_render_advanced_editor_can_clear_saved_override()
 
     print("ui state conversion regression checks passed")
     return 0

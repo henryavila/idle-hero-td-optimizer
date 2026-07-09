@@ -29,6 +29,7 @@ RUNS_DIR = APP_ROOT / "runs"
 USER_STATE_DIR = APP_ROOT / "user_state"
 LOCKED_UPGRADES_PATH = USER_STATE_DIR / "locked_upgrades.json"
 TARGET_METRICS_PATH = USER_STATE_DIR / "target_metrics.json"
+ADVANCED_OVERRIDES_PATH = USER_STATE_DIR / "advanced_overrides.json"
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -476,6 +477,7 @@ def build_state_rows(
                 "screen_loaded": screen_loaded,
                 "inference": "ocr" if detected else None,
                 "manual_locked": False,
+                "advanced_override": False,
                 "confidence": record.get("confidence"),
                 "ocr_text": text,
             }
@@ -530,6 +532,113 @@ def coerce_int(value: Any) -> int | None:
     if re.fullmatch(r"[+-]?\d+(?:[.,]\d{3})+", compact):
         return int(compact.replace(".", "").replace(",", ""))
     return None
+
+
+def advanced_override_from_row(row: pd.Series | dict[str, Any]) -> dict[str, Any] | None:
+    status = str(row.get("status", ""))
+    if status not in STATUS_OPTIONS:
+        return None
+    level = coerce_int(row.get("level"))
+    if status == "locked" and level is None:
+        level = 0
+    return {"status": status, "level": level}
+
+
+def normalize_advanced_overrides(overrides: Any) -> dict[str, dict[str, Any]]:
+    if isinstance(overrides, dict) and "overrides" in overrides:
+        overrides = overrides.get("overrides")
+    if not isinstance(overrides, dict):
+        return {}
+
+    normalized: dict[str, dict[str, Any]] = {}
+    for key in CORE_KEYS:
+        raw_override = overrides.get(key)
+        if not isinstance(raw_override, dict):
+            continue
+        override = advanced_override_from_row(raw_override)
+        if override is not None:
+            normalized[key] = override
+    return normalized
+
+
+def load_advanced_overrides(path: Path = ADVANCED_OVERRIDES_PATH) -> dict[str, dict[str, Any]]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return normalize_advanced_overrides(payload)
+
+
+def legacy_manual_locked_overrides(path: Path = LOCKED_UPGRADES_PATH) -> dict[str, dict[str, Any]]:
+    return {key: {"status": "locked", "level": 0} for key in load_manual_locked(path)}
+
+
+def load_saved_advanced_overrides(
+    path: Path = ADVANCED_OVERRIDES_PATH,
+    legacy_locked_path: Path = LOCKED_UPGRADES_PATH,
+) -> dict[str, dict[str, Any]]:
+    overrides = load_advanced_overrides(path)
+    if overrides or path.exists():
+        return overrides
+    return legacy_manual_locked_overrides(legacy_locked_path)
+
+
+def save_advanced_overrides(overrides: dict[str, dict[str, Any]], path: Path = ADVANCED_OVERRIDES_PATH) -> None:
+    normalized = normalize_advanced_overrides(overrides)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "overrides": normalized,
+        "updated_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def collect_advanced_overrides(base_rows: pd.DataFrame, edited_rows: pd.DataFrame) -> dict[str, dict[str, Any]]:
+    if base_rows.empty or edited_rows.empty:
+        return {}
+
+    base_by_key = {
+        str(row["upgrade_key"]): advanced_override_from_row(row)
+        for _, row in base_rows.iterrows()
+    }
+    overrides: dict[str, dict[str, Any]] = {}
+    for _, row in edited_rows.iterrows():
+        key = str(row.get("upgrade_key", ""))
+        if key not in CORE_KEYS:
+            continue
+        edited = advanced_override_from_row(row)
+        if edited is None:
+            continue
+        if edited != base_by_key.get(key):
+            overrides[key] = edited
+    return normalize_advanced_overrides(overrides)
+
+
+def apply_advanced_overrides(rows: pd.DataFrame, overrides: dict[str, dict[str, Any]]) -> pd.DataFrame:
+    if rows.empty:
+        return rows
+
+    normalized = normalize_advanced_overrides(overrides)
+    result = rows.copy()
+    if "advanced_override" not in result.columns:
+        result["advanced_override"] = False
+
+    for key, override in normalized.items():
+        index = result.index[result["upgrade_key"].astype(str) == key]
+        if len(index) != 1:
+            continue
+        row_index = index[0]
+        status = str(override["status"])
+        level = override.get("level")
+        if status == "locked" and level is None:
+            level = 0
+        result.loc[row_index, "status"] = status
+        result.loc[row_index, "level"] = level
+        result.loc[row_index, "advanced_override"] = True
+        result.loc[row_index, "inference"] = f"advanced={status}"
+    return result
 
 
 def validate_resource_inputs(energy: str, prestige_points: str) -> list[str]:
@@ -824,6 +933,11 @@ def inference_label(inference: Any) -> str:
         "missing=locked:after-visible-lock": "locked inferido depois de tier travado",
         "missing=locked:beyond-visible-tiers": "locked inferido alem do limite visivel",
         "manual=locked": "bloqueio manual salvo",
+        "advanced=available": "ajuste avancado salvo: disponivel",
+        "advanced=locked": "ajuste avancado salvo: locked",
+        "advanced=maxed": "ajuste avancado salvo: maxed",
+        "advanced=ignore": "ajuste avancado salvo: ignorado",
+        "advanced=review": "ajuste avancado salvo: revisar",
         "ocr": "lido pelo OCR",
         "not-loaded": "tela nao anexada",
     }
@@ -884,97 +998,6 @@ def screen_counts_text(rows: pd.DataFrame) -> str:
         f"{counts.get('maxed', 0)} maxed | "
         f"{counts.get('review', 0)} pendencias"
     )
-
-
-def manual_locked_conflicts(rows: pd.DataFrame, manual_locked: set[str]) -> list[str]:
-    conflicts = []
-    for _, row in rows.iterrows():
-        key = str(row["upgrade_key"])
-        if key not in manual_locked:
-            continue
-        ocr_level = coerce_int(row.get("ocr_level"))
-        if ocr_level is not None and ocr_level > 0:
-            conflicts.append(f"{label_for_key(key)}: OCR leu Lv {level_display(ocr_level)}")
-    return conflicts
-
-
-def manual_locked_editor_frame(
-    rows: pd.DataFrame,
-    manual_locked: set[str],
-    *,
-    show_state: bool = True,
-) -> pd.DataFrame:
-    ordered = rows.sort_values(["family", "tier"]).copy()
-    data = {
-        "locked": [str(key) in manual_locked for key in ordered["upgrade_key"]],
-        "label": [upgrade_display_name(str(key)) for key in ordered["upgrade_key"]],
-    }
-    if show_state:
-        data["status"] = [status_label(str(status)) for status in ordered["status"]]
-        data["level"] = [level_display(value) or "" for value in ordered["level"]]
-    data["upgrade_key"] = [str(key) for key in ordered["upgrade_key"]]
-    return pd.DataFrame(data)
-
-
-def render_manual_locked_editor(merged: pd.DataFrame, *, show_state: bool = True) -> pd.DataFrame:
-    manual_locked = load_manual_locked()
-    if merged.empty:
-        return merged
-
-    edited_locked = set(manual_locked)
-    state_version = st.session_state.get("state_version", "v0")
-    with st.expander(f"Bloqueios manuais ({len(manual_locked)})", expanded=bool(manual_locked)):
-        tabs = st.tabs([SCREEN_TITLES.get(screen, screen) for screen in SCREEN_ORDER])
-        for screen, tab in zip(SCREEN_ORDER, tabs):
-            with tab:
-                subset = merged[merged["screen"] == screen]
-                if subset.empty:
-                    st.caption("Sem itens nesta tela.")
-                    continue
-                frame = manual_locked_editor_frame(subset, edited_locked, show_state=show_state)
-                disabled_columns = ["label", "upgrade_key"]
-                column_config = {
-                    "locked": st.column_config.CheckboxColumn("Locked", width="small"),
-                    "label": st.column_config.TextColumn("Upgrade", width="medium"),
-                    "upgrade_key": st.column_config.TextColumn("Key", width="medium"),
-                }
-                if show_state:
-                    disabled_columns.extend(["status", "level"])
-                    column_config.update(
-                        {
-                            "status": st.column_config.TextColumn("Status", width="small"),
-                            "level": st.column_config.TextColumn("Level", width="small"),
-                        }
-                    )
-                edited = st.data_editor(
-                    frame,
-                    width="stretch",
-                    hide_index=True,
-                    num_rows="fixed",
-                    disabled=disabled_columns,
-                    column_config=column_config,
-                    key=f"manual_locked_editor_{state_version}_{screen_slug(screen)}",
-                )
-                screen_keys = set(frame["upgrade_key"])
-                edited_locked.difference_update(screen_keys)
-                edited_locked.update(
-                    str(row["upgrade_key"])
-                    for _, row in edited.iterrows()
-                    if bool(row.get("locked"))
-                )
-
-        edited_locked = set(normalize_manual_locked(edited_locked))
-        if edited_locked != manual_locked:
-            save_manual_locked(edited_locked)
-            st.session_state["last_macro_text"] = None
-            st.session_state["last_result"] = None
-
-        conflicts = manual_locked_conflicts(merged, edited_locked)
-        if conflicts:
-            st.warning("Bloqueio manual conflita com OCR: " + "; ".join(conflicts[:6]))
-        st.caption(f"Arquivo: {LOCKED_UPGRADES_PATH.relative_to(APP_ROOT)}")
-
-    return apply_manual_locked(merged, edited_locked)
 
 
 def screen_section_header(screen: str, rows: pd.DataFrame) -> None:
@@ -1096,27 +1119,42 @@ def render_inference_summary(rows: pd.DataFrame) -> None:
             subset = rows[rows["screen"] == screen]
             if subset.empty:
                 continue
-            inferred_maxed = int(((subset["status"] == "maxed") & (~subset["detected"])).sum())
+            advanced_override = (
+                subset.get("advanced_override", pd.Series(False, index=subset.index))
+                .fillna(False)
+                .astype(bool)
+            )
+            manual_locked = (
+                subset.get("manual_locked", pd.Series(False, index=subset.index))
+                .fillna(False)
+                .astype(bool)
+            )
+            inferred_maxed = int(
+                ((subset["status"] == "maxed") & (~subset["detected"]) & (~advanced_override)).sum()
+            )
             inferred_locked = int(
                 (
                     (subset["status"] == "locked")
-                    & (~subset.get("manual_locked", pd.Series(dtype=bool)).fillna(False))
+                    & (~manual_locked)
+                    & (~advanced_override)
                 ).sum()
             )
-            manual_locked = int(subset.get("manual_locked", pd.Series(dtype=bool)).fillna(False).sum())
+            advanced_override_count = int(advanced_override.sum())
             review_missing = int(((subset["status"] == "review") & (~subset["detected"])).sum())
             st.markdown(f"**{SCREEN_TITLES.get(screen, screen)}**")
             st.write(
                 f"- {inferred_maxed} maxed inferidos antes de sequencias visiveis\n"
                 f"- {inferred_locked} locked inferidos por Wave/limite visivel\n"
-                f"- {manual_locked} locked manuais salvos\n"
+                f"- {advanced_override_count} ajustes avancados salvos\n"
                 f"- {review_missing} ausencias para revisar"
             )
 
 
-def render_advanced_editor(merged: pd.DataFrame) -> None:
-    with st.expander("Ajustes avancados", expanded=False):
+def render_advanced_editor(merged: pd.DataFrame, base_rows: pd.DataFrame) -> None:
+    saved_overrides = load_saved_advanced_overrides()
+    with st.expander(f"Ajustes avancados ({len(saved_overrides)})", expanded=False):
         editor_columns = ["label", "level", "status", "confidence", "upgrade_key"]
+        state_version = st.session_state.get("state_version", "v0")
         tabs = st.tabs([SCREEN_TITLES.get(screen, screen) for screen in SCREEN_ORDER])
         for screen, tab in zip(SCREEN_ORDER, tabs):
             with tab:
@@ -1137,10 +1175,17 @@ def render_advanced_editor(merged: pd.DataFrame) -> None:
                         "upgrade_key": st.column_config.TextColumn("Key", disabled=True),
                     },
                     disabled=["upgrade_key", "label", "confidence"],
-                    key=f"advanced_state_editor_{screen_slug(screen)}",
+                    key=f"advanced_state_editor_{state_version}_{screen_slug(screen)}",
                 )
                 for _, edited_row in edited.iterrows():
                     update_row(merged, str(edited_row["upgrade_key"]), str(edited_row["status"]), edited_row["level"])
+
+        edited_overrides = collect_advanced_overrides(base_rows, merged)
+        if edited_overrides != saved_overrides:
+            save_advanced_overrides(edited_overrides)
+            st.session_state["last_macro_text"] = None
+            st.session_state["last_result"] = None
+        st.caption(f"Arquivo: {ADVANCED_OVERRIDES_PATH.relative_to(APP_ROOT)}")
 
 
 def render_debug_rows(merged: pd.DataFrame) -> None:
@@ -1156,12 +1201,14 @@ def render_debug_rows(merged: pd.DataFrame) -> None:
 def show_editor() -> pd.DataFrame | None:
     rows = st.session_state.get("state_rows")
     if rows is None:
-        pre_ocr_rows = build_state_rows([], manual_locked=load_manual_locked())
-        render_manual_locked_editor(pre_ocr_rows, show_state=False)
+        base_rows = build_state_rows([])
+        merged = apply_advanced_overrides(base_rows, load_saved_advanced_overrides())
+        render_advanced_editor(merged, base_rows)
         return None
 
-    merged = rows.copy()
-    merged = render_manual_locked_editor(merged)
+    ocr_results = st.session_state.get("ocr_results", [])
+    base_rows = build_state_rows(ocr_results) if ocr_results else rows.copy()
+    merged = apply_advanced_overrides(base_rows, load_saved_advanced_overrides())
     pending = merged[merged["status"] == "review"].copy()
 
     if not pending.empty:
@@ -1179,8 +1226,7 @@ def show_editor() -> pd.DataFrame | None:
     with st.expander("Resumo dos levels lidos", expanded=not pending.empty):
         render_state_summary(merged)
     render_inference_summary(merged)
-    render_advanced_editor(merged)
-    merged = apply_manual_locked(merged, load_manual_locked())
+    render_advanced_editor(merged, base_rows)
     render_debug_rows(merged)
 
     st.session_state["state_rows"] = merged
@@ -1553,9 +1599,9 @@ def main() -> None:
                 else:
                     st.write("Montando estado dos upgrades...")
                     st.session_state["ocr_results"] = ocr_results
-                    st.session_state["state_rows"] = build_state_rows(
-                        ocr_results,
-                        manual_locked=load_manual_locked(),
+                    st.session_state["state_rows"] = apply_advanced_overrides(
+                        build_state_rows(ocr_results),
+                        load_saved_advanced_overrides(),
                     )
                     st.session_state["state_version"] = datetime.now().strftime("%H%M%S%f")
                     st.session_state["last_macro_text"] = None
