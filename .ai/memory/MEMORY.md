@@ -5,5 +5,5 @@ Short index of durable project learnings for future sessions.
 - [Runtime portability](runtime-portability.md): keep shell launchers relocatable and handle stale port processes safely.
 - [Optimizer input normalization](optimizer-input-normalization.md): preserve integer levels from Streamlit/Pandas, accept both decimal separators in resource inputs, and treat optimizer targets as explicit metrics.
 - [OCR consensus](ocr-consensus.md): keep OCR layers conservative; PaddleOCR/PP-OCRv5 is an optional `auto-lines` layer, not a standalone replacement.
-- [Manual locked upgrades](manual-locked-upgrades.md): infer safe locked states from visible Wave locks or visible limits, and use persisted manual locks only for corrections.
+- [Advanced upgrade overrides](manual-locked-upgrades.md): infer safe locked states from visible Wave locks or visible limits, and use persisted advanced overrides for manual `status`/`level` corrections.
 - [Hunt log](hunt-log.md): adversarial test coverage added for high-risk state-conversion paths.
